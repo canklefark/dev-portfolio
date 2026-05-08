@@ -1,0 +1,17 @@
+---
+interface Props {
+  max?: string;
+  gutters?: string;
+  andText?: boolean;
+}
+
+const { max = "var(--measure)", gutters = "0", andText = false } = Astro.props;
+---
+
+<div
+  class="l-center"
+  style={`--max: ${max}; --gutters: ${gutters}`}
+  data-and-text={andText || undefined}
+>
+  <slot />
+</div>

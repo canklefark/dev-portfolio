@@ -1,0 +1,15 @@
+---
+interface Props {
+  min?: string;
+  space?: string;
+}
+
+const { min = "14rem", space = "s1" } = Astro.props;
+---
+
+<div
+  class="l-grid"
+  style={`--min: ${min}; --space: var(--${space})`}
+>
+  <slot />
+</div>

@@ -1,0 +1,23 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Chip from "./Chip.astro";
+import { formatLogTimestamp } from "../lib/format";
+
+interface Props {
+  entry: CollectionEntry<"logbook">;
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+---
+
+<a href={`/logbook/${entry.id}`} class="log-entry">
+  <div class="l-stack" style="--space: var(--s-2)">
+    <div class="l-cluster log-meta" style="--space: var(--s-1)">
+      <span class="log-ts">{formatLogTimestamp(data.date)}</span>
+      {data.tags.map((tag) => <Chip>{tag}</Chip>)}
+    </div>
+    <div class="log-title">{data.title}</div>
+    <div class="log-preview">{data.preview}</div>
+  </div>
+</a>

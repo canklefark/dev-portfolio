@@ -1,0 +1,22 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import StageCard from "../../components/StageCard.astro";
+import { getCollection } from "astro:content";
+
+const projects = (await getCollection("projects", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+---
+
+<Layout title="Projects — Zeik Cookson" activeNav="projects">
+  <section class="section">
+    <div class="u-gutters">
+      <div class="section-label">All Projects</div>
+      {projects.length === 0
+        ? <p class="empty-state">No stages documented yet.</p>
+        : projects.map((entry) => <StageCard entry={entry} />)
+      }
+      <div class="u-spacer-l"></div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,297 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-06T00:00:00Z",
+  "title": "Design System: Zeik Cookson Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "void-black": {
+        "role": "neutral",
+        "displayName": "Void Black",
+        "canonical": "oklch(5.5% 0.01 68)",
+        "tonalRamp": [
+          "oklch(5.5% 0.01 68)",
+          "oklch(8% 0.012 70)",
+          "oklch(13% 0.016 68)",
+          "oklch(17% 0.014 68)",
+          "oklch(24% 0.016 66)",
+          "oklch(33% 0.016 68)",
+          "oklch(50% 0.014 70)",
+          "oklch(70% 0.010 72)"
+        ]
+      },
+      "column-black": {
+        "role": "neutral",
+        "displayName": "Column Black",
+        "canonical": "oklch(8% 0.012 70)",
+        "tonalRamp": [
+          "oklch(5% 0.006 70)",
+          "oklch(8% 0.012 70)",
+          "oklch(10% 0.014 70)",
+          "oklch(13% 0.016 68)",
+          "oklch(17% 0.014 68)",
+          "oklch(24% 0.016 66)",
+          "oklch(33% 0.016 68)",
+          "oklch(46% 0.016 68)"
+        ]
+      },
+      "surface-warm": {
+        "role": "neutral",
+        "displayName": "Warm Surface",
+        "canonical": "oklch(10% 0.014 70)",
+        "tonalRamp": [
+          "oklch(5% 0.006 70)",
+          "oklch(8% 0.012 70)",
+          "oklch(10% 0.014 70)",
+          "oklch(13% 0.016 68)",
+          "oklch(20% 0.015 70)",
+          "oklch(30% 0.014 70)",
+          "oklch(50% 0.012 70)",
+          "oklch(75% 0.009 72)"
+        ]
+      },
+      "ink-primary": {
+        "role": "neutral",
+        "displayName": "Ink Primary",
+        "canonical": "oklch(93% 0.008 82)",
+        "tonalRamp": [
+          "oklch(15% 0.004 82)",
+          "oklch(25% 0.005 82)",
+          "oklch(35% 0.006 82)",
+          "oklch(46% 0.016 68)",
+          "oklch(57% 0.018 72)",
+          "oklch(70% 0.010 82)",
+          "oklch(82% 0.008 82)",
+          "oklch(93% 0.008 82)"
+        ]
+      },
+      "pit-lane-amber": {
+        "role": "primary",
+        "displayName": "Pit Lane Amber",
+        "canonical": "oklch(74% 0.17 75)",
+        "tonalRamp": [
+          "oklch(15% 0.008 75)",
+          "oklch(25% 0.05 75)",
+          "oklch(35% 0.10 75)",
+          "oklch(45% 0.14 75)",
+          "oklch(55% 0.16 75)",
+          "oklch(65% 0.17 75)",
+          "oklch(74% 0.17 75)",
+          "oklch(88% 0.08 75)"
+        ]
+      },
+      "signal-green": {
+        "role": "tertiary",
+        "displayName": "Signal Green",
+        "canonical": "oklch(65% 0.14 152)",
+        "tonalRamp": [
+          "oklch(15% 0.007 152)",
+          "oklch(25% 0.04 152)",
+          "oklch(35% 0.08 152)",
+          "oklch(45% 0.12 152)",
+          "oklch(55% 0.14 152)",
+          "oklch(65% 0.14 152)",
+          "oklch(75% 0.10 152)",
+          "oklch(88% 0.05 152)"
+        ]
+      },
+      "signal-red": {
+        "role": "tertiary",
+        "displayName": "Signal Red",
+        "canonical": "oklch(52% 0.16 26)",
+        "tonalRamp": [
+          "oklch(15% 0.008 26)",
+          "oklch(25% 0.05 26)",
+          "oklch(35% 0.10 26)",
+          "oklch(44% 0.15 26)",
+          "oklch(52% 0.16 26)",
+          "oklch(62% 0.14 26)",
+          "oklch(72% 0.10 26)",
+          "oklch(85% 0.05 26)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero name only. One instance per page. The <em> inside is italic and Pit Lane Amber."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page-level headings on detail and about pages. Used once per page."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Stage card titles, prose H2. The primary working heading level."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "All readable prose. Never use Playfair or Mono at body scale. Cap at 65ch in prose contexts."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Section labels, stage numbers, chip text, CTA button labels. Widest tracking — instrument register."
+      }
+    },
+    "shadows": [
+      {
+        "name": "hover-lift",
+        "value": "0 8px 28px oklch(0% 0 0 / 0.14)",
+        "purpose": "Stage card hover only. Fires with translateY(-2px). Never applied at rest."
+      }
+    ],
+    "motion": [
+      {
+        "name": "fast",
+        "value": "0.15s linear",
+        "purpose": "Color and border-color hover transitions on links, buttons, chips, nav."
+      },
+      {
+        "name": "standard",
+        "value": "0.2s ease-out",
+        "purpose": "Stage card transform, box-shadow, and radial gradient opacity."
+      },
+      {
+        "name": "slow",
+        "value": "0.25s linear",
+        "purpose": "Theme toggle transitions on background and color. Radial gradient appearance."
+      },
+      {
+        "name": "underline-draw",
+        "value": "0.3s ease-out",
+        "purpose": "Title underline draw via background-size animation on stage card hover."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile",
+        "value": "480px",
+        "purpose": "Hero font size fallback, hero padding reduction."
+      },
+      {
+        "name": "sm",
+        "value": "640px",
+        "purpose": "Nav spacing, detail stats grid collapse to 2-col, about grid to 1-col."
+      },
+      {
+        "name": "md",
+        "value": "860px",
+        "purpose": "Column border-left/right removed. Column goes edge-to-edge."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Solid amber CTA. Used for the primary action per section (e.g. VIEW PIPELINE, DOWNLOAD CV).",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">VIEW PIPELINE</a>",
+      "css": ".ds-btn-primary { font-family: \"JetBrains Mono\", monospace; font-size: 0.625rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(8% 0.012 70); background: oklch(74% 0.17 75); padding: 0.625rem 1.25rem; border: none; cursor: pointer; text-decoration: none; display: inline-block; transition: opacity 0.15s; } .ds-btn-primary:hover { opacity: 0.85; } .ds-btn-primary:focus-visible { outline: 2px solid oklch(74% 0.17 75); outline-offset: 2px; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Ghost CTA. Used as a secondary action alongside a primary button.",
+      "html": "<a class=\"ds-btn-outline\" href=\"#\">VIEW SOURCE</a>",
+      "css": ".ds-btn-outline { font-family: \"JetBrains Mono\", monospace; font-size: 0.625rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(57% 0.018 72); background: transparent; padding: 0.625rem 1.25rem; border: 1px solid oklch(24% 0.016 66); cursor: pointer; text-decoration: none; display: inline-block; transition: color 0.15s, border-color 0.15s; } .ds-btn-outline:hover { color: oklch(93% 0.008 82); border-color: oklch(74% 0.17 75); } .ds-btn-outline:focus-visible { outline: 2px solid oklch(74% 0.17 75); outline-offset: 2px; }"
+    },
+    {
+      "name": "Chip Default",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Neutral tag for tech stack, duration, and category labels.",
+      "html": "<span class=\"ds-chip\">KUBERNETES</span>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; font-family: \"JetBrains Mono\", monospace; font-size: 0.5rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(33% 0.016 68); border: 1px solid oklch(24% 0.016 66); padding: 0.15rem 0.45rem; background: oklch(10% 0.014 70); }"
+    },
+    {
+      "name": "Chip Accent",
+      "kind": "chip",
+      "refersTo": "chip-accent",
+      "description": "Active/primary classification. The amber variant — used sparingly.",
+      "html": "<span class=\"ds-chip-accent\">ACTIVE</span>",
+      "css": ".ds-chip-accent { display: inline-flex; align-items: center; font-family: \"JetBrains Mono\", monospace; font-size: 0.5rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(74% 0.17 75); border: 1px solid oklch(74% 0.17 75 / 0.55); padding: 0.15rem 0.45rem; background: oklch(74% 0.17 75 / 0.09); }"
+    },
+    {
+      "name": "Chip Green",
+      "kind": "chip",
+      "refersTo": "chip-green",
+      "description": "Confirmed/healthy/shipped status. Signal Green with transparent background.",
+      "html": "<span class=\"ds-chip-green\">SHIPPED</span>",
+      "css": ".ds-chip-green { display: inline-flex; align-items: center; font-family: \"JetBrains Mono\", monospace; font-size: 0.5rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(65% 0.14 152); border: 1px solid oklch(65% 0.14 152); padding: 0.15rem 0.45rem; background: transparent; }"
+    },
+    {
+      "name": "Stage Card",
+      "kind": "card",
+      "refersTo": "button-primary",
+      "description": "Signature project entry card. Cursor-tracked radial gradient on hover. Angular, bordered, title underline draw.",
+      "html": "<a class=\"ds-stage-card\" href=\"#\"><div class=\"ds-stage-header\"><span class=\"ds-stage-num\">STAGE 01</span><span class=\"ds-chip-accent\">PRODUCTION</span></div><div class=\"ds-stage-title\">Zero-Downtime Kubernetes Migration</div><div class=\"ds-stage-desc\">Migrated a stateful PostgreSQL cluster from bare metal to EKS with no service interruption across three production environments.</div><div class=\"ds-stage-footer\"><span class=\"ds-stage-time\">6 WK · 2024</span><span class=\"ds-stage-read\">READ FULL LOG →</span></div></a>",
+      "css": ".ds-stage-card { display: block; text-decoration: none; color: inherit; border: 1px solid oklch(17% 0.014 68); background: oklch(10% 0.014 70); padding: 1.625rem; position: relative; overflow: hidden; transition: border-color 0.2s, transform 0.2s ease-out, box-shadow 0.2s ease-out; } .ds-stage-card::after { content: \"\"; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, oklch(74% 0.17 75 / 0.09), transparent 65%); opacity: 0; transition: opacity 0.25s; pointer-events: none; } .ds-stage-card:hover { border-color: oklch(24% 0.016 66); transform: translateY(-2px); box-shadow: 0 8px 28px oklch(0% 0 0 / 0.14); } .ds-stage-card:hover::after { opacity: 1; } .ds-stage-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 0.75rem; } .ds-stage-num { font-family: \"JetBrains Mono\", monospace; font-size: 0.5rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: oklch(74% 0.17 75); } .ds-chip-accent { display: inline-flex; align-items: center; font-family: \"JetBrains Mono\", monospace; font-size: 0.5rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: oklch(74% 0.17 75); border: 1px solid oklch(74% 0.17 75 / 0.55); padding: 0.15rem 0.45rem; background: oklch(74% 0.17 75 / 0.09); } .ds-stage-title { font-family: \"Playfair Display\", Georgia, serif; font-size: 1.3125rem; font-weight: 600; letter-spacing: -0.01em; line-height: 1.25; color: oklch(93% 0.008 82); margin-bottom: 0.625rem; background-image: linear-gradient(oklch(74% 0.17 75), oklch(74% 0.17 75)); background-repeat: no-repeat; background-size: 0% 1px; background-position: 0 100%; transition: background-size 0.3s ease-out; } .ds-stage-card:hover .ds-stage-title { background-size: 100% 1px; } .ds-stage-desc { font-family: \"Inter\", sans-serif; font-size: 0.875rem; color: oklch(57% 0.018 72); line-height: 1.65; margin-bottom: 1.125rem; } .ds-stage-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; padding-top: 0.875rem; border-top: 1px solid oklch(17% 0.014 68); } .ds-stage-time { font-family: \"JetBrains Mono\", monospace; font-size: 0.5625rem; color: oklch(33% 0.016 68); letter-spacing: 0.06em; } .ds-stage-read { font-family: \"JetBrains Mono\", monospace; font-size: 0.5rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: oklch(74% 0.17 75); opacity: 0; transform: translateX(6px); transition: opacity 0.2s, transform 0.2s ease-out; } .ds-stage-card:hover .ds-stage-read { opacity: 1; transform: translateX(0); }"
+    },
+    {
+      "name": "Section Label",
+      "kind": "custom",
+      "refersTo": "chip",
+      "description": "Horizontal position marker with a rule extending to the right edge. No left rule.",
+      "html": "<div class=\"ds-section-label\">PROJECTS</div>",
+      "css": ".ds-section-label { font-family: \"JetBrains Mono\", monospace; font-size: 0.5rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: oklch(33% 0.016 68); display: flex; align-items: center; gap: 0.75rem; padding: 2.5rem 0 1.5rem; } .ds-section-label::after { content: \"\"; flex: 1; height: 1px; background: oklch(17% 0.014 68); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Technical Memoir",
+    "overview": "Every project is a chapter. The interface is the typeset book: Playfair Display carries editorial weight, Inter provides legible body text, and JetBrains Mono reads out the instrument data. The visual system recedes so the work can speak. Restraint here is not minimalism as aesthetic choice — it is restraint as professional signal. Decoration signals insecurity; this system signals the opposite.\n\nThe site runs on a single column bounded at 800px and ruled on both sides by a 1px border, like a logbook with a spine. A grain texture overlays the whole surface — so faint it reads subliminally, but present enough to make the screen feel material rather than rendered. The amber accent is used the way a status indicator is used: once, at the point of focus, meaning exactly what it says. Everywhere else is carbonized neutral.\n\nThis system explicitly rejects: marketing websites, SaaS landing-page patterns, gradient-heavy DevOps tool dashboards, generic dark-mode portfolios with teal accents and card grids, and heavy motorsport theming that reads as costume.",
+    "keyCharacteristics": [
+      "Three-voice typography: Playfair Display (editorial weight), Inter (readable body), JetBrains Mono (instrument read-out)",
+      "Zero border-radius on every interactive element — angular throughout",
+      "Dual-theme (dark/light) with warm-tinted OKLCH neutrals in both modes",
+      "Grain texture overlay, opacity variable per theme (0.045 dark, 0.025 light)",
+      "Single chromatic accent — Pit Lane Amber — used at ≤10% of any surface",
+      "Column format: 800px max-width, vertically ruled by 1px borders"
+    ],
+    "rules": [
+      {
+        "name": "The One Signal Rule",
+        "body": "Pit Lane Amber appears on ≤10% of any screen. It is a status indicator, not an aesthetic choice. Diluting it with color washes, section backgrounds, or decorative borders destroys its meaning.",
+        "section": "colors"
+      },
+      {
+        "name": "The Three Voices Rule",
+        "body": "Every text element is set in exactly one voice: Playfair Display (heading weight), Inter (prose body), or JetBrains Mono (instrument data). Mixing voices within the same semantic level breaks the register.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-Until-Hover Rule",
+        "body": "No static shadows. A surface casts a shadow only when it moves. If you find yourself adding box-shadow to a surface at rest, you are borrowing consumer app vocabulary this system does not speak.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Zero Radius Rule",
+        "body": "Every surface is angular. No border-radius on interactive elements. Softening edges borrows consumer app vocabulary this system deliberately rejects.",
+        "section": "components"
+      },
+      {
+        "name": "The Watermark Rule",
+        "body": "Motorsport lives in naming conventions (stage numbers, logbook entries, status labels) — never in visual decoration, hero widgets, or oversize numbers.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do use Pit Lane Amber for exactly one semantic purpose per element: the thing that is active, selected, or actionable.",
+      "Do set body copy in Inter at 1.0625rem / line-height 1.75. Playfair and Mono are never used at body scale.",
+      "Do use tonal background steps (Column Black → Warm Surface → Raised Surface) to express depth at rest.",
+      "Do keep all surfaces at 0px border-radius. Every edge is angular.",
+      "Do apply motorsport naming texture to new content types — stage labels, logbook entry formats, status indicators — keeping it in labels and metadata, not visual decoration.",
+      "Do vary padding for rhythm. Flat spacing produces monotony."
+    ],
+    "donts": [
+      "Don't build marketing websites, SaaS landing pages, or gradient-heavy DevOps tool dashboards.",
+      "Don't use the generic dark-mode developer portfolio formula: teal accents, card grids with icon + heading + text, gradient CTAs.",
+      "Don't apply heavy motorsport theming — no racing hero widgets, no giant lap-time numbers, no checkered visual patterns.",
+      "Don't use gradient text (background-clip: text). Headlines are solid Ink Primary or Pit Lane Amber, never blended.",
+      "Don't use border-left greater than 1px as a colored accent stripe on cards, callouts, or list items.",
+      "Don't add static shadows to surfaces at rest.",
+      "Don't use the same padding value throughout.",
+      "Don't write marketing copy. The tone is logbook: direct, specific, no filler."
+    ]
+  }
+}

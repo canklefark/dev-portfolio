@@ -1,0 +1,17 @@
+---
+interface Props {
+  threshold?: string;
+  space?: string;
+  limit?: number;
+}
+
+const { threshold = "30rem", space = "s1", limit = 4 } = Astro.props;
+---
+
+<div
+  class="l-switcher"
+  style={`--threshold: ${threshold}; --space: var(--${space})`}
+  data-limit={limit}
+>
+  <slot />
+</div>

@@ -1,0 +1,16 @@
+---
+interface Props {
+  space?: string;
+  justify?: string;
+  align?: string;
+}
+
+const { space = "s0", justify = "flex-start", align = "center" } = Astro.props;
+---
+
+<div
+  class="l-cluster"
+  style={`--space: var(--${space}); --justify: ${justify}; --align: ${align}`}
+>
+  <slot />
+</div>

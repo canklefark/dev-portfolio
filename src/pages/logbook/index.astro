@@ -1,0 +1,36 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import LogEntry from "../../components/LogEntry.astro";
+import { getCollection } from "astro:content";
+
+const allEntries = (await getCollection("logbook", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+
+const PAGE_SIZE = 10;
+const entries = allEntries.slice(0, PAGE_SIZE);
+const hasMore = allEntries.length > PAGE_SIZE;
+---
+
+<Layout title="Logbook — Zeik Cookson" activeNav="logbook">
+  <section class="section">
+    <div class="u-gutters">
+      <div class="section-label">Logbook</div>
+      <p class="logbook-intro">
+        Working notes from the homelab and the day job.
+      </p>
+      {entries.length === 0
+        ? <p class="empty-state">Nothing logged yet.</p>
+        : entries.map((entry) => <LogEntry entry={entry} />)
+      }
+      {hasMore && (
+        <div class="logbook-footer u-text-right">
+          <a href="/logbook/archive" class="cta-outline u-text-mono-xs">
+            All {allEntries.length} entries →
+          </a>
+        </div>
+      )}
+      <div class="u-spacer-l"></div>
+    </div>
+  </section>
+</Layout>

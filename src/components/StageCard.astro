@@ -1,0 +1,46 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Chip from "./Chip.astro";
+
+interface Props {
+  entry: CollectionEntry<"projects">;
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+---
+
+<a href={`/projects/${entry.id}`} class="stage-card">
+  <div class="l-stack" style="--space: var(--s1)">
+    <div class="l-cluster stage-header" style="--justify: space-between; --align: center">
+      <div class="stage-title">{data.title}</div>
+      <div class="l-cluster stage-chips" style="--space: var(--s-2); --align: center">
+        <Chip variant={data.statusVariant !== "default" ? data.statusVariant : undefined}>
+          {data.status}
+        </Chip>
+      </div>
+    </div>
+    <div class="stage-desc">{data.summary}</div>
+    <div class="l-cluster stage-tags" style="--space: var(--s-2)">
+      {data.tags.map((tag) => <span class="stage-tag">{tag}</span>)}
+    </div>
+    <div class="l-cluster stage-footer" style="--justify: space-between">
+      <span class="stage-time">
+        SURFACE: {data.surface}&emsp;/&emsp;TIME: {data.timeLabel}&emsp;/&emsp;{data.period}
+      </span>
+      <span class="stage-read" aria-hidden="true">READ NOTES →</span>
+    </div>
+  </div>
+</a>
+
+<script>
+  document.querySelectorAll<HTMLElement>(".stage-card").forEach((card) => {
+    card.addEventListener("mousemove", (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      card.style.setProperty("--mx", x + "%");
+      card.style.setProperty("--my", y + "%");
+    });
+  });
+</script>

@@ -1,0 +1,63 @@
+---
+import Layout from "../layouts/Layout.astro";
+import StageCard from "../components/StageCard.astro";
+import LogEntry from "../components/LogEntry.astro";
+import Stack from "../components/layout/Stack.astro";
+import Cluster from "../components/layout/Cluster.astro";
+import { getCollection } from "astro:content";
+import { showAvailability } from "../data/about";
+
+const projects = (await getCollection("projects", ({ data }) => !data.draft))
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 2);
+
+const logbook = (await getCollection("logbook", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 2);
+---
+
+<Layout title="Zeik Cookson — DevOps Engineer" activeNav="home">
+  <section class="section" id="home">
+    <div class="u-gutters">
+      <div class="hero">
+        <Stack space="s2">
+          <div class="hero-head">
+            <div class="hero-stage-indicator">Current Stage: <em>Adding Flux to k3s</em></div>
+            <h1 class="hero-name" style="margin-block-start: var(--s-1)"><span class="hero-first">Zeik</span><br /><em>Cookson</em></h1>
+            <div class="hero-role" style="margin-block-start: var(--s-2)">DevOps Engineer — Knoxville, TN</div>
+          </div>
+          <Stack space="s-2">
+            <p class="hero-bio">
+              I was hired two years ago as a WordPress designer and developer at a Knoxville agency. The work shifted toward infrastructure over the last year. I kept taking it on and built a homelab to go further than the day job covers.
+            </p>
+            <Cluster space="s-2">
+              <span class="chip">SURFACE: BARE METAL + CLOUD</span>
+              <span class="chip">REGION: SOUTHEAST</span>
+              {showAvailability && <span class="chip" data-variant="accent">AVAIL: OPEN TO ROLES</span>}
+            </Cluster>
+          </Stack>
+          <Cluster space="s1">
+            <a href="/projects" class="cta-primary">View Projects →</a>
+            <a href="/logbook" class="cta-outline">Read the Logbook</a>
+          </Cluster>
+        </Stack>
+      </div>
+    </div>
+
+    <hr class="rule" />
+
+    <div class="u-gutters">
+      <div class="section-label">Recent Stages</div>
+      {projects.map((entry) => <StageCard entry={entry} />)}
+
+      <div class="section-label">Logbook</div>
+      {logbook.map((entry) => <LogEntry entry={entry} />)}
+
+      <div class="logbook-footer u-text-right">
+        <a href="/logbook" class="cta-outline u-text-mono-xs">
+          All log entries →
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

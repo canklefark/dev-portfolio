@@ -1,0 +1,91 @@
+---
+import { currentStage } from "../data/about";
+
+interface Props {
+  activeNav: "home" | "projects" | "logbook" | "about";
+}
+
+const { activeNav } = Astro.props;
+
+const links = [
+  { id: "home", label: "Home", href: "/" },
+  { id: "projects", label: "Projects", href: "/projects" },
+  { id: "logbook", label: "Logbook", href: "/logbook" },
+  { id: "about", label: "About", href: "/about" },
+] as const;
+---
+
+<nav aria-label="Primary navigation">
+  <a class="nav-logo" href="/" aria-label="Go home">
+    <span class="nav-logotype">Zeik Cookson</span>
+    <span class="nav-handle">@canklefark // DevOps</span>
+  </a>
+  <div class="nav-sep" aria-hidden="true"></div>
+  <div class="nav-links">
+    {
+      links.map((link) => (
+        <a
+          href={link.href}
+          class="nav-link"
+          data-state={activeNav === link.id ? "active" : undefined}
+        >
+          {link.label}
+        </a>
+      ))
+    }
+  </div>
+  <div class="nav-right">
+    <div class="nav-stage" aria-label="Current stage">
+      <span class="stage-dot" aria-hidden="true"></span>{currentStage}
+    </div>
+    <button class="theme-btn" id="theme-toggle" aria-label="Toggle light/dark mode">
+      <svg
+        id="ico-sun"
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+      <svg
+        id="ico-moon"
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<script>
+  const root = document.documentElement;
+  const toggle = document.getElementById("theme-toggle");
+
+  toggle?.addEventListener("click", () => {
+    const next = root.dataset.theme === "dark" ? "light" : "dark";
+    root.dataset.theme = next;
+    localStorage.setItem("zk-theme", next);
+  });
+</script>
