@@ -1,0 +1,41 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="404 — Zeik Cookson" description="Page not found.">
+  <section class="section">
+    <div class="u-gutters">
+      <div class="detail-stage">404 · NOT FOUND</div>
+      <h1 class="detail-h1">Nothing here.</h1>
+      <p class="detail-sub">No route matched this path. The logbook has no record of it.</p>
+      <p class="err-ts"><time id="err-time"></time></p>
+      <a href="/" class="cta-primary">Back to home →</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .detail-stage {
+    margin-block-start: var(--s4);
+  }
+  .detail-sub {
+    margin-block-end: var(--s1);
+  }
+  .err-ts {
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    color: var(--text-dim);
+    margin-block-end: var(--s2);
+    letter-spacing: 0.06em;
+  }
+</style>
+
+<script>
+  const el = document.getElementById("err-time") as HTMLTimeElement | null;
+  if (el) {
+    const now = new Date();
+    el.textContent =
+      now.toISOString().replace("T", " ").slice(0, 19) + " UTC";
+    el.dateTime = now.toISOString();
+  }
+</script>

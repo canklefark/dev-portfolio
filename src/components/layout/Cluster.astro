@@ -1,16 +1,19 @@
 ---
-interface Props {
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"div"> {
   space?: string;
   justify?: string;
   align?: string;
 }
 
-const { space = "s0", justify = "flex-start", align = "center" } = Astro.props;
+const { space = "s0", justify = "flex-start", align = "center", class: className, ...rest } = Astro.props;
 ---
 
 <div
-  class="l-cluster"
+  class:list={["l-cluster", className]}
   style={`--space: var(--${space}); --justify: ${justify}; --align: ${align}`}
+  {...rest}
 >
   <slot />
 </div>

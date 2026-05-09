@@ -25,7 +25,7 @@ Every portfolio template I found was either a generic dark-mode card grid or a m
 
 The system is Swiss: a single 800px column ruled by 1px borders, two typefaces with non-overlapping jobs (Satoshi for everything readable, IBM Plex Mono for instrument data), and a single chromatic accent used exactly once per context. The motorsport reference lives in naming texture: stage numbers, logbook format, status labels. It never becomes a visual theme.
 
-I built the design system from tokens up — OKLCH color values, semantic CSS variables, zero border-radius throughout. Light and dark mode are both first-class; neither is a fallback.
+I built the design system from tokens up: OKLCH color values, semantic CSS variables, zero border-radius throughout. Light and dark mode are both first-class; neither is a fallback.
 
 ## Content Workflow
 

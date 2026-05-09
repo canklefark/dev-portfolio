@@ -1,19 +1,15 @@
 ---
 interface Props {
   space?: string;
-  recursive?: boolean;
-  splitAfter?: number;
   as?: string;
 }
 
-const { space = "s1", recursive = false, splitAfter, as: Tag = "div" } = Astro.props;
-const selector = recursive ? ".l-stack" : ".l-stack > * + *";
+const { space = "s1", as: Tag = "div" } = Astro.props;
 ---
 
 <Tag
   class="l-stack"
   style={`--space: var(--${space})`}
-  data-split-after={splitAfter}
 >
   <slot />
 </Tag>

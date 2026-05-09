@@ -1,20 +1,18 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import StageCard from "../../components/StageCard.astro";
-import { getCollection } from "astro:content";
+import { getSortedProjects } from "../../lib/projects";
 
-const projects = (await getCollection("projects", ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
-);
+const projects = await getSortedProjects();
 ---
 
-<Layout title="Projects — Zeik Cookson" activeNav="projects">
-  <section class="section">
+<Layout title="Projects — Zeik Cookson" description="Infrastructure projects — Kubernetes clusters, self-hosted services, observability, and more." activeNav="projects">
+  <section class="section" data-page-entry>
     <div class="u-gutters">
-      <div class="section-label">All Projects</div>
+      <h1 class="section-label">All Projects</h1>
       {projects.length === 0
         ? <p class="empty-state">No stages documented yet.</p>
-        : projects.map((entry) => <StageCard entry={entry} />)
+        : projects.map((entry, i) => <StageCard entry={entry} headingLevel={2} style={`--i: ${i}`} />)
       }
       <div class="u-spacer-l"></div>
     </div>

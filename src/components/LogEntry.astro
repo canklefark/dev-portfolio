@@ -2,22 +2,73 @@
 import type { CollectionEntry } from "astro:content";
 import Chip from "./Chip.astro";
 import { formatLogTimestamp } from "../lib/format";
+import type { HeadingLevel } from "../lib/types";
 
 interface Props {
   entry: CollectionEntry<"logbook">;
+  headingLevel?: HeadingLevel;
+  style?: string;
 }
 
-const { entry } = Astro.props;
+const { entry, headingLevel = 3, style } = Astro.props;
 const { data } = entry;
 ---
 
-<a href={`/logbook/${entry.id}`} class="log-entry">
+<a href={`/logbook/${entry.id}`} class="log-entry u-entry-in" style={style}>
   <div class="l-stack" style="--space: var(--s-2)">
     <div class="l-cluster log-meta" style="--space: var(--s-1)">
       <span class="log-ts">{formatLogTimestamp(data.date)}</span>
       {data.tags.map((tag) => <Chip>{tag}</Chip>)}
     </div>
-    <div class="log-title">{data.title}</div>
+    {headingLevel === 2
+      ? <h2 class="log-title">{data.title}</h2>
+      : <h3 class="log-title">{data.title}</h3>
+    }
     <div class="log-preview">{data.preview}</div>
   </div>
 </a>
+
+<style>
+  .log-entry {
+    --entry-stagger: 0.04s;
+    padding-block: var(--s1);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background-image: none;
+  }
+  .log-entry:first-child {
+    border-top: 1px solid var(--border);
+  }
+  .log-ts {
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    font-weight: var(--fw-medium);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-variant-numeric: tabular-nums;
+  }
+  .log-title {
+    font-family: var(--font-display);
+    font-size: var(--text-display-sm);
+    font-weight: var(--fw-bold);
+    line-height: 1.3;
+    color: var(--text);
+    transition: color var(--ease-fast);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .log-entry:hover .log-title {
+      color: var(--accent);
+    }
+  }
+  .log-preview {
+    font-size: var(--text-body-sm);
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+
+</style>

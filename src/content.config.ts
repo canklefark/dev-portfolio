@@ -23,7 +23,6 @@ const projects = defineCollection({
         variant: z.enum(["default", "green", "accent"]).default("default"),
       }),
     ),
-    paceNote: z.string().optional(),
     draft: z.boolean().default(false),
   }),
 });

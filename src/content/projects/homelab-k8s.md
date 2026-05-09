@@ -15,7 +15,6 @@ stats:
   - { label: "Runtime", value: "k3s", variant: "default" }
   - { label: "Provisioner", value: "Ansible", variant: "green" }
   - { label: "GitOps", value: "Flux (WIP)", variant: "accent" }
-paceNote: "NOTE: BOOTSTRAPPING FLUX ON LIVE CLUSTER → ANNOTATE EXISTING RESOURCES FIRST → DON'T LET DRIFT DETECTION FIGHT YOU"
 ---
 
 ## The Problem

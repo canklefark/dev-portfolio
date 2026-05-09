@@ -1,0 +1,31 @@
+/* ─── ANIMATION ──────────────────────────────────────────────────────────── */
+@keyframes entry-in {
+  from {
+    opacity: 0;
+    translate: 0 10px;
+  }
+}
+
+/* ─── ENTRY ANIMATION UTILITY ────────────────────────────────────────────── */
+.u-entry-in {
+  animation: entry-in 0.4s var(--ease-spring) both;
+  animation-delay: calc(var(--i, 0) * var(--entry-stagger, 0.07s));
+}
+
+/* ─── REDUCED MOTION ─────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  body {
+    transition: none;
+  }
+  a {
+    transition: none;
+  }
+  .cta-primary,
+  .cta-outline,
+  .back-btn {
+    transition: none;
+  }
+  .u-entry-in {
+    animation: none;
+  }
+}

@@ -1,15 +1,18 @@
 ---
-interface Props {
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"div"> {
   min?: string;
   space?: string;
 }
 
-const { min = "14rem", space = "s1" } = Astro.props;
+const { min = "14rem", space = "s1", class: className, ...rest } = Astro.props;
 ---
 
 <div
-  class="l-grid"
+  class:list={["l-grid", className]}
   style={`--min: ${min}; --space: var(--${space})`}
+  {...rest}
 >
   <slot />
 </div>

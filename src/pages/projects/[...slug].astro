@@ -1,10 +1,14 @@
 ---
-import { getCollection, render } from "astro:content";
+import { render } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import Chip from "../../components/Chip.astro";
+import BackButton from "../../components/BackButton.astro";
+import Cluster from "../../components/layout/Cluster.astro";
+import Grid from "../../components/layout/Grid.astro";
+import { getSortedProjects } from "../../lib/projects";
 
 export async function getStaticPaths() {
-  const projects = await getCollection("projects", ({ data }) => !data.draft);
+  const projects = await getSortedProjects();
   return projects.map((entry) => ({
     params: { slug: entry.id },
     props: { entry },
@@ -13,44 +17,27 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
-const p = entry.data;
+const project = entry.data;
 ---
 
-<Layout title={`${p.title} — Zeik Cookson`} activeNav="projects">
+<Layout title={`${project.title} — Zeik Cookson`} description={project.summary} activeNav="projects">
   <section class="section">
     <div class="u-gutters">
-      <a href="/projects" class="back-btn">
-        <svg
-          width="10"
-          height="10"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <polyline points="15 18 9 12 15 6"></polyline>
-        </svg>
-        Back to Projects
-      </a>
-      <div class="detail-stage">{p.category}</div>
-      <h1 class="detail-h1">{p.title}</h1>
-      <div class="l-cluster detail-chips" style="--space: var(--s-2); margin-block-end: var(--s1)">
-        <Chip variant={p.statusVariant !== "default" ? p.statusVariant : undefined}>
-          {p.status}
-        </Chip>
-        <Chip>SURFACE: {p.surface}</Chip>
-      </div>
-      <p class="detail-sub">{p.sub}</p>
-      <div class="l-grid detail-stats" style="--min: 9rem; --space: 1px">
+      <BackButton href="/projects" label="Back to Projects" />
+      <div class="detail-stage">{project.category}</div>
+      <h1 class="detail-h1">{project.title}</h1>
+      <Cluster space="s-2" class="detail-chips">
+        <Chip variant={project.statusVariant}>{project.status}</Chip>
+        <Chip>SURFACE: {project.surface}</Chip>
+      </Cluster>
+      <p class="detail-sub">{project.sub}</p>
+      <Grid min="9rem" class="detail-stats" data-divider>
         {
-          p.stats.map((stat) => (
+          project.stats.map((stat) => (
             <div class="detail-stat">
-              <div class="detail-stat-lbl">{stat.label}</div>
+              <div class="data-cell-lbl detail-stat-lbl">{stat.label}</div>
               <div
-                class="detail-stat-val"
+                class="data-cell-val detail-stat-val u-color-variant"
                 data-variant={stat.variant !== "default" ? stat.variant : undefined}
               >
                 {stat.value}
@@ -58,8 +45,7 @@ const p = entry.data;
             </div>
           ))
         }
-      </div>
-      {p.paceNote && <div class="pace-note">{p.paceNote}</div>}
+      </Grid>
       <div class="prose">
         <Content />
       </div>

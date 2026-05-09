@@ -1,44 +1,37 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import StageCard from "../components/StageCard.astro";
-import LogEntry from "../components/LogEntry.astro";
 import Stack from "../components/layout/Stack.astro";
 import Cluster from "../components/layout/Cluster.astro";
-import { getCollection } from "astro:content";
+import Chip from "../components/Chip.astro";
 import { showAvailability } from "../data/about";
+import { getSortedProjects } from "../lib/projects";
 
-const projects = (await getCollection("projects", ({ data }) => !data.draft))
-  .sort((a, b) => a.data.order - b.data.order)
-  .slice(0, 2);
-
-const logbook = (await getCollection("logbook", ({ data }) => !data.draft))
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0, 2);
+const projects = (await getSortedProjects()).slice(0, 3);
 ---
 
-<Layout title="Zeik Cookson — DevOps Engineer" activeNav="home">
-  <section class="section" id="home">
+<Layout title="Zeik Cookson — DevOps Engineer" description="DevOps and platform engineering portfolio. Infrastructure work from the homelab and beyond." activeNav="home">
+  <section class="section" id="home" data-page-entry>
     <div class="u-gutters">
       <div class="hero">
         <Stack space="s2">
           <div class="hero-head">
-            <div class="hero-stage-indicator">Current Stage: <em>Adding Flux to k3s</em></div>
-            <h1 class="hero-name" style="margin-block-start: var(--s-1)"><span class="hero-first">Zeik</span><br /><em>Cookson</em></h1>
-            <div class="hero-role" style="margin-block-start: var(--s-2)">DevOps Engineer — Knoxville, TN</div>
+            <div class="hero-stage-indicator">Devops Engineer <em>Knoxville, TN</em></div>
+            <h1 class="hero-name"><span class="hero-first">Zeik</span><br /><em>Cookson</em></h1>
           </div>
           <Stack space="s-2">
             <p class="hero-bio">
               I was hired two years ago as a WordPress designer and developer at a Knoxville agency. The work shifted toward infrastructure over the last year. I kept taking it on and built a homelab to go further than the day job covers.
             </p>
             <Cluster space="s-2">
-              <span class="chip">SURFACE: BARE METAL + CLOUD</span>
-              <span class="chip">REGION: SOUTHEAST</span>
-              {showAvailability && <span class="chip" data-variant="accent">AVAIL: OPEN TO ROLES</span>}
+              <Chip>SURFACE: BARE METAL + CLOUD</Chip>
+              <Chip>REGION: SOUTHEAST</Chip>
+              {showAvailability && <Chip variant="accent">AVAIL: AVAILABLE</Chip>}
             </Cluster>
           </Stack>
           <Cluster space="s1">
             <a href="/projects" class="cta-primary">View Projects →</a>
-            <a href="/logbook" class="cta-outline">Read the Logbook</a>
+            <a href="/about" class="cta-outline">About</a>
           </Cluster>
         </Stack>
       </div>
@@ -47,17 +40,78 @@ const logbook = (await getCollection("logbook", ({ data }) => !data.draft))
     <hr class="rule" />
 
     <div class="u-gutters">
-      <div class="section-label">Recent Stages</div>
-      {projects.map((entry) => <StageCard entry={entry} />)}
-
-      <div class="section-label">Logbook</div>
-      {logbook.map((entry) => <LogEntry entry={entry} />)}
+      <h2 class="section-label">Recent Projects</h2>
+      {projects.map((entry, i) => <StageCard entry={entry} style={`--i: ${i}`} />)}
 
       <div class="logbook-footer u-text-right">
-        <a href="/logbook" class="cta-outline u-text-mono-xs">
-          All log entries →
+        <a href="/projects" class="cta-outline u-text-mono-xs">
+          All projects →
         </a>
       </div>
     </div>
   </section>
 </Layout>
+
+<style>
+  .hero {
+    padding-block: var(--s5) var(--s4);
+  }
+  .hero-stage-indicator {
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-md);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .hero-stage-indicator::before {
+    content: "";
+    flex: 0 0 32px;
+    height: 1px;
+    background: var(--border-hi);
+  }
+  .hero-stage-indicator::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .hero-stage-indicator em {
+    font-style: normal;
+    color: var(--accent);
+  }
+  .hero-name {
+    font-family: var(--font-display);
+    font-size: var(--text-display-xl);
+    font-weight: var(--fw-regular);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    text-wrap: balance;
+    margin-block-start: var(--s-1);
+  }
+  .hero-name em {
+    font-style: normal;
+    font-weight: var(--fw-semibold);
+    color: var(--accent);
+  }
+  .hero-bio {
+    font-size: var(--text-body-lg);
+    color: var(--text);
+    line-height: 1.75;
+    max-inline-size: var(--measure);
+    text-wrap: pretty;
+  }
+  .rule {
+    border: none;
+    border-top: 1px solid var(--border);
+  }
+  @media (max-width: 640px) {
+    .hero {
+      padding-block: var(--s3) var(--s2);
+    }
+  }
+</style>

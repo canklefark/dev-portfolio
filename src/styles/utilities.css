@@ -1,0 +1,39 @@
+/* ─── UTILITY ────────────────────────────────────────────────────────────── */
+.u-gutters {
+  padding-inline: var(--gutters, var(--s2));
+}
+.u-text-right {
+  text-align: right;
+}
+.u-text-mono-xs {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-xs);
+}
+.u-border-top {
+  border-top: 1px solid var(--border);
+}
+.u-spacer-l {
+  padding-block-end: var(--s4);
+}
+
+/* divider grid/switcher — 1px gaps filled by border-color background */
+[data-divider] {
+  --space: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+/* shared color variant for stat/cell values */
+.u-color-variant[data-variant="green"] {
+  color: var(--green);
+}
+.u-color-variant[data-variant="accent"] {
+  color: var(--accent);
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .u-gutters {
+    padding-inline: var(--s1);
+  }
+}

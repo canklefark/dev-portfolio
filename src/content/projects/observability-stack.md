@@ -15,7 +15,6 @@ stats:
   - { label: "Dashboards", value: "Grafana", variant: "default" }
   - { label: "Coverage", value: "All nodes", variant: "green" }
   - { label: "Next", value: "Loki", variant: "accent" }
-paceNote: "NOTE: GET ALERTMANAGER WIRED BEFORE ADDING SERVICES / LOKI FOR LOGS IS THE LOGICAL NEXT STEP"
 ---
 
 ## Setup

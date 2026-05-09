@@ -33,25 +33,25 @@ css-var-map:
   signal-red: "--red"
 typography:
   display:
-    fontFamily: '"Neue Montreal", system-ui, sans-serif'
+    fontFamily: '"Satoshi", system-ui, sans-serif'
     fontSize: "clamp(3.5rem, 10vw, 6rem)"
     fontWeight: 500
     lineHeight: 1.02
     letterSpacing: "-0.02em"
   headline:
-    fontFamily: '"Neue Montreal", system-ui, sans-serif'
+    fontFamily: '"Satoshi", system-ui, sans-serif'
     fontSize: "clamp(2rem, 5vw, 3rem)"
     fontWeight: 700
     lineHeight: 1.08
     letterSpacing: "-0.02em"
   title:
-    fontFamily: '"Neue Montreal", system-ui, sans-serif'
+    fontFamily: '"Satoshi", system-ui, sans-serif'
     fontSize: "1.4375rem"
     fontWeight: 600
     lineHeight: 1.25
     letterSpacing: "-0.01em"
   body:
-    fontFamily: '"Neue Montreal", system-ui, sans-serif'
+    fontFamily: '"Satoshi", system-ui, sans-serif'
     fontSize: "1rem"
     fontWeight: 400
     lineHeight: 1.65
@@ -109,7 +109,7 @@ components:
 
 **Creative North Star: "The Technical Memoir"**
 
-Every project is a chapter. The interface is the typeset book: Neue Montreal carries both editorial weight and body legibility, while IBM Plex Mono reads out the instrument data. The visual system recedes so the work can speak. Restraint here is not minimalism as aesthetic choice — it is restraint as professional signal. Decoration signals insecurity; this system signals the opposite.
+Every project is a chapter. The interface is the typeset book: Satoshi carries both editorial weight and body legibility, while IBM Plex Mono reads out the instrument data. The visual system recedes so the work can speak. Restraint here is not minimalism as aesthetic choice — it is restraint as professional signal. Decoration signals insecurity; this system signals the opposite.
 
 The site runs on a single column bounded at 800px and ruled on both sides by a 1px border, like a logbook with a spine. A grain texture overlays the whole surface — so faint it reads subliminally, but present enough to make the screen feel material rather than rendered. The amber accent is used the way a status indicator is used: once, at the point of focus, meaning exactly what it says. Everywhere else is carbonized neutral.
 
@@ -117,7 +117,7 @@ This system explicitly rejects: marketing websites, SaaS landing-page patterns, 
 
 **Key Characteristics:**
 
-- Two-voice typography: Neue Montreal (display through body), IBM Plex Mono (instrument read-out)
+- Two-voice typography: Satoshi (display through body), IBM Plex Mono (instrument read-out)
 - Zero border-radius on every interactive element — angular throughout
 - Dual-theme (dark/light) with warm-tinted OKLCH neutrals in both modes
 - Grain texture overlay, opacity variable per theme (0.03 dark, 0.025 light)
@@ -161,23 +161,23 @@ Light mode values use the same semantic roles with sand-toned neutrals. Column s
 
 ## 3. Typography
 
-**Display + Body Font:** Neue Montreal (system-ui, sans-serif fallback) — one sans-serif voice across all non-code text
+**Display + Body Font:** Satoshi (system-ui, sans-serif fallback) — one sans-serif voice across all non-code text
 **Label/Mono Font:** IBM Plex Mono (ui-monospace, monospace fallback)
 
-**Character:** Neue Montreal handles everything that isn't instrument data — from the 6rem hero name down to 1rem body prose. Its rational grotesque character reads precision without coldness. IBM Plex Mono handles all instrument contexts: labels, timestamps, navigation, code. Two voices, zero overlap.
+**Character:** Satoshi handles everything that isn't instrument data — from the 6rem hero name down to 1rem body prose. Its rational grotesque character reads precision without coldness. IBM Plex Mono handles all instrument contexts: labels, timestamps, navigation, code. Two voices, zero overlap.
 
 ### Hierarchy
 
 - **Display** (500, `clamp(3.5rem, 10vw, 6rem)`, line-height 1.02, -0.02em): Hero name only. One instance on the homepage. The `<em>` inside is Pit Lane Amber — the only time the accent colors a headline.
 - **Headline** (700, `clamp(2rem, 5vw, 3rem)`, line-height 1.08, -0.02em): Page-level headings on detail and about pages. Used once per page.
 - **Title** (600, `1.4375rem`, line-height 1.25, -0.01em): Stage card titles, prose H2 headings. The primary working heading level.
-- **Body** (400 Neue Montreal, `1rem`, line-height 1.65, max-width 60ch): All readable content. Never use IBM Plex Mono at body scale.
+- **Body** (400 Satoshi, `1rem`, line-height 1.65, max-width 60ch): All readable content. Never use IBM Plex Mono at body scale.
 - **Label** (700 IBM Plex Mono, `0.5rem`, letter-spacing 0.18em, all-caps): Section labels, stage numbers, chip text, CTA button labels. Widest tracking in the system. The instrument register.
 - **Mono Meta** (500 IBM Plex Mono, `0.5625rem`–`0.625rem`, letter-spacing 0.1–0.14em, all-caps): Hero role/handle, nav links, timestamps, contact items. Lighter weight than Label, still monospace.
 
 ### Named Rules
 
-**The Two Voices Rule.** Every text element is set in one of two voices: Neue Montreal (any non-code element — display, heading, body) or IBM Plex Mono (instrument data: labels, timestamps, navigation, code). The voices have non-overlapping jobs. A monospace label next to a sans-serif label at the same size is a mistake, not a variation.
+**The Two Voices Rule.** Every text element is set in one of two voices: Satoshi (any non-code element — display, heading, body) or IBM Plex Mono (instrument data: labels, timestamps, navigation, code). The voices have non-overlapping jobs. A monospace label next to a sans-serif label at the same size is a mistake, not a variation.
 
 ## 4. Elevation
 
@@ -222,7 +222,7 @@ The "READ FULL LOG →" label (`stage-read`) is `opacity: 0; transform: translat
 
 ### Navigation
 
-Sticky at 56px, glazed with `backdrop-filter: blur(10px)`. Background: Column Black at 92% opacity. Logo: two-line, two-voice — logotype in Neue Montreal 700 (1rem), handle in IBM Plex Mono 500 uppercase below. Nav links: 0.5625rem IBM Plex Mono, Ink Secondary at rest, Ink Primary on hover, Pit Lane Amber when `.active`. Theme toggle: Border Base stroke at rest, Pit Lane Amber on hover.
+Sticky at 56px, glazed with `backdrop-filter: blur(10px)`. Background: Column Black at 92% opacity. Logo: two-line, two-voice — logotype in Satoshi 700 (1rem), handle in IBM Plex Mono 500 uppercase below. Nav links: 0.5625rem IBM Plex Mono, Ink Secondary at rest, Ink Primary on hover, Pit Lane Amber when `.active`. Theme toggle: Border Base stroke at rest, Pit Lane Amber on hover.
 
 ### Section Labels
 
@@ -230,14 +230,14 @@ Horizontal position markers. IBM Plex Mono 700, 0.5rem, +0.18em, uppercase, Ink 
 
 ### Log Entries
 
-Typographic list with no card surface. Each entry separated by a 1px Border Dim rule. Vertical padding `1.375rem`. Title: Neue Montreal 700 / 1.1875rem; transitions to Pit Lane Amber on hover. Timestamp and chips in the meta row above. No background, no elevation — the typography is the container.
+Typographic list with no card surface. Each entry separated by a 1px Border Dim rule. Vertical padding `1.375rem`. Title: Satoshi 700 / 1.1875rem; transitions to Pit Lane Amber on hover. Timestamp and chips in the meta row above. No background, no elevation — the typography is the container.
 
 ## 6. Do's and Don'ts
 
 ### Do:
 
 - **Do** use Pit Lane Amber for exactly one semantic purpose per element: the thing that is active, selected, or actionable. Its power is its rarity.
-- **Do** set body copy in Neue Montreal at 1rem / line-height 1.65. IBM Plex Mono is never used at body scale.
+- **Do** set body copy in Satoshi at 1rem / line-height 1.65. IBM Plex Mono is never used at body scale.
 - **Do** use tonal background steps (Column Black → Warm Surface → Raised Surface) to express depth at rest. Background color is the only elevation tool outside of hover states.
 - **Do** keep all surfaces at 0px border-radius. Every edge is angular.
 - **Do** apply motorsport naming texture to new content types — stage labels, logbook entry formats, status indicators — keeping it in labels and metadata, not visual decoration.

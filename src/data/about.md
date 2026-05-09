@@ -1,4 +1,4 @@
-I was hired at Keller Creative two years ago as a designer and developer (the only developer on staff). I've built WordPress marketing sites, managed hosting through Gridpane, and won a 2nd place ADDY for [tamcoonline.com](https://tamcoonline.com). Three AS degrees: design, web development, marketing.
+I was hired at Keller Creative two years ago as a designer and developer (the only developer on staff). I've built WordPress marketing sites and managed hosting through Gridpane, including [tamcoonline.com](https://tamcoonline.com). Three AS degrees: design, web development, marketing.
 
 The role started shifting as we adopted more AI tooling. I wrote a script that syncs Toggl time tracking to Asana, built Slack alerts for datacenter maintenance windows, and put together a product management system that connects a client's catalog to their WordPress site. Infrastructure crept in. I kept saying yes to it.
 

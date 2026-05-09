@@ -4,10 +4,12 @@ import "../styles/global.css";
 
 interface Props {
   title: string;
-  activeNav: "home" | "projects" | "logbook" | "about";
+  description?: string;
+  activeNav?: "home" | "projects" | "logbook" | "about";
 }
 
-const { title, activeNav } = Astro.props;
+const { title, description, activeNav } = Astro.props;
+const desc = description ?? "DevOps and platform engineering portfolio. Infrastructure work from the homelab and beyond.";
 ---
 
 <html lang="en">
@@ -15,19 +17,111 @@ const { title, activeNav } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
+    <meta name="description" content={desc} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={desc} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
+    <link rel="preload" href="/fonts/Satoshi-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/IBMPlexMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/IBMPlexMono-Medium.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/IBMPlexMono-Bold.woff2" as="font" type="font/woff2" crossorigin />
     <script is:inline>
       (function () {
-        var t = localStorage.getItem("zk-theme") || "dark";
+        var t;
+        try { t = localStorage.getItem("zk-theme"); } catch (_) {}
+        if (!t) t = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
         document.documentElement.dataset.theme = t;
+      })();
+    </script>
+    <script is:inline>
+      (function () {
+        var amber = "color:#D4892B;font-family:monospace;font-size:13px;font-weight:700;letter-spacing:0.08em";
+        var dim = "color:#777;font-family:monospace;font-size:11px";
+        console.log("%cZEIK COOKSON", amber);
+        console.log("%cDevOps Engineer · Knoxville, TN\nzeik.cookson@kellercreative.com", dim);
+        console.log("%c→ Reading the source? Let's talk.", dim);
+      })();
+    </script>
+    <script is:inline>
+      (function () {
+        var pending = false;
+        var timer = null;
+        var routes = { h: "/", p: "/projects", l: "/logbook", a: "/about" };
+        document.addEventListener("keydown", function (e) {
+          if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+          if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
+          if (pending) {
+            clearTimeout(timer);
+            pending = false;
+            var dest = routes[e.key];
+            if (dest) { e.preventDefault(); window.location.href = dest; }
+            return;
+          }
+          if (e.key === "g") {
+            pending = true;
+            timer = setTimeout(function () { pending = false; }, 800);
+          }
+        });
       })();
     </script>
   </head>
   <body>
     <div class="l-center page-col" style="--max: 800px">
+      <a href="#main-content" class="skip-link">Skip to content</a>
       <Nav activeNav={activeNav} />
-      <slot />
+      <main id="main-content" tabindex="-1">
+        <slot />
+      </main>
     </div>
   </body>
 </html>
+
+<style>
+  .skip-link {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    z-index: 10000;
+    transform: translateX(-50%) translateY(-110%);
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border-hi);
+    padding: 0.5rem 1rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-md);
+    font-weight: var(--fw-medium);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: transform var(--ease-standard);
+  }
+  .skip-link:focus-visible {
+    transform: translateX(-50%) translateY(0.5rem);
+  }
+  .page-col {
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    min-height: 100svh;
+    background: var(--bg);
+    transition:
+      border-color var(--ease-slow),
+      background var(--ease-slow);
+  }
+  @media (max-width: 860px) {
+    .page-col {
+      border-left: none;
+      border-right: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .skip-link {
+      transition: none;
+    }
+  }
+</style>

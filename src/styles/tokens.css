@@ -1,0 +1,127 @@
+/* ─── TOKENS ─────────────────────────────────────────────────────────────── */
+:root {
+  color-scheme: dark light;
+
+  /* modular scale — ratio 1.333 (perfect fourth) */
+  --ratio: 1.333;
+  --s-3: calc(var(--s-2) / var(--ratio));
+  --s-2: calc(var(--s-1) / var(--ratio));
+  --s-1: calc(var(--s0) / var(--ratio));
+  --s0: 1rem;
+  --s1: calc(var(--s0) * var(--ratio));
+  --s2: calc(var(--s1) * var(--ratio));
+  --s3: calc(var(--s2) * var(--ratio));
+  --s4: calc(var(--s3) * var(--ratio));
+  --s5: calc(var(--s4) * var(--ratio));
+
+  /* axiom */
+  --measure: 60ch;
+
+  /* type scale — intentional literals, not derived from ratio */
+  --text-mono-xs: 0.4875rem;
+  --text-mono-sm: 0.5rem;
+  --text-mono-md: 0.5625rem;
+  --text-mono-lg: 0.625rem;
+  --text-mono-xl: 0.75rem;
+  --text-body-sm: 0.8125rem;
+  --text-body-md: 1rem;
+  --text-body-lg: 1.125rem;
+  --text-display-sm: 1.1875rem;
+  --text-display-sm-plus: 1.25rem;
+  --text-display-md: 1.4375rem;
+  --text-display-lg: clamp(2rem, 5vw, 3rem);
+  --text-display-xl: clamp(3.5rem, 10vw, 6rem);
+
+  /* fonts */
+  --font-display: "Satoshi", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  /* weights */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* motion */
+  --ease-fast: 150ms;
+  --ease-press: 160ms;
+  --ease-standard: 200ms;
+  --ease-slow: 250ms;
+  --ease-emphasis: 300ms;
+  --easing-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* shadows */
+  --shadow-card-hover: 0 8px 28px oklch(0% 0 0 / 0.14);
+
+  /* breakpoints — documentation only, not usable in @media */
+  /* --bp-mobile: 420px | --bp-sm: 480px | --bp-md: 640px | --bp-lg: 860px */
+
+  /* theme fallbacks (dark) — overridden by [data-theme] attribute */
+  --bg-body: oklch(22% 0.005 70);
+  --bg: oklch(23% 0.005 70);
+  --bg-warm: oklch(23% 0.005 70);
+  --bg-raised: oklch(25% 0.007 68);
+  --bg-glass: oklch(23% 0.005 70 / 0.92);
+  --border: oklch(28% 0.008 68);
+  --border-hi: oklch(35% 0.01 66);
+  --text: oklch(93% 0.007 82);
+  --text-muted: oklch(62% 0.016 74);
+  --text-dim: oklch(50% 0.012 70);
+  --accent: oklch(74% 0.17 75);
+  --accent-dim: oklch(74% 0.17 75 / 0.09);
+  --accent-soft: oklch(74% 0.17 75 / 0.55);
+  --green: oklch(65% 0.14 152);
+  --green-dim: oklch(65% 0.14 152 / 0.09);
+  --red: oklch(
+    52% 0.16 26
+  ); /* reserved: error states, deprecated/inactive status */
+  --learning: oklch(65% 0.15 68);
+  --grain: 0.03;
+}
+
+/* Explicit dark block for when JS sets data-theme="dark"; mirrors :root fallback
+   so toggling back from light still resolves correctly via attribute specificity */
+:root[data-theme="dark"] {
+  --bg-body: oklch(22% 0.005 70);
+  --bg: oklch(23% 0.005 70);
+  --bg-warm: oklch(23% 0.005 70);
+  --bg-raised: oklch(25% 0.007 68);
+  --bg-glass: oklch(23% 0.005 70 / 0.92);
+  --border: oklch(28% 0.008 68);
+  --border-hi: oklch(35% 0.01 66);
+  --text: oklch(93% 0.007 82);
+  --text-muted: oklch(62% 0.016 74);
+  --text-dim: oklch(50% 0.012 70);
+  --accent: oklch(74% 0.17 75);
+  --accent-dim: oklch(74% 0.17 75 / 0.09);
+  --accent-soft: oklch(74% 0.17 75 / 0.55);
+  --green: oklch(65% 0.14 152);
+  --green-dim: oklch(65% 0.14 152 / 0.09);
+  --red: oklch(
+    52% 0.16 26
+  ); /* reserved: error states, deprecated/inactive status */
+  --learning: oklch(65% 0.15 68);
+  --grain: 0.03;
+}
+
+:root[data-theme="light"] {
+  --bg-body: oklch(91% 0.014 78);
+  --bg: oklch(97% 0.006 82);
+  --bg-warm: oklch(95% 0.01 80);
+  --bg-raised: oklch(99% 0.003 80);
+  --bg-glass: oklch(97% 0.006 82 / 0.92);
+  --border: oklch(88% 0.014 78);
+  --border-hi: oklch(82% 0.016 74);
+  --text: oklch(12% 0.016 64);
+  --text-muted: oklch(46% 0.016 68);
+  --text-dim: oklch(72% 0.012 72);
+  --accent: oklch(60% 0.16 66);
+  --accent-dim: oklch(60% 0.16 66 / 0.08);
+  --accent-soft: oklch(60% 0.16 66 / 0.5);
+  --green: oklch(47% 0.15 154);
+  --green-dim: oklch(47% 0.15 154 / 0.09);
+  --red: oklch(44% 0.15 26);
+  --learning: oklch(48% 0.13 64);
+  --grain: 0.025;
+}

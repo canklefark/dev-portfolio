@@ -1,17 +1,18 @@
 ---
-interface Props {
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"div"> {
   threshold?: string;
   space?: string;
-  limit?: number;
 }
 
-const { threshold = "30rem", space = "s1", limit = 4 } = Astro.props;
+const { threshold = "30rem", space = "s1", class: className, ...rest } = Astro.props;
 ---
 
 <div
-  class="l-switcher"
+  class:list={["l-switcher", className]}
   style={`--threshold: ${threshold}; --space: var(--${space})`}
-  data-limit={limit}
+  {...rest}
 >
   <slot />
 </div>

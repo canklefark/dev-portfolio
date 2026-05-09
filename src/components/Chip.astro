@@ -9,3 +9,32 @@ const { variant = "default" } = Astro.props;
 <span class="chip" data-variant={variant !== "default" ? variant : undefined}>
   <slot />
 </span>
+
+<style>
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-sm);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    border: 1px solid var(--border-hi);
+    padding: 0.15rem 0.45rem;
+    background: var(--bg-warm);
+  }
+
+  .chip[data-variant="accent"] {
+    color: var(--accent);
+    border-color: var(--accent-soft);
+    background: var(--accent-dim);
+  }
+
+  .chip[data-variant="green"] {
+    color: var(--green);
+    border-color: var(--green);
+    background: var(--green-dim);
+  }
+</style>

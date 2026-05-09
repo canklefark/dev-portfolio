@@ -1,28 +1,30 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Switcher from "../components/layout/Switcher.astro";
 import AboutContent from "../data/about.md";
 import { cells, stack, contacts, role } from "../data/about";
 ---
 
-<Layout title="About — Zeik Cookson" activeNav="about">
+<Layout title="About — Zeik Cookson" description="About Zeik Cookson — designer turned DevOps engineer in Knoxville, TN. Tools, stack, and contact." activeNav="about">
+  {/* no data-page-entry — about manages its own top spacing via .about-inner padding */}
   <section class="section">
     <div class="about-inner">
-      <h2 class="about-h2">
+      <h1 class="about-h2">
         Designer who ended up<br />in the <em>engine bay.</em>
-      </h2>
+      </h1>
       <div class="about-role">{role}</div>
 
       <div class="about-body">
         <AboutContent />
       </div>
 
-      <div class="l-switcher about-grid-2" style="--threshold: 30rem; --space: 1px" role="list">
+      <Switcher class="about-grid-2" data-divider role="list">
         {
           cells.map((cell) => (
             <div class="about-cell" role="listitem">
-              <div class="about-cell-lbl">{cell.label}</div>
+              <div class="data-cell-lbl about-cell-lbl">{cell.label}</div>
               <div
-                class="about-cell-val"
+                class="data-cell-val about-cell-val u-color-variant"
                 data-variant={cell.variant ?? undefined}
               >
                 {cell.value}
@@ -30,22 +32,7 @@ import { cells, stack, contacts, role } from "../data/about";
             </div>
           ))
         }
-      </div>
-
-      <div class="stack-table">
-        <div class="stack-thead">
-          <span>Tool / Platform</span>
-          <span>Status</span>
-        </div>
-        {
-          stack.map((item) => (
-            <div class="stack-row">
-              <span class="stack-name">{item.name}</span>
-              <span class="stack-level" data-level={item.level.toLowerCase()}>{item.level}</span>
-            </div>
-          ))
-        }
-      </div>
+      </Switcher>
 
       <div class="contact-block">
         <p class="contact-lead">If the work here is interesting, reach out.</p>
@@ -55,7 +42,7 @@ import { cells, stack, contacts, role } from "../data/about";
               class="contact-item"
               href={contact.href}
               target={contact.icon !== "email" ? "_blank" : undefined}
-              rel={contact.icon !== "email" ? "noopener" : undefined}
+              rel={contact.icon !== "email" ? "noopener noreferrer" : undefined}
             >
               {contact.icon === "email" && (
                 <svg
@@ -110,6 +97,170 @@ import { cells, stack, contacts, role } from "../data/about";
           ))
         }
       </div>
+
+      <h2 class="section-label">Stack</h2>
+      <table class="stack-table">
+        <thead class="stack-thead">
+          <tr>
+            <th scope="col">Tool / Platform</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            stack.map((item) => (
+              <tr class="stack-row">
+                <td class="stack-name">{item.name}</td>
+                <td class="stack-level" data-level={item.level.toLowerCase()}>{item.level}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
     </div>
   </section>
 </Layout>
+
+<style>
+  .about-inner {
+    padding: var(--s4) var(--s2);
+  }
+  .about-h2 {
+    font-family: var(--font-display);
+    font-size: var(--text-display-lg);
+    font-weight: var(--fw-bold);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-block-end: 0.375rem;
+    text-wrap: balance;
+  }
+  .about-h2 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .about-role {
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-md);
+    font-weight: var(--fw-medium);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-block-end: var(--s2);
+  }
+  .about-body {
+    max-inline-size: var(--measure);
+  }
+  .about-body :global(p) {
+    font-size: var(--text-body-md);
+    color: var(--text-muted);
+    line-height: 1.8;
+    margin-block-end: var(--s1);
+    text-wrap: pretty;
+  }
+
+  .about-grid-2 {
+    margin-block: var(--s3);
+  }
+  .about-cell {
+    padding: var(--s1);
+    background: var(--bg-warm);
+  }
+  .about-cell-lbl {
+    letter-spacing: 0.16em;
+    margin-block-end: 0.5rem;
+  }
+  .about-cell-val {
+    font-size: var(--text-mono-xl);
+  }
+  .contact-lead {
+    font-family: var(--font-display);
+    font-size: var(--text-body-sm);
+    color: var(--text-muted);
+    margin-block-end: var(--s1);
+  }
+  .contact-block {
+    margin-block-start: var(--s3);
+  }
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-block: 0.5rem;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-lg);
+    color: var(--text-muted);
+    cursor: pointer;
+    text-decoration: none;
+    transition: color var(--ease-fast);
+    background-image: none;
+  }
+  .contact-item:first-child {
+    border-top: 1px solid var(--border);
+  }
+  .contact-item:hover {
+    color: var(--accent);
+  }
+  .stack-table {
+    border: 1px solid var(--border);
+    margin-block: 0;
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .stack-thead tr {
+    border-bottom: 1px solid var(--border-hi);
+    background: var(--bg-raised);
+  }
+  .stack-thead th {
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-xs);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-align: left;
+    padding: 0.5rem var(--s0);
+    vertical-align: middle;
+  }
+  .stack-thead th:last-child {
+    text-align: right;
+  }
+  .stack-row {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-warm);
+  }
+  .stack-row:last-child {
+    border-bottom: none;
+  }
+  .stack-name {
+    font-size: var(--text-body-sm);
+    color: var(--text-muted);
+    padding: 0.5rem var(--s0);
+    vertical-align: middle;
+  }
+  .stack-level {
+    font-family: var(--font-mono);
+    font-size: var(--text-mono-xs);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.5rem var(--s0);
+    text-align: right;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+  .stack-level[data-level="daily"] { color: var(--green); }
+  .stack-level[data-level="proficient"] { color: var(--accent); }
+  .stack-level[data-level="familiar"] { color: var(--text-muted); }
+  .stack-level[data-level="learning"] { color: var(--learning); }
+  .stack-level[data-level="next"] { color: var(--text-dim); }
+  @media (max-width: 640px) {
+    .about-inner {
+      padding: var(--s3) var(--s1);
+    }
+    .contact-item {
+      min-height: 44px;
+    }
+  }
+</style>

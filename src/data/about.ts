@@ -23,10 +23,7 @@ export interface Contact {
   href: string;
 }
 
-export const currentStage = "ADDING FLUX";
-
-export const role =
-  "Designer / Developer at Keller Creative — Knoxville, TN — @canklefark";
+export const role = "Designer / Developer at Keller Creative · Knoxville, TN";
 
 export const showAvailability = false;
 
@@ -38,15 +35,14 @@ export const cells: Cell[] = [
 ];
 
 export const stack: StackItem[] = [
-  { name: "Claude Code", level: "DAILY" },
   { name: "Docker", level: "DAILY" },
   { name: "Git / GitHub", level: "DAILY" },
-  { name: "WordPress / Gridpane", level: "PROFICIENT" },
-  { name: "Ansible", level: "FAMILIAR" },
   { name: "Kubernetes (k3s)", level: "LEARNING" },
-  { name: "Bash scripting", level: "LEARNING" },
+  { name: "Ansible", level: "LEARNING" },
+  { name: "Bash scripting", level: "FAMILIAR" },
   { name: "Terraform", level: "NEXT" },
   { name: "Go", level: "NEXT" },
+  { name: "Claude Code", level: "DAILY" },
 ];
 
 export const contacts: Contact[] = [
