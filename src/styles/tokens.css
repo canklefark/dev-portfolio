@@ -58,13 +58,13 @@
   /* --bp-mobile: 420px | --bp-sm: 480px | --bp-md: 640px | --bp-lg: 860px */
 
   /* theme fallbacks (dark) — overridden by [data-theme] attribute */
-  --bg-body: oklch(22% 0.005 70);
-  --bg: oklch(23% 0.005 70);
-  --bg-warm: oklch(23% 0.005 70);
-  --bg-raised: oklch(25% 0.007 68);
-  --bg-glass: oklch(23% 0.005 70 / 0.92);
-  --border: oklch(28% 0.008 68);
-  --border-hi: oklch(35% 0.01 66);
+  --bg-body: oklch(11% 0.004 70);
+  --bg: oklch(13% 0.004 70);
+  --bg-warm: oklch(13% 0.004 70);
+  --bg-raised: oklch(15.5% 0.005 68);
+  --bg-glass: oklch(13% 0.004 70 / 0.92);
+  --border: oklch(19% 0.006 68);
+  --border-hi: oklch(26% 0.008 66);
   --text: oklch(93% 0.007 82);
   --text-muted: oklch(62% 0.016 74);
   --text-dim: oklch(50% 0.012 70);
@@ -83,13 +83,13 @@
 /* Explicit dark block for when JS sets data-theme="dark"; mirrors :root fallback
    so toggling back from light still resolves correctly via attribute specificity */
 :root[data-theme="dark"] {
-  --bg-body: oklch(22% 0.005 70);
-  --bg: oklch(23% 0.005 70);
-  --bg-warm: oklch(23% 0.005 70);
-  --bg-raised: oklch(25% 0.007 68);
-  --bg-glass: oklch(23% 0.005 70 / 0.92);
-  --border: oklch(28% 0.008 68);
-  --border-hi: oklch(35% 0.01 66);
+  --bg-body: oklch(11% 0.004 70);
+  --bg: oklch(13% 0.004 70);
+  --bg-warm: oklch(13% 0.004 70);
+  --bg-raised: oklch(15.5% 0.005 68);
+  --bg-glass: oklch(13% 0.004 70 / 0.92);
+  --border: oklch(19% 0.006 68);
+  --border-hi: oklch(26% 0.008 66);
   --text: oklch(93% 0.007 82);
   --text-muted: oklch(62% 0.016 74);
   --text-dim: oklch(50% 0.012 70);
