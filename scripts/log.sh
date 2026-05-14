@@ -70,9 +70,11 @@ log() {
   local preview="$note"
   [[ ! "$preview" =~ [.!?]$ ]] && preview="${preview}."
 
-  # YAML safety: escape double quotes
-  local safe_title="${title//\"/\\\"}"
-  local safe_preview="${preview//\"/\\\"}"
+  # YAML safety: escape backslashes first, then double quotes
+  local safe_title="${title//\\/\\\\}"
+  safe_title="${safe_title//\"/\\\"}"
+  local safe_preview="${preview//\\/\\\\}"
+  safe_preview="${safe_preview//\"/\\\"}"
 
   # Tags: comma-separated → YAML array, auto-uppercased
   local tags_yaml="[]"
@@ -101,7 +103,7 @@ preview: "$safe_preview"
 draft: false
 ---
 
-$safe_preview
+$preview
 EOF
 
   echo "→ src/content/logbook/$filename"
