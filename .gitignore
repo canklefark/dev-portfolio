@@ -25,4 +25,6 @@ pnpm-debug.log*
 
 # local AI tooling
 .impeccable/
+.superpowers/
+.worktrees/
 docs/superpowers
