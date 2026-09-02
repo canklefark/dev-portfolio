@@ -2,19 +2,19 @@
 date: "2025-03-01"
 title: "K-One"
 category: "Revenue Intelligence"
-status: "IN PROGRESS"
-statusVariant: "accent"
+status: "LIVE"
+statusVariant: "green"
 surface: "ON-PREM / IIS + NODE"
 timeLabel: "ACTIVE"
-period: "Q1–Q2 2025"
+period: "Q1 2025 – present"
 tags: ["SvelteKit", "SQL Server", "Entra ID", "IIS", "Azure Pipelines"]
-summary: "Revenue intelligence app for a ~$200M wholesale distributor, surfacing rebate gaps, margin alerts, and renewal queues from read-only SQL views."
-sub: "SvelteKit app on Windows Server, surfacing rebate gaps, margin alerts, and renewal queues from read-only SQL views."
+summary: "Revenue intelligence and workflow platform for a ~$200M wholesale distributor — rebate detection, margin alerts, a sales performance playbook, and write workflows for invoice management, all from read-only SQL views."
+sub: "Grew from a read-only reporting app into a full internal platform across Sales, Contracts, Operations, and Leadership, with admin-managed goal tracking and role-based write workflows."
 stats:
-  - { label: "Roles", value: "5 tiers", variant: "default" }
+  - { label: "Tests", value: "136", variant: "green" }
+  - { label: "Commits", value: "1,800+", variant: "default" }
   - { label: "Auth", value: "Entra OIDC", variant: "default" }
-  - { label: "Infra", value: "On-prem only", variant: "green" }
-  - { label: "Goal", value: "~$5M/yr saved", variant: "accent" }
+  - { label: "Infra", value: "On-prem only", variant: "default" }
 ---
 
 ## The Problem
@@ -39,15 +39,11 @@ I built K-One as a read-only SvelteKit app sitting on top of a separate SQL repo
 
 ## Current State
 
-Test server is up with the first two dashboards live. Several additional data views are pending from the client's IT team, which will unlock the remaining hubs. Auth integration is in progress while the Entra App Registration is being provisioned. A systematic security review has been completed and findings are being worked through in priority order.
+In production and still growing. What started as a read-only reporting dashboard is now a platform spanning Business Services, a Service Department module (extracted from Business Services as a shared, parameterized abstraction rather than duplicated), and a Sales Playbook with admin-managed quarterly goal bands, grade-ladder performance metrics, and a live-editable rep roster across four districts — all built on top of the original read-only, row-level-secured data layer. 136 tests, Entra auth fully live, write workflows for Low Lines invoice management shipped and in daily use.
 
 ## What's Next
 
-1. Complete Entra auth integration on the test environment.
-2. Get the remaining views from IT to unlock the Operations hub and contract analytics.
-3. Work through the security review findings, priority order.
-4. Phase 2: Anthropic-powered margin explanations and contract PDF parsing, both degrading gracefully if the API is down.
-5. Provision prod and enable the deploy stage.
+Between shipped milestones there's no fixed backlog — the next piece of scope gets defined against whatever the business needs next, the same way the Sales Playbook and Service Department both started as single-milestone additions. Recent work has trended toward admin self-service: letting designated staff manage goal targets, capability grants, and roster changes themselves instead of routing every change through a code deploy.
 
 ## Stack
 

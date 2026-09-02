@@ -2,19 +2,19 @@
 date: "2025-01-15"
 title: "Homelab Kubernetes Cluster"
 category: "Homelab Infrastructure"
-status: "IN PROGRESS"
-statusVariant: "accent"
+status: "RETIRED"
+statusVariant: "default"
 surface: "BARE METAL"
-timeLabel: "ACTIVE"
+timeLabel: "RETIRED"
 period: "Q1 2025"
 tags: ["Kubernetes", "k3s", "Ansible", "Flux"]
-summary: "Three Lenovo mini PCs running k3s. Ansible handles provisioning; Flux GitOps is being layered in now."
-sub: "Three Lenovo mini PCs running k3s. Ansible handles node provisioning; Flux GitOps is being layered in now to bring every deployment under version control."
+summary: "Three Lenovo mini PCs running k3s. Retired after the nodes died; workloads consolidated back onto a single Docker host."
+sub: "Ansible handled node provisioning and Flux GitOps was partway to landing when the nodes died. Everything it was meant to run lives on the Docker host now."
 stats:
-  - { label: "Nodes", value: "3", variant: "default" }
+  - { label: "Nodes", value: "3 (retired)", variant: "default" }
   - { label: "Runtime", value: "k3s", variant: "default" }
-  - { label: "Provisioner", value: "Ansible", variant: "green" }
-  - { label: "GitOps", value: "Flux (WIP)", variant: "accent" }
+  - { label: "Provisioner", value: "Ansible", variant: "default" }
+  - { label: "GitOps", value: "Flux (never finished)", variant: "default" }
 ---
 
 ## The Problem
@@ -27,7 +27,7 @@ Three Lenovo mini PCs, each running as both control plane and worker. `k3s` for 
 
 ## Current State
 
-Cluster is stable and running. Flux reconciliation is being wired up against a private Git repository. Once Flux is solid, the Docker Compose workloads on the Beelink migrate into the cluster progressively, with the Beelink as a Docker fallback.
+The Lenovo nodes died before Flux reconciliation was finished. Rather than replace them, I consolidated everything back onto the Docker host — see [Self-Hosted Services](/projects/self-hosted-services) for where those workloads live now. The cluster is fully decommissioned.
 
 ## Stack
 

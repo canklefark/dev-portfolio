@@ -28,7 +28,7 @@ Mostly because I can. Google Photos has storage limits and recipe apps tend to d
 
 ## What's Next
 
-These will migrate to the K8s cluster as Flux stabilizes. The Beelink becomes a fallback Docker host once the cluster can take the workloads.
+The original plan was for these to migrate onto a k3s cluster once its GitOps setup stabilized — see [Homelab Kubernetes Cluster](/projects/homelab-k8s). The cluster's nodes died before that happened, so the migration ran in reverse: this Docker host is now the permanent, consolidated home for these services, not a fallback.
 
 ## Stack
 
