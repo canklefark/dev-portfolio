@@ -5,7 +5,7 @@ import "../styles/global.css";
 interface Props {
   title: string;
   description?: string;
-  activeNav?: "home" | "projects" | "logbook" | "about";
+  activeNav?: "home" | "projects" | "about";
 }
 
 const { title, description, activeNav } = Astro.props;
@@ -55,7 +55,7 @@ const desc = description ?? "DevOps and platform engineering portfolio. Infrastr
       (function () {
         var pending = false;
         var timer = null;
-        var routes = { h: "/", p: "/projects", l: "/logbook", a: "/about" };
+        var routes = { h: "/", p: "/projects", a: "/about" };
         document.addEventListener("keydown", function (e) {
           if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
           if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;

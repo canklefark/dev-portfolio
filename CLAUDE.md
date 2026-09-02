@@ -6,22 +6,6 @@ Astro 6, TypeScript strict mode, no UI framework. Content via Astro content coll
 
 ## Content
 
-### Adding a logbook entry
-
-Create a file in `src/content/logbook/` named `YYYY-MM-DD-slug.md`:
-
-```md
----
-title: "Post title"
-date: "2025-05-08"
-tags: ["tag1", "tag2"]
-preview: "One sentence shown on the index page."
-draft: false
----
-
-Body content here.
-```
-
 ### Adding a project
 
 Create a file in `src/content/projects/` named `project-slug.md`:

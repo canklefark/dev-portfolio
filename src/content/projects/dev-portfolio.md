@@ -29,7 +29,7 @@ I built the design system from tokens up: OKLCH color values, semantic CSS varia
 
 ## Content Workflow
 
-Content lives in Astro content collections: Markdown files with typed frontmatter, validated against a Zod schema at build time. Adding a logbook entry is creating a `.md` file, committing it, and pushing. No CMS login, no deploy dashboard. The push triggers a Cloudflare Pages build; the post is live in under a minute.
+Content lives in Astro content collections: Markdown files with typed frontmatter, validated against a Zod schema at build time. Adding a project is creating a `.md` file, committing it, and pushing. No CMS login, no deploy dashboard. The push triggers a Cloudflare Pages build; the post is live in under a minute.
 
 This site is also the first project I'm using as a live case study while I build it.
 

@@ -1,6 +1,6 @@
 ---
 interface Props {
-  activeNav?: "home" | "projects" | "logbook" | "about";
+  activeNav?: "home" | "projects" | "about";
 }
 
 const { activeNav } = Astro.props;
@@ -8,7 +8,6 @@ const { activeNav } = Astro.props;
 const links = [
   { id: "home", label: "Home", href: "/" },
   { id: "projects", label: "Projects", href: "/projects" },
-  { id: "logbook", label: "Logbook", href: "/logbook" },
   { id: "about", label: "About", href: "/about" },
 ] as const;
 ---

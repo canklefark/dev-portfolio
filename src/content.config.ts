@@ -27,15 +27,4 @@ const projects = defineCollection({
   }),
 });
 
-const logbook = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/logbook" }),
-  schema: z.object({
-    title: z.string(),
-    date: z.coerce.date(),
-    tags: z.array(z.string()),
-    preview: z.string(),
-    draft: z.boolean().default(false),
-  }),
-});
-
-export const collections = { projects, logbook };
+export const collections = { projects };
