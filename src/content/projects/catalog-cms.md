@@ -12,9 +12,9 @@ summary: "Internal CMS for a B2B cleaning products company — manages their ful
 sub: "SvelteKit 2 app backed by SQLite, deployed in Docker on a Dokploy VPS, with async product/FAQ sync to a WordPress REST + ACF backend."
 stats:
   - { label: "Products", value: "~200", variant: "default" }
-  - { label: "DB tables", value: "15", variant: "default" }
+  - { label: "DB tables", value: "20", variant: "default" }
   - { label: "Storage", value: "SQLite + R2", variant: "green" }
-  - { label: "Commits", value: "111", variant: "default" }
+  - { label: "Commits", value: "155", variant: "default" }
 draft: false
 ---
 
@@ -44,9 +44,13 @@ Products and FAQs sync to a WordPress site with custom post types, ACF field gro
 
 ## Current State
 
-Running in production on Dokploy (Docker + Traefik), SQLite volume-mounted at `/app/data`. Core catalog CRUD is stable. The WP sync is functional — it went through several debugging rounds and now has dead-letter recovery in place.
+Running in production on Dokploy (Docker + Traefik), SQLite volume-mounted at `/app/data`. The original build has since been fully rewritten on the same architecture — same SQLite + Drizzle + R2 approach, but with a real role hierarchy (admin > manager > user, enforced in every loader and form action), CSV export locked behind its own auth path instead of piggybacking on the UI session, password reset and account lifecycle emails through Resend, and an append-only audit log with a filterable blame view by date range. Catalog CRUD, the dispensing-system ID scheme, and WordPress sync all carried over unchanged, with dead-letter recovery still in place.
 
 Built with Claude Code as the primary implementation tool. I owned the architecture decisions, Dokploy/Docker deployment, and the WordPress site it integrates with.
+
+## What's Next
+
+Working through code-review findings from the current phase — recent fixes have covered a CSV content-type header bug, a timing-safe comparison on the export credential check, and audit-log ordering around session revocation. Nothing structural queued beyond that.
 
 ## Stack
 

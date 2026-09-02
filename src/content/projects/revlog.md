@@ -1,7 +1,5 @@
 ---
-# Source: vault:gh/cf/revlog-svelte | generated: 2026-06-09 | mode: NEW
-# To approve: set draft: false and save in Obsidian, then run /portfolio-update --commit
-date: "2026-06-09"
+date: "2026-04-27"
 title: "Revlog"
 category: "Personal Projects"
 status: "IN PROGRESS"
@@ -23,8 +21,8 @@ tags:
 summary: "A motorsport logbook for tracking car builds, maintenance schedules, events, and performance data — built for time attack and track day drivers."
 sub: "Full-stack SvelteKit app with Drizzle + PostgreSQL, Better Auth sessions, and telemetry import from VBO, RaceChrono, and generic CSV files. Ten phases shipped; human verification walkthrough surfaced 12 issues queued for Phase 11."
 stats:
-  - { label: "Commits", value: "343", variant: "default" }
-  - { label: "Phases", value: "10 complete", variant: "green" }
+  - { label: "Commits", value: "352", variant: "default" }
+  - { label: "Phases", value: "9 of 12", variant: "default" }
   - { label: "E2E tests", value: "40+ passing", variant: "default" }
   - { label: "Issues found", value: "12 in walkthrough", variant: "default" }
 draft: false
@@ -42,11 +40,11 @@ The project uses GSD for planning: every phase has a research doc, validation st
 
 ## Current State
 
-Ten phases complete across v1.0 and v1.1 milestones. Core features live: garage management, event and run tracking, maintenance log with soft-delete/trash, telemetry import with format parsers, pre-event readiness check, AI-generated checklists, admin tooling (bug reports, user allowlist, CSV data export), and a full E2E suite (40+ passing tests across garage, events, auth, telemetry, checklists, and admin). Phase 10 generated three verification documents — per-screen checklist, journey verification scripts, and a triage template — then a human walkthrough surfaced 12 issues: 3 P1 (Delete Forever 500 error, import blocked by missing carId assignment UI, penalty input labels missing), 4 P2, 4 P3, 1 Polish.
+v1.0 shipped in full: garage management, event and run tracking, maintenance log with soft-delete/trash, telemetry import with format parsers, pre-event readiness check, AI-generated checklists, and admin tooling (bug reports, user allowlist, CSV data export). Of v1.1's six verification phases, three are done — E2E coverage for garage/runs and events/auth/telemetry (40+ passing tests), and the Phase 10 human walkthrough, which surfaced 12 issues: 3 P1 (a Delete Forever 500 error, event import blocked by a missing carId assignment UI, missing penalty input labels), 4 P2, 4 P3, 1 Polish. None of those are fixed yet — work has been paused at the verification checkpoint since.
 
 ## What's Next
 
-Phase 11 will triage and fix the 12 issues from the walkthrough, P1 bugs first: wiring the carId assignment into the event import page, fixing the Delete Forever 500, and labeling penalty inputs. After Phase 11: deployment to the beta subdomain, telemetry visualization (lap delta overlays, sector charts), and a sharing mode for publishing build specs.
+Phase 9 still needs E2E coverage for checklists, settings, and admin actions. Then Phase 11 triages and fixes the 12 issues from the walkthrough, P1s first, and Phase 12 is the launch gate — CI green, zero P0/P1, domain flipped to production.
 
 ## Stack
 
