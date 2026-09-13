@@ -23,26 +23,33 @@ export interface Contact {
   href: string;
 }
 
-export const role = "Designer / Developer at Keller Creative · Knoxville, TN";
+export const role =
+  "Head of Platform and MarTech at Keller Creative · Knoxville, TN";
 
 export const showAvailability = false;
 
 export const cells: Cell[] = [
-  { label: "Currently Learning", value: "Kubernetes, Flux", variant: "accent" },
-  { label: "Currently Building", value: "K8s cluster (adding Flux)" },
+  {
+    label: "Currently Learning",
+    value: "Kubernetes (CKA track)",
+    variant: "accent",
+  },
+  { label: "Currently Building", value: "Internal platform consolidation" },
   { label: "Enrolled In", value: "KodeKloud" },
-  { label: "Currently Racing", value: "HPDE / SCCA time trials → Sundae Cup" },
+  { label: "Currently Paddling", value: "Whitewater kayaking" },
 ];
 
 export const stack: StackItem[] = [
-  { name: "Docker", level: "DAILY" },
-  { name: "Git / GitHub", level: "DAILY" },
+  { name: "SvelteKit", level: "DAILY" },
+  { name: "TypeScript", level: "DAILY" },
+  { name: "PostgreSQL / Drizzle", level: "DAILY" },
+  { name: "Claude Code (agents & plugins)", level: "DAILY" },
+  { name: "Docker / Dokploy", level: "DAILY" },
+  { name: "MCP (Model Context Protocol)", level: "PROFICIENT" },
+  { name: "Cloudflare Pages / Workers", level: "PROFICIENT" },
   { name: "Kubernetes (k3s)", level: "LEARNING" },
-  { name: "Ansible", level: "LEARNING" },
   { name: "Bash scripting", level: "FAMILIAR" },
   { name: "Terraform", level: "NEXT" },
-  { name: "Go", level: "NEXT" },
-  { name: "Claude Code", level: "DAILY" },
 ];
 
 export const contacts: Contact[] = [

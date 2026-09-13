@@ -8,7 +8,7 @@ surface: "CLAUDE CODE MARKETPLACE"
 timeLabel: "ACTIVE"
 period: "Q3 2026"
 tags: ["Claude Code Plugin", "Agent Skills", "Marketplace"]
-summary: "A Claude Code plugin marketplace for the agency I work at — one repo so the team installs internal tools from a shared source instead of copying files by hand."
+summary: "A Claude Code plugin marketplace for the agency I work at: one repo so the team installs internal tools from a shared source instead of copying files by hand."
 sub: "Five vendored plugins covering project scaffolding, client site builds, branded reporting, local-business prospecting, and deployment, installable org-wide via managed settings."
 stats:
   - { label: "Plugins", value: "5", variant: "default" }
@@ -18,7 +18,7 @@ draft: false
 
 ## The Problem
 
-I kept building useful Claude Code skills for agency work — scaffolding, deploys, reporting — and the only way teammates got them was copying files by hand or asking me directly. That doesn't scale past one person, and it means the tools drift out of sync the moment someone's copy falls behind.
+I kept building useful Claude Code skills for agency work: scaffolding, deploys, reporting. The only way teammates got them was copying files by hand or asking me directly. That doesn't scale past one person, and it means the tools drift out of sync the moment someone's copy falls behind.
 
 ## Approach
 
@@ -30,7 +30,7 @@ All five plugins are vendored and marked stable. The skills follow the open Agen
 
 ## What's Next
 
-Adding plugins as they prove out elsewhere first — this repo is meant to stay a thin distribution layer, not where new tools get built from scratch.
+Adding plugins as they prove out elsewhere first. This repo is meant to stay a thin distribution layer, not where new tools get built from scratch.
 
 ## Stack
 

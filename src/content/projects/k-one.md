@@ -8,7 +8,7 @@ surface: "ON-PREM / IIS + NODE"
 timeLabel: "ACTIVE"
 period: "Q1 2025 – present"
 tags: ["SvelteKit", "SQL Server", "Entra ID", "IIS", "Azure Pipelines"]
-summary: "Revenue intelligence and workflow platform for a ~$200M wholesale distributor — rebate detection, margin alerts, a sales performance playbook, and write workflows for invoice management, all from read-only SQL views."
+summary: "Revenue intelligence and workflow platform for a ~$200M wholesale distributor: rebate detection, margin alerts, a sales performance playbook, and write workflows for invoice management, all from read-only SQL views."
 sub: "Grew from a read-only reporting app into a full internal platform across Sales, Contracts, Operations, and Leadership, with admin-managed goal tracking and role-based write workflows."
 stats:
   - { label: "Tests", value: "136", variant: "green" }
@@ -39,11 +39,11 @@ I built K-One as a read-only SvelteKit app sitting on top of a separate SQL repo
 
 ## Current State
 
-In production and still growing. What started as a read-only reporting dashboard is now a platform spanning Business Services, a Service Department module (extracted from Business Services as a shared, parameterized abstraction rather than duplicated), and a Sales Playbook with admin-managed quarterly goal bands, grade-ladder performance metrics, and a live-editable rep roster across four districts — all built on top of the original read-only, row-level-secured data layer. 136 tests, Entra auth fully live, write workflows for Low Lines invoice management shipped and in daily use.
+In production and still growing. What started as a read-only reporting dashboard is now a platform spanning Business Services, a Service Department module (extracted from Business Services as a shared, parameterized abstraction rather than duplicated), and a Sales Playbook with admin-managed quarterly goal bands, grade-ladder performance metrics, and a live-editable rep roster across four districts, all built on top of the original read-only, row-level-secured data layer. 136 tests, Entra auth fully live, write workflows for Low Lines invoice management shipped and in daily use.
 
 ## What's Next
 
-Between shipped milestones there's no fixed backlog — the next piece of scope gets defined against whatever the business needs next, the same way the Sales Playbook and Service Department both started as single-milestone additions. Recent work has trended toward admin self-service: letting designated staff manage goal targets, capability grants, and roster changes themselves instead of routing every change through a code deploy.
+Between shipped milestones there's no fixed backlog. The next piece of scope gets defined against whatever the business needs next, the same way the Sales Playbook and Service Department both started as single-milestone additions. Recent work has trended toward admin self-service: letting designated staff manage goal targets, capability grants, and roster changes themselves instead of routing every change through a code deploy.
 
 ## Stack
 

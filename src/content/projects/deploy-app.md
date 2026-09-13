@@ -8,7 +8,7 @@ surface: "CLAUDE CODE PLUGIN"
 timeLabel: "ACTIVE"
 period: "Q3 2026"
 tags: ["Claude Code Plugin", "Cloudflare Pages", "Dokploy", "Bash"]
-summary: "A Claude Code plugin that detects a project's type and deploys it to the right host — Cloudflare Pages for static sites, Dokploy for everything dynamic — with no flags needed for the common case."
+summary: "A Claude Code plugin that detects a project's type and deploys it to the right host: Cloudflare Pages for static sites, Dokploy for everything dynamic. No flags needed for the common case."
 sub: "Runs as a single bash skill with no build step: it reads a repo's own config files to decide static vs. dynamic, then talks to the Cloudflare or Dokploy API directly."
 stats:
   - { label: "Version", value: "v1.5", variant: "default" }
@@ -23,15 +23,15 @@ Every new project at the agency ends the same way: figure out where it's suppose
 
 ## Approach
 
-`/deploy-app` reads a project's own config to decide: an `astro.config.*` or `adapter-static` means static and goes to Cloudflare Pages, GitHub-backed with auto-deploy on push; a `next.config.*`, or a SvelteKit app without `adapter-static`, means dynamic and goes to Dokploy, CLI preferred with an API fallback. Secrets are redeemed at runtime from the agency's secrets manager, never stored in the plugin itself. It's idempotent — every create call checks for an existing resource first — and a `--dry-run` flag previews exactly what it would do before it does anything.
+`/deploy-app` reads a project's own config to decide: an `astro.config.*` or `adapter-static` means static and goes to Cloudflare Pages, GitHub-backed with auto-deploy on push; a `next.config.*`, or a SvelteKit app without `adapter-static`, means dynamic and goes to Dokploy, CLI preferred with an API fallback. Secrets are redeemed at runtime from the agency's secrets manager, never stored in the plugin itself. It's idempotent: every create call checks for an existing resource first. A `--dry-run` flag previews exactly what it would do before it does anything.
 
 ## Current State
 
-At v1.5, live-tested against three real scenarios: a fresh deploy, a deploy against a broken repo to confirm the error path, and a deploy with `--domain` to confirm custom-domain attachment. Two response-shape bugs found during that live test — a nested `project.create` response, an `items` key on `application.search` — are fixed and registered.
+At v1.5, live-tested against three real scenarios: a fresh deploy, a deploy against a broken repo to confirm the error path, and a deploy with `--domain` to confirm custom-domain attachment. Two response-shape bugs found during that live test (a nested `project.create` response, an `items` key on `application.search`) are fixed and registered.
 
 ## What's Next
 
-Closing the last audit items flagged by a codebase map review, then it's done — this isn't a project that needs to keep growing.
+Closing the last audit items flagged by a codebase map review, then it's done. This isn't a project that needs to keep growing.
 
 ## Stack
 

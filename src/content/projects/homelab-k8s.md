@@ -27,7 +27,7 @@ Three Lenovo mini PCs, each running as both control plane and worker. `k3s` for 
 
 ## Current State
 
-The Lenovo nodes died before Flux reconciliation was finished. Rather than replace them, I consolidated everything back onto the Docker host — see [Self-Hosted Services](/projects/self-hosted-services) for where those workloads live now. The cluster is fully decommissioned.
+The Lenovo nodes died before Flux reconciliation was finished. Rather than replace them, I consolidated everything back onto the Docker host. See [Self-Hosted Services](/projects/self-hosted-services) for where those workloads live now. The cluster is fully decommissioned.
 
 ## Stack
 
