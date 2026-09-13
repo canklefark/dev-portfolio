@@ -19,9 +19,9 @@ tags:
 summary: "A monorepo platform that gives every new internal tool a cheap, predetermined home instead of its own throwaway repo: one app, one Postgres, shared auth, and a written contract a module must satisfy to join."
 sub: "Built to stop internal tools from sprawling into a pile of one-off repos, each hand-rolling the same auth, cron, and integration plumbing. First absorption in progress now, proving the contract end to end."
 stats:
-  - { label: "Commits", value: "323", variant: "default" }
-  - { label: "Phases shipped", value: "4 of 5", variant: "default" }
-  - { label: "Modules absorbed", value: "1", variant: "green" }
+  - { label: "Commits", value: "775", variant: "default" }
+  - { label: "Milestones shipped", value: "v1.2 – v1.4", variant: "default" }
+  - { label: "Modules absorbed", value: "1 (proposals)", variant: "green" }
 draft: false
 ---
 
@@ -35,11 +35,11 @@ Instead of rebuilding tools one at a time, I built a platform for absorbing them
 
 ## Current State
 
-Four of five phases are shipped: the monorepo scaffold, the database foundation seeded from `eos`, the shared auth and UI shell, and the ops backbone with cron workers, rehearsed Postgres backups, and R2 object storage. The fifth phase (absorbing an existing proposals tool by hand as the platform's first real module) is in progress now, and it's the one that actually proves the contract holds up outside of theory.
+The platform spine is done: the monorepo scaffold, the database foundation seeded from `eos`, the shared auth and UI shell, and the ops backbone with cron workers, rehearsed Postgres backups, and R2 object storage. The first real absorption, a client proposal tool pulled in as `modules/proposals`, is done too, and it went well past proving the module contract. Three milestones of follow-on work brought the module to full parity with the app it replaced, down to editorial typography and a signed PDF export that matches the original page for page.
 
 ## What's Next
 
-Finishing the proposals absorption and measuring how long it took end to end. The target is under a week, and if it isn't, the contract gets fixed before anything else gets absorbed. After that, several more internal tools are queued for future absorption waves, but each one waits until the pattern is proven, not assumed.
+Absorbing a second module: a client performance reporting system that currently exists as an abandoned standalone app and a much simpler static-page plugin in the agency's plugin marketplace. This absorption replaces both with one module built on the same authoring pattern proposals proved out, plus a monthly metrics history ledger and a Slack digest for notable changes.
 
 ## Stack
 

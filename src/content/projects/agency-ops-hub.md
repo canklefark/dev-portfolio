@@ -20,9 +20,9 @@ tags:
 summary: "Internal ops hub for the agency I work at: huddle board, task intake from Slack/Gmail/Granola, meeting-transcript extraction, and client/project dashboards. Replatformed off a Next.js/Vercel/Supabase app the team was outgrowing."
 sub: "A full re-architecture onto SvelteKit and self-hosted Postgres on Dokploy, with 1,891 tests built alongside the code instead of deferred."
 stats:
-  - { label: "Tests", value: "1,891", variant: "green" }
-  - { label: "Commits", value: "860", variant: "default" }
-  - { label: "Files changed (v2.0)", value: "409", variant: "default" }
+  - { label: "Tests", value: "~3,100", variant: "green" }
+  - { label: "Commits", value: "1,356", variant: "default" }
+  - { label: "Milestones shipped", value: "v1 – v2.3", variant: "default" }
 draft: false
 ---
 
@@ -36,11 +36,13 @@ I re-architected it from scratch onto SvelteKit, self-hosted Postgres, and Dokpl
 
 ## Current State
 
-v2.0 is live: 1,891 tests (1,332 unit, 559 integration), all green, zero TypeScript errors. Every pre-replatform pain point I set out to fix (the pooler bottleneck, the monolithic registry editor, the unsafe Slack type casts, the untested services) is gone by construction, not patched over.
+v2.0 through v2.3 have all shipped. Every pre-replatform pain point I set out to fix (the pooler bottleneck, the monolithic registry editor, the unsafe Slack type casts, the untested services) is gone by construction, not patched over. v2.3 ran a 16-screen design critique and fixed the cross-cutting UI/UX problems it found: unbounded lists forcing scroll, flat visual hierarchy, a couple of functional bugs, a missing confirmation gap, and weak discoverability, plus gave Home an actual cockpit view instead of a bare status widget.
+
+Live human UAT on v2.3 then surfaced something bigger: the replatform had no in-app path to a project or client detail page at all, and a full content comparison against the original app it replaced showed the gap went well beyond navigation.
 
 ## What's Next
 
-v2.1 closes out deferred backlog: deeper huddle support for meeting prep and per-client time-budget pacing, in-app roster management so deactivating someone doesn't require a direct DB write, and a preview/dry-run step before registry changes commit.
+v2.4 closes the structural and content gaps between this app and the original MVP it replaced: a real Home/Mission-Control landing page, proper `/projects` and `/clients` list entry points, a "flag for discussion" step on the huddle board, and an operator-facing registry audit and job ledger. Verification for this milestone checks each screen directly against its counterpart in the original app, not just against a written spec.
 
 ## Stack
 

@@ -12,7 +12,7 @@ summary: "A pricing and invoicing app with an MCP interface so Claude can read a
 sub: "A 24-tool MCP surface covering rate cards, tickets, bundling, and flags, backed by an append-only price-history log and ending in a frozen, client-ready invoice PDF."
 stats:
   - { label: "MCP tools", value: "24", variant: "green" }
-  - { label: "Commits", value: "601", variant: "default" }
+  - { label: "Commits", value: "673", variant: "default" }
   - { label: "Audit findings closed", value: "17/17", variant: "green" }
 draft: false
 ---
@@ -31,7 +31,7 @@ v1.0 through v1.2 have all shipped. v1.1 rebuilt navigation and cross-linking be
 
 ## What's Next
 
-No active milestone right now. v1.2's audit closeout was the last phase queued. Next scope gets defined when I need it.
+Building v2.0, a client-agnostic initiatives tracker for pre-sales and delivery opportunities that currently live in an ad-hoc shared doc. Claude reads a meeting transcript, proposes a change to an initiative's status, and I confirm before it writes, with a manual UI path for corrections. An initiative can later graduate into a real billable project.
 
 ## Stack
 

@@ -11,8 +11,8 @@ tags: ["SvelteKit", "SQL Server", "Entra ID", "IIS", "Azure Pipelines"]
 summary: "Revenue intelligence and workflow platform for a ~$200M wholesale distributor: rebate detection, margin alerts, a sales performance playbook, and write workflows for invoice management, all from read-only SQL views."
 sub: "Grew from a read-only reporting app into a full internal platform across Sales, Contracts, Operations, and Leadership, with admin-managed goal tracking and role-based write workflows."
 stats:
-  - { label: "Tests", value: "136", variant: "green" }
-  - { label: "Commits", value: "1,800+", variant: "default" }
+  - { label: "Tests", value: "137", variant: "green" }
+  - { label: "Commits", value: "1,900+", variant: "default" }
   - { label: "Auth", value: "Entra OIDC", variant: "default" }
   - { label: "Infra", value: "On-prem only", variant: "default" }
 ---
@@ -43,7 +43,7 @@ In production and still growing. What started as a read-only reporting dashboard
 
 ## What's Next
 
-Between shipped milestones there's no fixed backlog. The next piece of scope gets defined against whatever the business needs next, the same way the Sales Playbook and Service Department both started as single-milestone additions. Recent work has trended toward admin self-service: letting designated staff manage goal targets, capability grants, and roster changes themselves instead of routing every change through a code deploy.
+Between shipped milestones there's no fixed backlog. The next piece of scope gets defined against whatever the business needs next, the same way the Sales Playbook and Service Department both started as single-milestone additions. Current work is a hardening pass: clearing lint and dead code across the shared table engine and department widgets, tightening a route guard, and fixing small UI rough edges surfaced along the way.
 
 ## Stack
 
