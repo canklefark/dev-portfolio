@@ -36,7 +36,7 @@ export const cells: Cell[] = [
   },
   { label: "Currently Building", value: "Internal platform consolidation" },
   { label: "Enrolled In", value: "KodeKloud" },
-  { label: "Currently Paddling", value: "Whitewater kayaking" },
+  { label: "Currently Paddling", value: "Ocoee, Class III" },
 ];
 
 export const stack: StackItem[] = [
