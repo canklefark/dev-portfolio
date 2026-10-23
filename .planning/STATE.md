@@ -5,15 +5,16 @@ milestone_name: EmDash Migration
 current_phase: 01
 current_phase_name: Spike, Baseline and Decisions
 status: executing
-stopped_at: Phase 1 context gathered
-last_updated: "2026-10-23T20:12:49.459Z"
-last_activity: "2026-10-23: Roadmap created for v1.0 EmDash Migration (6 phases, 38 requirements mapped)"
-state_head: 440ad0696464e3493a81759c7aa8fbaae437993b
+stopped_at: Completed 01-01-PLAN.md
+last_updated: "2026-10-23T20:18:26.681Z"
+last_activity: 2026-10-23
+last_activity_desc: Phase 01 execution started
+state_head: 178b28ca21ba3a00c7f960dc60701c3d18c71c7f
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 5
-  completed_plans: 0
+  completed_plans: 1
 ---
 
 # Project State
@@ -23,14 +24,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-10-23)
 
 **Core value:** A hiring manager lands on an honest, fast, distinctive site that makes the project work carry the argument.
-**Current focus:** Phase 1: Spike, Baseline and Decisions
+**Current focus:** Phase 01 — Spike, Baseline and Decisions
 
 ## Current Position
 
-Phase: 01 (Spike, Baseline and Decisions) — READY TO EXECUTE
-Plan: 0 of TBD in current phase
+Phase: 01 (Spike, Baseline and Decisions) — EXECUTING
+Plan: 2 of 5
 Status: Ready to execute
-Last activity: 2026-10-23: Roadmap created for v1.0 EmDash Migration (6 phases, 38 requirements mapped)
+Last activity: 2026-10-23 — Phase 01 execution started
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -54,6 +55,11 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: -
 
 _Updated after each plan completion_
+**Per-Plan Metrics:**
+
+| Plan | Duration | Tasks | Files |
+|------|----------|-------|-------|
+| Phase 01 P01 | 6 min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -66,6 +72,8 @@ Recent decisions affecting current work:
 - [Roadmap]: GUARD-01 lands with the read-path rewire (Phase 3). GUARD-02 and GUARD-03 land with the Workers deploy (Phase 5).
 - [Roadmap]: Agent access is proven locally (Phase 4) before the MCP endpoint goes public (Phase 5).
 - [Roadmap]: Draft, preview, publish, revision restore and preview links are exercised on the deployed site (Phase 6).
+- [Phase 01]: Baseline captured at main f4e5470 (Node 24.17.0, astro 6.2.2) in ~/portfolio-baseline/2026-10-23; all later parity is judged against it via scripts/script-inventory.mjs
+- [Phase 01]: Allowlist scripts/script-allowlist.json is derived from the baseline inventory and committed; .emdash/migrations.json is not committed (revisit with GUARD-02 in Phase 5)
 
 ### Pending Todos
 
@@ -93,6 +101,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-23T19:11:00.744Z
-Stopped at: Phase 1 context gathered
-Resume file: .planning/phases/01-spike-baseline-and-decisions/01-CONTEXT.md
+Last session: 2026-10-23T20:18:26.652Z
+Stopped at: Completed 01-01-PLAN.md
+Resume file: None
