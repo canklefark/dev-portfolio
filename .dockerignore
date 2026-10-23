@@ -1,0 +1,16 @@
+node_modules
+dist
+data
+.git
+.astro
+.planning
+.claude
+.agents
+.cursor
+.vscode
+.impeccable
+.superpowers
+.worktrees
+.env
+.env.*
+.DS_Store

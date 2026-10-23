@@ -4,6 +4,7 @@
 import { createHash } from "node:crypto";
 import {
   cpSync,
+  mkdirSync,
   mkdtempSync,
   readFileSync,
   readdirSync,
@@ -12,7 +13,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join, relative, sep } from "node:path";
+import { dirname, join, relative, sep } from "node:path";
 
 /**
  * @typedef {{ kind: "inline" | "external" | "data", type: string, src: string | null, bytes: number, sha256: string | null }} ScriptRecord
@@ -22,10 +23,12 @@ import { join, relative, sep } from "node:path";
  * @typedef {{ route: string, ok: boolean, reason: string }} RouteResult
  * @typedef {{ script: number, module: number, external: number, modulepreload: number }} AllowedCounts
  * @typedef {{ generatedFrom: string, inlineHashes: Record<string, string[]>, routes: Record<string, AllowedCounts> }} Allowlist
- * @typedef {{ usage: string, min: number, max: number, run: (args: string[]) => number }} Command
+ * @typedef {{ usage: string, min: number, max: number, run: (args: string[]) => number | Promise<number> }} Command
  */
 
 const JSON_LD = "application/ld+json";
+// Unmatched path used to request the prerendered 404 page from a running server.
+const MISSING_ROUTE = "/__parity_missing_route__/";
 
 /**
  * @param {string} dir
@@ -216,6 +219,65 @@ function compareDirs(baseDir, candDir) {
       reason: `normalized HTML differs at offset ${i}: baseline ${side(x)} vs candidate ${side(y)}`,
     };
   });
+}
+
+/**
+ * Request every baseline route from a running server and write each body to the route's
+ * relative file path under outDir, so the result compares like a build directory.
+ * "/404" is requested through an unmatched path and must answer 404; all others must answer 200.
+ * @param {string} baseUrl
+ * @param {string} baselineDir
+ * @param {string} outDir
+ * @returns {Promise<number>}
+ */
+async function fetchRoutes(baseUrl, baselineDir, outDir) {
+  const base = baseUrl.replace(/\/+$/, "");
+  const routes = loadRoutes(baselineDir);
+  let unexpected = 0;
+  for (const route of Object.keys(routes).sort()) {
+    const is404 = route === "/404";
+    const path = is404
+      ? MISSING_ROUTE
+      : route === "/"
+        ? "/"
+        : `${route.replace(/\/+$/, "")}/`;
+    const expected = is404 ? 404 : 200;
+    const response = await fetch(base + path, {
+      redirect: "follow",
+      signal: AbortSignal.timeout(15000),
+    });
+    console.log(`FETCH ${route} ${response.status}`);
+    if (response.status !== expected) {
+      console.log(
+        `UNEXPECTED ${route}: status ${response.status}, expected ${expected}`,
+      );
+      unexpected++;
+      continue;
+    }
+    const target = join(outDir, routes[route].file);
+    mkdirSync(dirname(target), { recursive: true });
+    writeFileSync(target, await response.text());
+  }
+  if (unexpected > 0) {
+    console.log(`fetch: ${unexpected} unexpected status`);
+    return 1;
+  }
+  return runCompare(baselineDir, outDir);
+}
+
+/**
+ * @param {string} baseline
+ * @param {string} candidate
+ * @returns {number}
+ */
+function runCompare(baseline, candidate) {
+  const results = compareDirs(baseline, candidate);
+  for (const r of results) {
+    console.log(r.ok ? `OK ${r.route}` : `DIFF ${r.route}: ${r.reason}`);
+  }
+  const identical = results.filter((r) => r.ok).length;
+  console.log(`compare: ${identical}/${results.length} identical`);
+  return identical === results.length ? 0 : 1;
 }
 
 /** @type {(keyof AllowedCounts)[]} */
@@ -471,15 +533,14 @@ const COMMANDS = {
     usage: "compare BASELINE_DIST_DIR CANDIDATE_DIST_DIR",
     min: 2,
     max: 2,
-    run: ([baseline, candidate]) => {
-      const results = compareDirs(baseline, candidate);
-      for (const r of results) {
-        console.log(r.ok ? `OK ${r.route}` : `DIFF ${r.route}: ${r.reason}`);
-      }
-      const identical = results.filter((r) => r.ok).length;
-      console.log(`compare: ${identical}/${results.length} identical`);
-      return identical === results.length ? 0 : 1;
-    },
+    run: ([baseline, candidate]) => runCompare(baseline, candidate),
+  },
+  fetch: {
+    usage: "fetch BASE_URL BASELINE_DIST_DIR OUT_DIR",
+    min: 3,
+    max: 3,
+    run: ([baseUrl, baseline, outDir]) =>
+      fetchRoutes(baseUrl, baseline, outDir),
   },
   derive: {
     usage: "derive INVENTORY_JSON ALLOWLIST_JSON GENERATED_FROM",
@@ -538,7 +599,7 @@ if (args.length < command.min || args.length > command.max) {
   usageExit([command.usage]);
 }
 try {
-  process.exitCode = command.run(args);
+  process.exitCode = await command.run(args);
 } catch (error) {
   console.error(`error: ${error instanceof Error ? error.message : error}`);
   process.exitCode = 1;
