@@ -1,7 +1,9 @@
 ---
+import type { HTMLTag } from "astro/types";
+
 interface Props {
   space?: string;
-  as?: string;
+  as?: HTMLTag;
 }
 
 const { space = "s1", as: Tag = "div" } = Astro.props;
