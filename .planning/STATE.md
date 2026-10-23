@@ -5,16 +5,16 @@ milestone_name: EmDash Migration
 current_phase: 01
 current_phase_name: Spike, Baseline and Decisions
 status: executing
-stopped_at: Completed 01-01-PLAN.md
-last_updated: "2026-10-23T20:18:26.681Z"
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-10-23T20:34:56.304Z"
 last_activity: 2026-10-23
 last_activity_desc: Phase 01 execution started
-state_head: 178b28ca21ba3a00c7f960dc60701c3d18c71c7f
+state_head: ed509d2a78cfda6a2d4eb354809e1ed688295f24
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 5
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-10-23)
 ## Current Position
 
 Phase: 01 (Spike, Baseline and Decisions) — EXECUTING
-Plan: 2 of 5
+Plan: 3 of 5
 Status: Ready to execute
 Last activity: 2026-10-23 — Phase 01 execution started
 
@@ -60,6 +60,7 @@ _Updated after each plan completion_
 | Plan | Duration | Tasks | Files |
 |------|----------|-------|-------|
 | Phase 01 P01 | 6 min | 2 tasks | 3 files |
+| Phase 01 P02 | 8min | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,9 @@ Recent decisions affecting current work:
 - [Roadmap]: Draft, preview, publish, revision restore and preview links are exercised on the deployed site (Phase 6).
 - [Phase 01]: Baseline captured at main f4e5470 (Node 24.17.0, astro 6.2.2) in ~/portfolio-baseline/2026-10-23; all later parity is judged against it via scripts/script-inventory.mjs
 - [Phase 01]: Allowlist scripts/script-allowlist.json is derived from the baseline inventory and committed; .emdash/migrations.json is not committed (revisit with GUARD-02 in Phase 5)
+- [Phase 01]: Stay on Astro 6.4.x with explicit majors; four residual npm advisories (astro, @astrojs/node, sharp, esbuild) recorded for plan 01-05 to become a named gate
+- [Phase 01]: Stack.astro 'as' prop typed as HTMLTag because @types/react (from @astrojs/react) rejects class on a string-typed dynamic tag
+- [Phase 01]: data/ must exist before EmDash opens SQLite; Phase 5 image must create and own it at the baked relative path
 
 ### Pending Todos
 
@@ -101,6 +105,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-23T20:18:26.652Z
-Stopped at: Completed 01-01-PLAN.md
+Last session: 2026-10-23T20:34:56.281Z
+Stopped at: Completed 01-02-PLAN.md
 Resume file: None
