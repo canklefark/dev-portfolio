@@ -5,16 +5,16 @@ milestone_name: EmDash Migration
 current_phase: 01
 current_phase_name: Spike, Baseline and Decisions
 status: executing
-stopped_at: Completed 01-03-PLAN.md
-last_updated: "2026-10-23T21:02:15.658Z"
+stopped_at: Completed 01-04-PLAN.md
+last_updated: "2026-10-23T21:12:51.048Z"
 last_activity: 2026-10-23
 last_activity_desc: Phase 01 execution started
-state_head: 6927ba5bdc49a380f7a89dbff4bdb44aae6b815c
+state_head: c4f5fd6550a40ddb08bf1ec112310bdf8e7622a6
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 5
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-10-23)
 ## Current Position
 
 Phase: 01 (Spike, Baseline and Decisions) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 Status: Ready to execute
 Last activity: 2026-10-23 — Phase 01 execution started
 
@@ -62,6 +62,7 @@ _Updated after each plan completion_
 | Phase 01 P01 | 6 min | 2 tasks | 3 files |
 | Phase 01 P02 | 8min | 3 tasks | 5 files |
 | Phase 01 P03 | 45min | 2 tasks | 7 files |
+| Phase 01 P04 | 9min | 2 tasks | 0 files |
 
 ## Accumulated Context
 
@@ -80,6 +81,9 @@ Recent decisions affecting current work:
 - [Phase 01]: Stack.astro 'as' prop typed as HTMLTag because @types/react (from @astrojs/react) rejects class on a string-typed dynamic tag
 - [Phase 01]: data/ must exist before EmDash opens SQLite; Phase 5 image must create and own it at the baked relative path
 - [Phase 01]: Node floor raised to >=22.22.2 (user decision A): @emdash-cms/registry-verification@0.3.4 needs ^22.22.2 || ^24.15.0 || >=26; .npmrc engine-strict copied into Docker dependency stages
+- [Phase 01]: Two passkeys sign in independently on EmDash 1.3.1 (internal and usb virtual authenticators, counters move only on the answering one); the credentials table has no rp id column, so rpId localhost is read from the authenticator
+- [Phase 01]: No-email recovery is a tested SQL procedure: stop server, sqlite3 .backup, integrity_check ok, DELETE users and emdash:setup_complete/setup_state with foreign_keys ON; schema and media survive and the wizard re-prompts site title and tagline
+- [Phase 01]: Media gate for Phase 5: cookie-authenticated writes need X-EmDash-Request (403 CSRF_REJECTED without it); uploads are served anonymously with a sandbox CSP and Range 206
 
 ### Pending Todos
 
@@ -107,6 +111,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-23T21:02:15.634Z
-Stopped at: Completed 01-03-PLAN.md
+Last session: 2026-10-23T21:12:51.023Z
+Stopped at: Completed 01-04-PLAN.md
 Resume file: None
