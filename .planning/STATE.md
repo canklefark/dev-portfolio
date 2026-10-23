@@ -5,16 +5,16 @@ milestone_name: EmDash Migration
 current_phase: 01
 current_phase_name: Spike, Baseline and Decisions
 status: executing
-stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-10-23T20:34:56.304Z"
+stopped_at: Completed 01-03-PLAN.md
+last_updated: "2026-10-23T21:02:15.658Z"
 last_activity: 2026-10-23
 last_activity_desc: Phase 01 execution started
-state_head: ed509d2a78cfda6a2d4eb354809e1ed688295f24
+state_head: 6927ba5bdc49a380f7a89dbff4bdb44aae6b815c
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 5
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # Project State
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-10-23)
 ## Current Position
 
 Phase: 01 (Spike, Baseline and Decisions) — EXECUTING
-Plan: 3 of 5
+Plan: 4 of 5
 Status: Ready to execute
 Last activity: 2026-10-23 — Phase 01 execution started
 
@@ -61,6 +61,7 @@ _Updated after each plan completion_
 |------|----------|-------|-------|
 | Phase 01 P01 | 6 min | 2 tasks | 3 files |
 | Phase 01 P02 | 8min | 3 tasks | 5 files |
+| Phase 01 P03 | 45min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -78,6 +79,7 @@ Recent decisions affecting current work:
 - [Phase 01]: Stay on Astro 6.4.x with explicit majors; four residual npm advisories (astro, @astrojs/node, sharp, esbuild) recorded for plan 01-05 to become a named gate
 - [Phase 01]: Stack.astro 'as' prop typed as HTMLTag because @types/react (from @astrojs/react) rejects class on a string-typed dynamic tag
 - [Phase 01]: data/ must exist before EmDash opens SQLite; Phase 5 image must create and own it at the baked relative path
+- [Phase 01]: Node floor raised to >=22.22.2 (user decision A): @emdash-cms/registry-verification@0.3.4 needs ^22.22.2 || ^24.15.0 || >=26; .npmrc engine-strict copied into Docker dependency stages
 
 ### Pending Todos
 
@@ -105,6 +107,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-23T20:34:56.281Z
-Stopped at: Completed 01-02-PLAN.md
+Last session: 2026-10-23T21:02:15.634Z
+Stopped at: Completed 01-03-PLAN.md
 Resume file: None
