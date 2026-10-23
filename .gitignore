@@ -28,3 +28,9 @@ pnpm-debug.log*
 .superpowers/
 .worktrees/
 docs/superpowers
+
+.vscode/  
+
+# EmDash runtime data (local SQLite and uploads) and per-build migration manifest
+data/
+.emdash/migrations.json

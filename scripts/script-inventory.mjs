@@ -20,6 +20,8 @@ import { join, relative, sep } from "node:path";
  * @typedef {{ file: string, scripts: ScriptRecord[], counts: RouteCounts }} RouteRecord
  * @typedef {{ routes: Record<string, RouteRecord> }} Inventory
  * @typedef {{ route: string, ok: boolean, reason: string }} RouteResult
+ * @typedef {{ script: number, module: number, external: number, modulepreload: number }} AllowedCounts
+ * @typedef {{ generatedFrom: string, inlineHashes: Record<string, string[]>, routes: Record<string, AllowedCounts> }} Allowlist
  * @typedef {{ usage: string, min: number, max: number, run: (args: string[]) => number }} Command
  */
 
@@ -216,6 +218,89 @@ function compareDirs(baseDir, candDir) {
   });
 }
 
+/** @type {(keyof AllowedCounts)[]} */
+const COUNT_KEYS = ["script", "module", "external", "modulepreload"];
+
+/**
+ * Allowlist from an inventory: per-route counts plus the set of inline executable hashes per type.
+ * Data scripts (JSON-LD) are never executable and stay out of both.
+ * @param {Inventory} inventory
+ * @param {string} generatedFrom
+ * @returns {Allowlist}
+ */
+function deriveAllowlist(inventory, generatedFrom) {
+  /** @type {Record<string, Set<string>>} */
+  const hashes = { classic: new Set(), module: new Set() };
+  /** @type {Record<string, AllowedCounts>} */
+  const routes = {};
+  for (const route of Object.keys(inventory.routes).sort()) {
+    const { scripts, counts } = inventory.routes[route];
+    for (const s of scripts) {
+      if (s.kind !== "inline" || s.sha256 === null) continue;
+      (hashes[s.type] ??= new Set()).add(s.sha256);
+    }
+    routes[route] = {
+      script: counts.script,
+      module: counts.module,
+      external: counts.external,
+      modulepreload: counts.modulepreload,
+    };
+  }
+  /** @type {Record<string, string[]>} */
+  const inlineHashes = {};
+  for (const type of Object.keys(hashes).sort()) {
+    inlineHashes[type] = [...hashes[type]].sort();
+  }
+  return { generatedFrom, inlineHashes, routes };
+}
+
+/**
+ * @param {string} path
+ * @returns {Allowlist}
+ */
+function readAllowlist(path) {
+  const allowlist = JSON.parse(readFileSync(path, "utf8"));
+  if (!allowlist.routes || !allowlist.inlineHashes) {
+    throw new Error(
+      `${path} is not an allowlist (routes or inlineHashes missing)`,
+    );
+  }
+  return allowlist;
+}
+
+/**
+ * Check built HTML against an allowlist: counts may not exceed it and every inline
+ * executable script must hash to a listed value for its type.
+ * @param {Allowlist} allowlist
+ * @param {string} dist
+ * @returns {RouteResult[]}
+ */
+function checkDir(allowlist, dist) {
+  const found = loadRoutes(dist);
+  return Object.keys(found)
+    .sort()
+    .map((route) => {
+      const allowed = allowlist.routes[route];
+      if (!allowed)
+        return { route, ok: false, reason: "route not in allowlist" };
+      const problems = COUNT_KEYS.filter(
+        (key) => found[route].counts[key] > allowed[key],
+      ).map(
+        (key) =>
+          `${key} ${found[route].counts[key]} exceeds allowed ${allowed[key]}`,
+      );
+      for (const s of found[route].scripts) {
+        if (s.kind !== "inline" || s.sha256 === null) continue;
+        if (!(allowlist.inlineHashes[s.type] ?? []).includes(s.sha256)) {
+          problems.push(
+            `inline ${s.type} script ${s.sha256} is not allowlisted`,
+          );
+        }
+      }
+      return { route, ok: problems.length === 0, reason: problems.join("; ") };
+    });
+}
+
 /**
  * @param {string} html
  * @param {string} marker
@@ -250,16 +335,27 @@ function editFirstInline(html) {
 }
 
 /**
- * @typedef {{ name: string, file: string | null, route: string | null, edit: (html: string) => string }} Mutation
+ * @typedef {{ name: string, file: string | null, route: string | null, executable: boolean, edit: (html: string) => string }} Mutation
  */
 
-/** @type {Mutation[]} */
+/**
+ * `executable` marks mutations that add or change something a browser would run, so an
+ * allowlist check must fail them. The compare must notice every mutation either way.
+ * @type {Mutation[]}
+ */
 const MUTATIONS = [
-  { name: "unchanged", file: null, route: null, edit: (html) => html },
+  {
+    name: "unchanged",
+    file: null,
+    route: null,
+    executable: false,
+    edit: (html) => html,
+  },
   {
     name: "inline-classic",
     file: "about/index.html",
     route: "/about",
+    executable: true,
     edit: (html) =>
       insertBefore(html, "</body>", "<script>window.__parity=1</script>"),
   },
@@ -267,6 +363,7 @@ const MUTATIONS = [
     name: "modulepreload",
     file: "index.html",
     route: "/",
+    executable: true,
     edit: (html) =>
       insertBefore(
         html,
@@ -278,6 +375,7 @@ const MUTATIONS = [
     name: "external-module",
     file: "projects/index.html",
     route: "/projects",
+    executable: true,
     edit: (html) =>
       insertBefore(
         html,
@@ -289,12 +387,14 @@ const MUTATIONS = [
     name: "edited-inline",
     file: "404.html",
     route: "/404",
+    executable: true,
     edit: editFirstInline,
   },
   {
     name: "json-ld",
     file: "about/index.html",
     route: "/about",
+    executable: false,
     edit: (html) =>
       insertBefore(
         html,
@@ -306,10 +406,13 @@ const MUTATIONS = [
 
 /**
  * Apply each mutation to a temporary copy of the baseline and confirm the compare notices it.
+ * With an allowlist, also confirm the check fails executable mutations and passes the rest.
  * @param {string} baseDir
+ * @param {string} [allowlistPath]
  * @returns {number}
  */
-function runSelftest(baseDir) {
+function runSelftest(baseDir, allowlistPath) {
+  const allowlist = allowlistPath ? readAllowlist(allowlistPath) : null;
   let detected = 0;
   for (const mutation of MUTATIONS) {
     const tmp = mkdtempSync(join(tmpdir(), "script-inventory-"));
@@ -323,11 +426,22 @@ function runSelftest(baseDir) {
         .filter((r) => !r.ok)
         .map((r) => r.route);
       const expected = mutation.route ? [mutation.route] : [];
-      const held =
+      let held =
         differing.length === expected.length &&
         differing.every((route, i) => route === expected[i]);
+      let detail = `differing routes [${differing.join(", ")}], expected [${expected.join(", ")}]`;
+      if (allowlist) {
+        const failing = checkDir(allowlist, tmp)
+          .filter((r) => !r.ok)
+          .map((r) => r.route);
+        const expectedFailing = mutation.executable ? expected : [];
+        held &&=
+          failing.length === expectedFailing.length &&
+          failing.every((route, i) => route === expectedFailing[i]);
+        detail += `; check failing [${failing.join(", ")}], expected [${expectedFailing.join(", ")}]`;
+      }
       console.log(
-        `${held ? "DETECTED" : "MISSED"} ${mutation.name}: differing routes [${differing.join(", ")}], expected [${expected.join(", ")}]`,
+        `${held ? "DETECTED" : "MISSED"} ${mutation.name}: ${detail}`,
       );
       if (held) detected++;
     } finally {
@@ -367,11 +481,40 @@ const COMMANDS = {
       return identical === results.length ? 0 : 1;
     },
   },
+  derive: {
+    usage: "derive INVENTORY_JSON ALLOWLIST_JSON GENERATED_FROM",
+    min: 3,
+    max: 3,
+    run: ([inventoryPath, allowlistPath, generatedFrom]) => {
+      /** @type {Inventory} */
+      const inventory = JSON.parse(readFileSync(inventoryPath, "utf8"));
+      const allowlist = deriveAllowlist(inventory, generatedFrom);
+      writeFileSync(allowlistPath, JSON.stringify(allowlist, null, 2) + "\n");
+      console.log(
+        `derived ${Object.keys(allowlist.routes).length} routes to ${allowlistPath}`,
+      );
+      return 0;
+    },
+  },
+  check: {
+    usage: "check ALLOWLIST_JSON DIST_DIR",
+    min: 2,
+    max: 2,
+    run: ([allowlistPath, dist]) => {
+      const results = checkDir(readAllowlist(allowlistPath), dist);
+      for (const r of results) {
+        console.log(r.ok ? `PASS ${r.route}` : `FAIL ${r.route}: ${r.reason}`);
+      }
+      const passed = results.filter((r) => r.ok).length;
+      console.log(`check: ${passed}/${results.length} passed`);
+      return passed === results.length ? 0 : 1;
+    },
+  },
   selftest: {
-    usage: "selftest BASELINE_DIST_DIR",
+    usage: "selftest BASELINE_DIST_DIR [ALLOWLIST_JSON]",
     min: 1,
-    max: 1,
-    run: ([baseline]) => runSelftest(baseline),
+    max: 2,
+    run: ([baseline, allowlistPath]) => runSelftest(baseline, allowlistPath),
   },
 };
 

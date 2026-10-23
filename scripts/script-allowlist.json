@@ -1,0 +1,118 @@
+{
+  "generatedFrom": "main@f4e54700d978da2249b4e0ae0c7a3c3377ba1125 astro 6.2.2",
+  "inlineHashes": {
+    "classic": [
+      "sha256-1X+Qtehj3LJIBoJF+6CXrA2v2MSmxZykuiX0PeDQGfc=",
+      "sha256-n9FjObMaBMueyJSDGWwmYbOw8llOB8uCSRQYMMjzzI4=",
+      "sha256-nBjgE3v+D5WJbrQs62ShGC2d6WC/nv35blQO7AgyZVQ="
+    ],
+    "module": [
+      "sha256-F334q3DDzRUWRvu8VD/Dtf8/1/iaSQZEfbyncU3E1SI=",
+      "sha256-GDi/JH0wbC7CD6K+qsyPu1LB3gWLpzWIPKOksfhJSkw="
+    ]
+  },
+  "routes": {
+    "/": {
+      "script": 4,
+      "module": 1,
+      "external": 0,
+      "modulepreload": 0
+    },
+    "/404": {
+      "script": 5,
+      "module": 2,
+      "external": 0,
+      "modulepreload": 0
+    },
+    "/about": {
+      "script": 4,
+      "module": 1,
+      "external": 0,
+      "modulepreload": 0
+    },
+    "/projects": {
+      "script": 4,
+      "module": 1,
+      "external": 0,
+      "modulepreload": 0
+    },
+    "/projects/agency-ops-hub": {
+      "script": 4,
+      "module": 1,
+      "external": 0,
+      "modulepreload": 0
+    },
+    "/projects/agent-tools": {
+      "script": 4,
+      "module": 1,
+      "external": 0,
+      "modulepreload": 0
+    },
+    "/projects/catalog-cms": {
+      "script": 4,
+      "module": 1,
+      "external": 0,
+      "modulepreload": 0
+    },
+    "/projects/deploy-app": {
+      "script": 4,
+      "module": 1,
+      "external": 0,
+      "modulepreload": 0
+    },
+    "/projects/dev-portfolio": {
+      "script": 4,
+      "module": 1,
+      "external": 0,
+      "modulepreload": 0
+    },
+    "/projects/disnes-optimizer": {
+      "script": 4,
+      "module": 1,
+      "external": 0,
+      "modulepreload": 0
+    },
+    "/projects/homelab-k8s": {
+      "script": 4,
+      "module": 1,
+      "external": 0,
+      "modulepreload": 0
+    },
+    "/projects/k-one": {
+      "script": 4,
+      "module": 1,
+      "external": 0,
+      "modulepreload": 0
+    },
+    "/projects/observability-stack": {
+      "script": 4,
+      "module": 1,
+      "external": 0,
+      "modulepreload": 0
+    },
+    "/projects/platform-hub": {
+      "script": 4,
+      "module": 1,
+      "external": 0,
+      "modulepreload": 0
+    },
+    "/projects/revlog": {
+      "script": 4,
+      "module": 1,
+      "external": 0,
+      "modulepreload": 0
+    },
+    "/projects/self-hosted-services": {
+      "script": 4,
+      "module": 1,
+      "external": 0,
+      "modulepreload": 0
+    },
+    "/projects/throughline-pricing": {
+      "script": 4,
+      "module": 1,
+      "external": 0,
+      "modulepreload": 0
+    }
+  }
+}
