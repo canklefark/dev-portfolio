@@ -4,13 +4,13 @@ FROM node:${NODE_VERSION}-alpine AS base
 WORKDIR /app
 
 FROM base AS build
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json .npmrc ./
 RUN npm ci
 COPY . .
 RUN npm run build
 
 FROM base AS prod-deps
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json .npmrc ./
 RUN npm ci --omit=dev
 
 FROM base AS runtime
