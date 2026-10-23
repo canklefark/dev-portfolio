@@ -38,7 +38,7 @@ Pin dependencies, capture the current site as a baseline before anything changes
 ### Branch, pins, Node
 - **D-13:** All migration work lives on a long-lived local branch `emdash-migration`. `main` stays deployable (it auto-deploys to Cloudflare Pages today). Nothing is pushed without the user's go-ahead.
 - **D-14:** Dependencies use caret ranges plus a committed lockfile.
-- **D-15:** `engines.node` is `>=22.16.0` (EmDash's floor). `.nvmrc` and the Dockerfile base image use Node 24, matching local Node 24.17. If the spike finds Node 24 incompatible, fall back to 22 and record it.
+- **D-15:** `engines.node` is `>=22.22.2` (raised from 22.16.0 during planning-execution: EmDash 1.3.1 dependency registry-verification needs ^22.22.2). `.nvmrc` and the Dockerfile base image use Node 24, matching local Node 24.17. If the spike finds Node 24 incompatible, fall back to 22 and record it.
 
 ### Claude's Discretion
 - Media storage option on Node and the exact Dockerfile layout.
