@@ -428,6 +428,20 @@ function readAllowlist(path) {
 }
 
 /**
+ * Allowed counts for a route: the exact key wins, otherwise a wildcard key "<parent>/*" matches a
+ * route with exactly one more path segment ("/projects/*" matches "/projects/x", not "/projects/x/y").
+ * @param {Allowlist} allowlist
+ * @param {string} route
+ * @returns {AllowedCounts | undefined}
+ */
+function allowedFor(allowlist, route) {
+  if (Object.hasOwn(allowlist.routes, route)) return allowlist.routes[route];
+  const wildcard = `${route.slice(0, route.lastIndexOf("/"))}/*`;
+  if (route === "/" || !Object.hasOwn(allowlist.routes, wildcard)) return;
+  return allowlist.routes[wildcard];
+}
+
+/**
  * Check built HTML against an allowlist: counts may not exceed it and every inline
  * executable script must hash to a listed value for its type.
  * @param {Allowlist} allowlist
@@ -439,7 +453,7 @@ function checkDir(allowlist, dist) {
   return Object.keys(found)
     .sort()
     .map((route) => {
-      const allowed = allowlist.routes[route];
+      const allowed = allowedFor(allowlist, route);
       if (!allowed)
         return { route, ok: false, reason: "route not in allowlist" };
       const problems = COUNT_KEYS.filter(

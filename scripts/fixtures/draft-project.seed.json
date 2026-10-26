@@ -1,0 +1,30 @@
+{
+  "$schema": "https://emdashcms.com/seed.schema.json",
+  "version": "1",
+  "content": {
+    "projects": [
+      {
+        "id": "projects:draft-fixture-project",
+        "slug": "draft-fixture-project",
+        "status": "draft",
+        "data": {
+          "title": "Draft Fixture Project",
+          "date": "2026-01-01T00:00:00.000Z",
+          "project_status": "DRAFT FIXTURE",
+          "status_variant": "default",
+          "surface": "FIXTURE",
+          "time_label": "FIXTURE",
+          "period": "Fixture",
+          "summary": "Fixture entry that must never render publicly.",
+          "sub": "Fixture entry the public-JS guard uses to prove drafts return 404.",
+          "stats": [],
+          "body": []
+        },
+        "taxonomies": {
+          "category": ["client-work"],
+          "tag": []
+        }
+      }
+    ]
+  }
+}

@@ -1,6 +1,7 @@
 // @ts-check
-// Public-JS guard (GUARD-01): builds the site, seeds a throwaway database from .emdash/seed.json, serves the
-// Node build from a temp directory on 127.0.0.1, asserts the HTTP status of every public route, then runs the
+// Public-JS guard (GUARD-01): builds the site, seeds a throwaway database from .emdash/seed.json plus a draft
+// fixture, serves the Node build from a temp directory on 127.0.0.1, asserts the HTTP status of every public
+// route (project routes are crawled from /projects/), the 404 cases and the admin route, then runs the
 // script-inventory allowlist check on the fetched pages. The repo data/ directory is never read or written.
 // usage: node scripts/check-public-js.mjs [--skip-build] [--out DIR]
 //   --skip-build  reuse the existing dist/ instead of running npm run build
@@ -10,7 +11,6 @@ import {
   existsSync,
   mkdirSync,
   mkdtempSync,
-  readFileSync,
   rmSync,
   writeFileSync,
 } from "node:fs";
@@ -18,6 +18,7 @@ import { createServer } from "node:net";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { DatabaseSync } from "node:sqlite";
 
 /**
  * @typedef {{ skipBuild: boolean, out: string | null }} Options
@@ -34,6 +35,12 @@ const KEPT_LINES = 50;
 const MISSING_ROUTE = "/__parity_missing_route__/";
 // Slug no project has: must answer 404 (fetched, never written).
 const MISSING_PROJECT = "/projects/__no_such_slug__/";
+// Draft entry applied from the fixture seed: must answer 404 and never appear on /projects/.
+const DRAFT_SLUG = "draft-fixture-project";
+// Published project whose database id, wrong-case slug and extra segment must all answer 404.
+const KNOWN_SLUG = "catalog-cms";
+const WRONG_CASE_SLUG = "Catalog-CMS";
+const ADMIN_PATH = "/_emdash/admin";
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -60,32 +67,100 @@ function parseArgs(argv) {
 }
 
 /**
- * Pages to fetch, taken from the allowlist routes that name one page (no wildcard).
+ * Fixed page routes plus one route per project slug crawled from the /projects/ body.
  * "/" is fetched at "/", "/404" through an unmatched path, every other route at "<route>/".
- * The negative route is fetched too but never written.
+ * @param {string[]} slugs
  * @returns {RouteCheck[]}
  */
-function loadChecks() {
-  const allowlist = JSON.parse(
-    readFileSync(join(repo, "scripts", "script-allowlist.json"), "utf8"),
-  );
-  const routes = Object.keys(allowlist.routes)
-    .filter((route) => !route.includes("*"))
-    .sort();
-  /** @type {RouteCheck[]} */
-  const checks = routes.map((route) => {
-    if (route === "/") return { path: "/", expected: 200, file: "index.html" };
-    if (route === "/404") {
-      return { path: MISSING_ROUTE, expected: 404, file: "404.html" };
-    }
-    return {
-      path: `${route}/`,
+function pageChecks(slugs) {
+  return [
+    { path: "/", expected: 200, file: "index.html" },
+    { path: MISSING_ROUTE, expected: 404, file: "404.html" },
+    { path: "/about/", expected: 200, file: "about/index.html" },
+    { path: "/projects/", expected: 200, file: "projects/index.html" },
+    ...slugs.map((slug) => ({
+      path: `/projects/${slug}/`,
       expected: 200,
-      file: `${route.slice(1)}/index.html`,
-    };
+      file: `projects/${slug}/index.html`,
+    })),
+  ];
+}
+
+/**
+ * Paths that must answer 404: unknown, draft, database id, wrong case and an extra segment.
+ * @param {string} projectId database id of the published KNOWN_SLUG entry
+ * @returns {string[]}
+ */
+function negativePaths(projectId) {
+  return [
+    MISSING_PROJECT,
+    `/projects/${DRAFT_SLUG}/`,
+    `/projects/${projectId}/`,
+    `/projects/${WRONG_CASE_SLUG}/`,
+    `/projects/${KNOWN_SLUG}/extra/`,
+  ];
+}
+
+/**
+ * Project slugs linked from a /projects/ body, sorted and without duplicates.
+ * @param {string} html
+ * @returns {string[]}
+ */
+function crawlSlugs(html) {
+  const slugs = new Set(
+    [...html.matchAll(/href="\/projects\/([a-z0-9-]+)\/?"/g)].map((m) => m[1]),
+  );
+  return [...slugs].sort();
+}
+
+/**
+ * Apply a seed file to the temp database. The path is an argument array entry, never a shell string.
+ * @param {string} work temp working directory holding data/
+ * @param {string} seedPath
+ * @returns {boolean}
+ */
+function applySeed(work, seedPath) {
+  const seed = spawnSync(
+    process.execPath,
+    [
+      join(repo, "node_modules", "emdash", "dist", "cli", "index.mjs"),
+      "seed",
+      seedPath,
+      "-d",
+      "./data/emdash.db",
+      "--cwd",
+      work,
+      "--skip-media",
+    ],
+    { cwd: work, encoding: "utf8" },
+  );
+  if (seed.status !== 0) {
+    console.log(`${seed.stdout ?? ""}${seed.stderr ?? ""}`.trimEnd());
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Database id of a published project, read from the temp database (never the repo data/).
+ * @param {string} work temp working directory holding data/
+ * @param {string} slug
+ * @returns {string | null}
+ */
+function projectId(work, slug) {
+  const db = new DatabaseSync(join(work, "data", "emdash.db"), {
+    readOnly: true,
   });
-  checks.push({ path: MISSING_PROJECT, expected: 404, file: null });
-  return checks;
+  try {
+    const row = db
+      .prepare(
+        "SELECT id FROM ec_projects WHERE slug = ? AND deleted_at IS NULL",
+      )
+      .get(slug);
+    return typeof row?.id === "string" ? row.id : null;
+  } finally {
+    db.close();
+  }
 }
 
 /** @returns {Promise<number>} a free port on the loopback interface */
@@ -125,6 +200,35 @@ async function waitForHealth(base, serverExited) {
     }
     await sleep(250);
   }
+  return false;
+}
+
+/**
+ * The admin answers under /_emdash/ only: 200 directly, or a redirect to a same-origin /_emdash/
+ * path that answers 200 (ADMIN-01).
+ * @param {string} base
+ * @returns {Promise<boolean>}
+ */
+async function checkAdmin(base) {
+  let path = ADMIN_PATH;
+  for (let hop = 0; hop < 3; hop++) {
+    const response = await fetch(base + path, {
+      redirect: "manual",
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
+    console.log(`ADMIN ${path} ${response.status}`);
+    if (response.status === 200) return true;
+    const location = response.headers.get("location");
+    if (response.status < 300 || response.status >= 400 || location === null) {
+      break;
+    }
+    const target = new URL(location, base);
+    if (target.origin !== base || !target.pathname.startsWith("/_emdash/")) {
+      break;
+    }
+    path = target.pathname + target.search;
+  }
+  console.log(`UNEXPECTED ${ADMIN_PATH}: no 200 answer under /_emdash/`);
   return false;
 }
 
@@ -188,28 +292,23 @@ async function run(options) {
 
   // Fresh working directory: the server reads ./data/emdash.db relative to its cwd, so the
   // repo database is never opened. Seed before the first start (an unseeded database
-  // would be auto-seeded with the default collections).
+  // would be auto-seeded with the default collections). The draft fixture goes in second.
   const work = mkdtempSync(join(tmpdir(), "check-public-js-"));
   tempDirs.push(work);
   mkdirSync(join(work, "data"));
-  const seed = spawnSync(
-    process.execPath,
-    [
-      join(repo, "node_modules", "emdash", "dist", "cli", "index.mjs"),
-      "seed",
-      join(repo, ".emdash", "seed.json"),
-      "-d",
-      "./data/emdash.db",
-      "--cwd",
-      work,
-      "--skip-media",
-    ],
-    { cwd: work, encoding: "utf8" },
-  );
-  if (seed.status !== 0) {
-    console.log(`${seed.stdout ?? ""}${seed.stderr ?? ""}`.trimEnd());
+  if (!applySeed(work, join(repo, ".emdash", "seed.json"))) {
     return "seed failed";
   }
+  if (
+    !applySeed(
+      work,
+      join(repo, "scripts", "fixtures", "draft-project.seed.json"),
+    )
+  ) {
+    return "draft fixture seed failed";
+  }
+  const knownId = projectId(work, KNOWN_SLUG);
+  if (knownId === null) return `no published project with slug ${KNOWN_SLUG}`;
 
   let outDir = options.out;
   if (outDir === null) {
@@ -218,6 +317,7 @@ async function run(options) {
   } else {
     mkdirSync(outDir, { recursive: true });
   }
+  const outputDir = outDir;
 
   const port = await freePort();
   const base = `http://${HOST}:${port}`;
@@ -246,25 +346,63 @@ async function run(options) {
   // Assert every status before the script check: an error page carries fewer scripts and
   // would pass the allowlist.
   let unexpected = 0;
-  for (const check of loadChecks()) {
-    const response = await fetch(base + check.path, {
+  /** @type {string[]} */
+  const adminRefs = [];
+
+  /**
+   * @param {string} label
+   * @param {string} path
+   * @param {number} expected
+   * @param {string | null} file where to write the body, null to discard it
+   * @returns {Promise<string | null>} the body when the status matched
+   */
+  async function visit(label, path, expected, file) {
+    const response = await fetch(base + path, {
       redirect: "manual",
       signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });
-    console.log(`FETCH ${check.path} ${response.status}`);
-    if (response.status !== check.expected) {
+    console.log(`${label} ${path} ${response.status}`);
+    const body = await response.text();
+    if (response.status !== expected) {
       console.log(
-        `UNEXPECTED ${check.path}: status ${response.status}, expected ${check.expected}`,
+        `UNEXPECTED ${path}: status ${response.status}, expected ${expected}`,
       );
       unexpected++;
-      continue;
+      return null;
     }
-    if (check.file === null) continue;
-    const target = join(outDir, check.file);
-    mkdirSync(dirname(target), { recursive: true });
-    writeFileSync(target, await response.text());
+    if (body.includes("/_emdash/")) {
+      console.log(`ADMIN-REF ${path}`);
+      adminRefs.push(path);
+    }
+    if (file !== null) {
+      const target = join(outputDir, file);
+      mkdirSync(dirname(target), { recursive: true });
+      writeFileSync(target, body);
+    }
+    return body;
   }
+
+  // Routes come from content: crawl the project links on /projects/ so a new project cannot escape.
+  const index = await visit("FETCH", "/projects/", 200, "projects/index.html");
+  if (index === null) return "1 unexpected status";
+  const slugs = crawlSlugs(index);
+  if (slugs.length === 0) return "no project links found on /projects/";
+  if (slugs.includes(DRAFT_SLUG) || index.includes(DRAFT_SLUG)) {
+    console.log(`UNEXPECTED /projects/: lists draft ${DRAFT_SLUG}`);
+    return "draft project listed on /projects/";
+  }
+  for (const check of pageChecks(slugs)) {
+    if (check.path === "/projects/") continue;
+    await visit("FETCH", check.path, check.expected, check.file);
+  }
+  for (const path of negativePaths(knownId)) {
+    await visit("NEGATIVE", path, 404, null);
+  }
+  if (!(await checkAdmin(base))) unexpected++;
   if (unexpected > 0) return `${unexpected} unexpected status`;
+  if (adminRefs.length > 0) {
+    return `${adminRefs.length} public pages reference /_emdash/`;
+  }
 
   const inventory = spawnSync(
     process.execPath,
@@ -272,7 +410,7 @@ async function run(options) {
       join(repo, "scripts", "script-inventory.mjs"),
       "check",
       join(repo, "scripts", "script-allowlist.json"),
-      outDir,
+      outputDir,
     ],
     { stdio: "inherit" },
   );

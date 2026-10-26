@@ -36,6 +36,12 @@
       "external": 0,
       "modulepreload": 0
     },
+    "/projects/*": {
+      "script": 4,
+      "module": 1,
+      "external": 0,
+      "modulepreload": 0
+    },
     "/projects/agency-ops-hub": {
       "script": 4,
       "module": 1,
