@@ -4,7 +4,7 @@
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
 import { DatabaseSync } from "node:sqlite";
 import { portableTextToMarkdown } from "emdash/client";
 import {
@@ -20,6 +20,7 @@ import {
   taxonomyDefinitions,
   termSlug,
 } from "./lib/schema.mjs";
+import { runAsEntry } from "./lib/entry.mjs";
 import { loadSourceModel } from "./lib/sources.mjs";
 
 /**
@@ -658,11 +659,4 @@ function main(argv) {
   return report.differences.length === 0 ? 0 : 1;
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
-  try {
-    process.exitCode = main(process.argv.slice(2));
-  } catch (error) {
-    console.error(`error: ${error instanceof Error ? error.message : error}`);
-    process.exitCode = 1;
-  }
-}
+runAsEntry(import.meta.url, main);

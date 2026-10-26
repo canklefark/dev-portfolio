@@ -6,7 +6,7 @@ import { execFileSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
 import { markdownToPortableText } from "emdash/client";
 import {
   ABOUT_SLUG,
@@ -20,6 +20,7 @@ import {
   taxonomyDefinitions,
   termSlug,
 } from "./lib/schema.mjs";
+import { runAsEntry } from "./lib/entry.mjs";
 import { loadSourceModel } from "./lib/sources.mjs";
 
 /**
@@ -260,11 +261,4 @@ function main(argv) {
   return 0;
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
-  try {
-    process.exitCode = main(process.argv.slice(2));
-  } catch (error) {
-    console.error(`error: ${error instanceof Error ? error.message : error}`);
-    process.exitCode = 1;
-  }
-}
+runAsEntry(import.meta.url, main);

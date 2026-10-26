@@ -8,7 +8,10 @@ import {
   mkdirSync,
   mkdtempSync,
   readFileSync,
+  realpathSync,
   rmSync,
+  symlinkSync,
+  writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -960,5 +963,117 @@ describe("category and tag are EmDash taxonomies (D-05 and D-09 amended)", () =>
       assert.equal(run.status, 1, run.stderr);
       assert.match(run.stdout, /DIFF schema tag\.terms/);
     });
+  });
+});
+
+describe("the CLI entry guard compares realpaths (HI-01)", () => {
+  const real = loadSourceModel(REPO_ROOT);
+
+  /**
+   * Run fn with a temp root that holds `linkrepo`, a symlink to the repo, and a `target` root path.
+   * @template T
+   * @param {(link: string, target: string, root: string) => T} fn
+   * @returns {T}
+   */
+  function withLinkedRepo(fn) {
+    return withRoot((root) => {
+      const link = join(root, "linkrepo");
+      symlinkSync(realpathSync(REPO_ROOT), link, "dir");
+      return fn(link, join(root, "target"), root);
+    });
+  }
+
+  it("runs the importer when it is reached through a symlinked directory", () => {
+    withLinkedRepo((link, target, root) => {
+      const run = spawnSync(
+        process.execPath,
+        [join(link, "scripts/import-content.mjs"), "--root", target],
+        { cwd: root, encoding: "utf8" },
+      );
+      assert.equal(run.status, 0, run.stderr);
+      assert.match(run.stdout, /^import: 13 projects and 1 about applied to /m);
+      assert.equal(existsSync(join(target, "data/emdash.db")), true);
+    });
+  });
+
+  it("runs the verifier through a symlink, writes its report and exits 0 on a match", () => {
+    withLinkedRepo((link, target, root) => {
+      applyModel(real, target);
+      const reportPath = join(root, "report.json");
+      const run = spawnSync(
+        process.execPath,
+        [
+          join(link, "scripts/verify-import.mjs"),
+          "--root",
+          target,
+          "--report",
+          reportPath,
+        ],
+        { cwd: root, encoding: "utf8" },
+      );
+      assert.equal(run.status, 0, run.stderr);
+      assert.match(run.stdout, /verify: \d+\/\d+ checks match, 0 differences/);
+      assert.equal(existsSync(reportPath), true);
+    });
+  });
+
+  it("exits 1 from a failing verify run through a symlink", () => {
+    const mutated = structuredClone(real);
+    const catalog = mutated.projects.find((p) => p.slug === "catalog-cms");
+    assert.ok(catalog);
+    catalog.summary =
+      (catalog.summary[0] === "X" ? "Y" : "X") + catalog.summary.slice(1);
+    withLinkedRepo((link, target, root) => {
+      applyModel(mutated, target);
+      const run = spawnSync(
+        process.execPath,
+        [
+          join(link, "scripts/verify-import.mjs"),
+          "--root",
+          target,
+          "--report",
+          join(root, "report.json"),
+        ],
+        { cwd: root, encoding: "utf8" },
+      );
+      assert.equal(run.status, 1, run.stderr);
+      assert.match(run.stdout, /DIFF projects catalog-cms\.summary/);
+    });
+  });
+
+  it("exits 1 instead of silently passing when a same-named script does not resolve to the module", () => {
+    withRoot((root) => {
+      const wrapperDir = join(root, "other");
+      mkdirSync(wrapperDir);
+      for (const script of ["import-content.mjs", "verify-import.mjs"]) {
+        const wrapper = join(wrapperDir, script);
+        writeFileSync(
+          wrapper,
+          `import ${JSON.stringify(join(REPO_ROOT, "scripts", script))};\n`,
+        );
+        const run = spawnSync(process.execPath, [wrapper], {
+          cwd: root,
+          encoding: "utf8",
+        });
+        assert.equal(run.status, 1, `${script}: ${run.stderr}`);
+        assert.match(run.stderr, /refusing to exit 0 without running/);
+      }
+    });
+  });
+
+  it("does not throw when the module is loaded with no argv[1] (node -e)", () => {
+    for (const script of ["import-content.mjs", "verify-import.mjs"]) {
+      const run = spawnSync(
+        process.execPath,
+        [
+          "--input-type=module",
+          "-e",
+          `await import(${JSON.stringify(join(REPO_ROOT, "scripts", script))})`,
+        ],
+        { cwd: REPO_ROOT, encoding: "utf8" },
+      );
+      assert.equal(run.status, 0, `${script}: ${run.stderr}`);
+      assert.equal(run.stdout, "");
+    }
   });
 });
