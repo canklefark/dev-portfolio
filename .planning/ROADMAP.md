@@ -18,7 +18,7 @@ This milestone moves the portfolio's content out of hand-edited markdown in git 
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Spike, Baseline and Decisions** - Pin dependencies, capture the current site as a baseline, and settle the platform questions with measurements (completed 2026-10-23)
-- [ ] **Phase 2: Content Model and Import** - Build the EmDash schema and import all 13 projects, About, nav and settings with a zero-diff parity report
+- [x] **Phase 2: Content Model and Import** - Build the EmDash schema and import all 13 projects, About, nav and settings with a zero-diff parity report (completed 2026-10-26)
 - [ ] **Phase 3: Read Path Rewire and Parity** - Public pages read from EmDash, look identical, ship no new JavaScript, and the markdown sources are gone
 - [ ] **Phase 4: Agent Access** - Claude manages content through MCP or CLI with a draft-first token that cannot touch the schema
 - [ ] **Phase 5: Dokploy Deploy and Cutover** - dev.zeikcookson.com moves to a Dokploy Node container with SQLite on a persistent volume, a claimed passkey admin, and migration-safe deploys
@@ -75,7 +75,7 @@ Plans:
 4. A field-by-field equality report shows zero differences in copy, dates, order, tags, stats and status against the source markdown
 5. Generated types are committed, and the committed seed file rebuilds the same schema and content in a fresh local database
 
-**Plans**: 4/4 plans executed
+**Plans**: 4/4 plans complete
 
 Plans:
 **Wave 1**
@@ -161,7 +161,7 @@ Phases execute in numeric order: 1, 2, 3, 4, 5, 6
 | Phase                            | Plans Complete | Status      | Completed  |
 | -------------------------------- | -------------- | ----------- | ---------- |
 | 1. Spike, Baseline and Decisions | 5/5            | Complete    | 2026-10-23 |
-| 2. Content Model and Import      | 4/4 | In Progress | -          |
+| 2. Content Model and Import      | 4/4 | Complete    | 2026-10-26 |
 | 3. Read Path Rewire and Parity   | 0/TBD          | Not started | -          |
 | 4. Agent Access                  | 0/TBD          | Not started | -          |
 | 5. Dokploy Deploy and Cutover    | 0/TBD          | Not started | -          |
