@@ -25,7 +25,11 @@
       "Bash(emdash content schedule *)",
       "Bash(emdash content delete *)",
       "Bash(emdash media delete *)",
-      "Bash(curl *_emdash*)"
+      "Bash(curl *_emdash*)",
+      "Edit(/.claude/**)",
+      "Write(/.claude/**)",
+      "Edit(/.mcp.json)",
+      "Write(/.mcp.json)"
     ]
   },
   "hooks": {

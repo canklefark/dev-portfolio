@@ -611,6 +611,15 @@ describe("deny rules", () => {
     assert.ok(bashRules().includes("Bash(curl *_emdash*)"));
   });
 
+  it("denies Edit and Write on the guard, the project settings and .mcp.json", () => {
+    // /.claude/** covers .claude/hooks/emdash-guard.mjs, .claude/settings.json and settings.local.json.
+    for (const tool of ["Edit", "Write"]) {
+      for (const path of ["/.claude/**", "/.mcp.json"]) {
+        assert.ok(denyList().includes(`${tool}(${path})`), `${tool}(${path})`);
+      }
+    }
+  });
+
   it("also blocks every denied CLI command through the hook", () => {
     for (const rule of bashRules().filter((r) => !r.startsWith("Bash(curl"))) {
       const command = rule
