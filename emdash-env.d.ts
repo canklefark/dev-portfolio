@@ -30,13 +30,11 @@ export interface Project {
   status: string;
   title: string;
   date: string;
-  category: "Agency Tooling" | "Client Work" | "Developer Tools" | "Homelab Infrastructure" | "Observability" | "Personal Projects" | "Revenue Intelligence" | "Self-Hosted Services" | "Web Development";
   project_status: string;
   status_variant: "accent" | "green" | "default";
   surface: string;
   time_label: string;
   period: string;
-  tags?: ("Agent Skills" | "Ansible" | "Astro" | "Azure Pipelines" | "Bash" | "Better Auth" | "Claude Code Plugin" | "Cloudflare Pages" | "Cloudflare R2" | "Cloudflare Workers" | "Cron Workers" | "Docker" | "Docker Compose" | "Dokploy" | "Drizzle" | "Entra ID" | "Flux" | "GitHub" | "Google Workspace SSO" | "Grafana" | "IIS" | "Immich" | "Kubernetes" | "MCP" | "Marketplace" | "Mealie" | "Ollama" | "PWA" | "Paperless-ngx" | "Playwright" | "PostgreSQL" | "Prometheus" | "Puppeteer" | "SQL Server" | "SQLite" | "Svelte 5" | "SvelteKit" | "Tailwind" | "Tailwind CSS" | "Turborepo" | "TypeScript" | "WordPress" | "k3s" | "node_exporter" | "shadcn-svelte")[];
   summary: string;
   sub: string;
   stats?: { "label": string; "value": string; "variant": "default" | "green" | "accent" }[];
