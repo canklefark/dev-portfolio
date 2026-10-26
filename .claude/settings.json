@@ -1,4 +1,17 @@
 {
+  "permissions": {
+    "deny": [
+      "mcp__emdash__content_publish",
+      "mcp__emdash__content_unpublish",
+      "mcp__emdash__content_schedule",
+      "mcp__emdash__content_unschedule",
+      "mcp__emdash__content_delete",
+      "mcp__emdash__content_permanent_delete",
+      "mcp__emdash__taxonomy_create",
+      "mcp__emdash__taxonomy_update",
+      "mcp__emdash__taxonomy_delete"
+    ]
+  },
   "hooks": {
     "PreToolUse": [
       {

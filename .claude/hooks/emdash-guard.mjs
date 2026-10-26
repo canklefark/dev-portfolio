@@ -1,7 +1,9 @@
 // @ts-check
 // Client-side publish guard for the emdash MCP tools (D-01 amended, D-12). EmDash 1.3.1 has no publish scope
 // and a token inherits its owner's admin role, so the server alone cannot keep the agent draft-only. This
-// hook refuses the live-write arguments on content_update before the request leaves the session.
+// hook refuses the publish-class and taxonomy definition tools, the live-write arguments on content_update and
+// a publish on content_create before the request leaves the session. Schema and settings tools are deferred so
+// the server's INSUFFICIENT_SCOPE refusal (AGENT-03) is what shows.
 // usage: Claude Code PreToolUse command hook. Reads the hook JSON on stdin. Exit 2 with the reason on stderr
 //   blocks the call, exit 0 defers to the normal permission flow.
 //   by hand: node .claude/hooks/emdash-guard.mjs < payload.json
@@ -23,6 +25,36 @@ const UPDATE_ALLOWED_KEYS = new Set([
   "replaceBlocks",
 ]);
 
+// Publish-class tools (D-01) and the taxonomy definition tools (AGENT-03). The deny rules in settings.json
+// list the same nine names; the hook refuses them again as a second layer.
+const BLOCKED_TOOLS = new Set([
+  "content_publish",
+  "content_unpublish",
+  "content_schedule",
+  "content_unschedule",
+  "content_delete",
+  "content_permanent_delete",
+  "taxonomy_create",
+  "taxonomy_update",
+  "taxonomy_delete",
+]);
+
+// content_create inputs. A new entry starts as a draft and drafts answer 404 on the public site, so tagging
+// one touches no live page. status is allowed here only as "draft", checked in check().
+const CREATE_ALLOWED_KEYS = new Set([
+  "collection",
+  "data",
+  "slug",
+  "locale",
+  "translationOf",
+  "migrateBlocks",
+  "replaceBlocks",
+  "bylines",
+  "taxonomies",
+  "seo",
+  "status",
+]);
+
 /**
  * @param {unknown} value
  * @returns {value is Record<string, unknown>}
@@ -40,6 +72,30 @@ function isPlainObject(value) {
 function check(toolName, toolInput) {
   if (!toolName.startsWith(TOOL_PREFIX)) return null;
   const tool = toolName.slice(TOOL_PREFIX.length);
+
+  if (BLOCKED_TOOLS.has(tool)) {
+    return tool.startsWith("taxonomy_")
+      ? "taxonomy definitions are part of the content model and are changed in the admin (AGENT-03)."
+      : "the user publishes, unpublishes, schedules and deletes in the admin (D-01).";
+  }
+
+  if (tool === "content_create") {
+    if (!isPlainObject(toolInput)) {
+      return "tool_input is not an object";
+    }
+    const extra = Object.keys(toolInput).filter(
+      (key) => !CREATE_ALLOWED_KEYS.has(key),
+    );
+    if (extra.length > 0) {
+      return `${extra.join(", ")} is not a key a new draft may carry.`;
+    }
+    if ("publishedAt" in toolInput) {
+      return "publishedAt would set a publish date. New entries start as drafts and the user publishes in the admin (D-01).";
+    }
+    if (toolInput.status !== undefined && toolInput.status !== "draft") {
+      return "status must be draft. The user publishes in the admin (D-01).";
+    }
+  }
 
   if (tool === "content_update") {
     if (!isPlainObject(toolInput)) {

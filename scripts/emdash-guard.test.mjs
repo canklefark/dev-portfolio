@@ -251,8 +251,8 @@ describe("fail closed", () => {
 describe("deny rules", () => {
   /** @returns {string[]} */
   function denyList() {
-    return JSON.parse(readFileSync(".claude/settings.json", "utf8"))
-      .permissions.deny;
+    return JSON.parse(readFileSync(".claude/settings.json", "utf8")).permissions
+      .deny;
   }
 
   it("denies exactly the nine guarded tools by bare name", () => {
