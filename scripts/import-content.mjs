@@ -14,6 +14,7 @@ import {
   NAV_MENU,
   SITE_SETTINGS,
   aboutCollection,
+  dateToDatetime,
   projectsCollection,
 } from "./lib/schema.mjs";
 import { loadSourceModel } from "./lib/sources.mjs";
@@ -52,7 +53,7 @@ export function buildSeed(model) {
       status: project.draft ? "draft" : "published",
       data: {
         title: project.title,
-        date: project.date,
+        date: dateToDatetime(project.date),
         category: project.category,
         project_status: project.status,
         status_variant: project.statusVariant,

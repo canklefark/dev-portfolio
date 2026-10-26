@@ -14,6 +14,7 @@ import {
   SITE_SETTINGS,
   TABLES,
   aboutCollection,
+  datetimeToDate,
   projectsCollection,
 } from "./lib/schema.mjs";
 import { loadSourceModel } from "./lib/sources.mjs";
@@ -183,7 +184,6 @@ export function verify(model, dbPath) {
       /** @type {[string, string][]} */
       const copy = [
         ["title", project.title],
-        ["date", project.date],
         ["category", project.category],
         ["project_status", project.status],
         ["status_variant", project.statusVariant],
@@ -196,6 +196,8 @@ export function verify(model, dbPath) {
       for (const [field, expected] of copy) {
         record(project.slug, field, expected, row[field]);
       }
+      // D-07 as amended: the stored datetime, read back as its UTC calendar day, equals the source string.
+      record(project.slug, "date", project.date, datetimeToDate(row.date));
       const tags = parseList(row.tags);
       record(
         project.slug,

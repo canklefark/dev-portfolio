@@ -33,6 +33,8 @@ import {
   STACK_LEVEL_OPTIONS,
   TABLES,
   aboutCollection,
+  dateToDatetime,
+  datetimeToDate,
   deriveTagOptions,
   projectsCollection,
 } from "./lib/schema.mjs";
@@ -610,6 +612,122 @@ describe("schema-check seed (decision Q4 4a)", () => {
         `SELECT COUNT(1) AS n FROM ${TABLES.about} WHERE deleted_at IS NULL`,
       );
       assert.equal(about[0].n, 1);
+    });
+  });
+});
+
+describe("date field is a native datetime at midnight UTC (D-07 amended)", () => {
+  const real = loadSourceModel(REPO_ROOT);
+
+  it("defines date as a required, indexed datetime with no pattern validation", () => {
+    const field = projectsCollection(real.tagOptions).fields.find(
+      (f) => f.slug === "date",
+    );
+    assert.ok(field);
+    assert.equal(field.type, "datetime");
+    assert.equal(field.required, true);
+    assert.equal(field.indexed, true);
+    assert.equal(field.validation, undefined);
+  });
+
+  it("converts the exact source string to midnight UTC and back to the same day", () => {
+    assert.equal(dateToDatetime("2025-05-08"), "2025-05-08T00:00:00Z");
+    assert.equal(datetimeToDate("2025-05-08T00:00:00Z"), "2025-05-08");
+    assert.equal(datetimeToDate("2025-05-08T00:00:00.000Z"), "2025-05-08");
+    assert.equal(dateToDatetime("2024-02-29"), "2024-02-29T00:00:00Z");
+    for (const project of real.projects) {
+      assert.equal(
+        datetimeToDate(dateToDatetime(project.date)),
+        project.date,
+        project.slug,
+      );
+    }
+  });
+
+  it("rejects anything that is not a real YYYY-MM-DD calendar day", () => {
+    for (const bad of [
+      "",
+      "2025-5-8",
+      "2025-05-08T00:00:00Z",
+      "2025-02-30",
+      "2025-13-01",
+      "May 8, 2025",
+    ]) {
+      assert.throws(() => dateToDatetime(bad), /YYYY-MM-DD calendar day/, bad);
+    }
+    assert.match(datetimeToDate("nope"), /invalid datetime/);
+    assert.match(datetimeToDate(null), /unexpected column type/);
+  });
+
+  it("puts midnight UTC in the seed for every project", () => {
+    const seed = buildSeed(real);
+    for (const entry of seed.content?.projects ?? []) {
+      const source = real.projects.find((p) => p.slug === entry.slug);
+      assert.ok(source);
+      assert.equal(
+        entry.data.date,
+        `${source.date}T00:00:00Z`,
+        String(entry.slug),
+      );
+    }
+  });
+
+  it("stores canonical UTC text, lists in date descending order and verifies with 0 differences", () => {
+    withRoot((root) => {
+      const dbPath = applyModel(real, root);
+      const rows = query(
+        dbPath,
+        `SELECT slug, date FROM ${TABLES.projects} WHERE deleted_at IS NULL ORDER BY date DESC, slug ASC`,
+      );
+      assert.equal(rows.length, 13);
+      for (const row of rows) {
+        const source = real.projects.find((p) => p.slug === row.slug);
+        assert.ok(source);
+        assert.equal(row.date, `${source.date}T00:00:00.000Z`, source.slug);
+      }
+      const expectedOrder = [...real.projects]
+        .sort((a, b) =>
+          a.date !== b.date
+            ? a.date < b.date
+              ? 1
+              : -1
+            : a.slug < b.slug
+              ? -1
+              : 1,
+        )
+        .map((p) => p.slug);
+      assert.deepEqual(
+        rows.map((row) => row.slug),
+        expectedOrder,
+      );
+      assert.deepEqual(verify(real, dbPath).differences, []);
+    });
+  });
+
+  it("reports a one day date change as exactly one date difference and exits 1 from the CLI", () => {
+    const mutated = structuredClone(real);
+    const catalog = mutated.projects.find((p) => p.slug === "catalog-cms");
+    assert.ok(catalog);
+    const day = new Date(`${catalog.date}T00:00:00Z`);
+    day.setUTCDate(day.getUTCDate() + 1);
+    catalog.date = day.toISOString().slice(0, 10);
+    withRoot((root) => {
+      const dbPath = applyModel(mutated, root);
+      const report = verify(real, dbPath);
+      assert.deepEqual(report.differences.map(label), ["projects catalog-cms date"]);
+      const run = spawnSync(
+        process.execPath,
+        [
+          "scripts/verify-import.mjs",
+          "--root",
+          root,
+          "--report",
+          join(root, "report.json"),
+        ],
+        { cwd: REPO_ROOT, encoding: "utf8" },
+      );
+      assert.equal(run.status, 1, run.stderr);
+      assert.match(run.stdout, /DIFF projects catalog-cms\.date/);
     });
   });
 });

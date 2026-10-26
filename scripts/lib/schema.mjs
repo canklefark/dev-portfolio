@@ -31,8 +31,40 @@ export const STAT_VARIANT_OPTIONS = Object.freeze([
   "accent",
 ]);
 
-// D-07: the exact source string, never a coerced or reformatted date.
+// D-07 (amended by the user on 2026-10-26, reason: the admin date picker): the field is a native datetime.
+// The source stays the exact YYYY-MM-DD string; DATE_PATTERN validates that source string only.
 export const DATE_PATTERN = "^\\d{4}-\\d{2}-\\d{2}$";
+
+/**
+ * The source YYYY-MM-DD string as midnight UTC. Throws when the string is not a real calendar day.
+ * @param {string} date
+ * @returns {string} YYYY-MM-DDT00:00:00Z (EmDash stores it as YYYY-MM-DDT00:00:00.000Z)
+ */
+export function dateToDatetime(date) {
+  const value = `${date}T00:00:00Z`;
+  const parsed = new Date(value);
+  if (
+    !new RegExp(DATE_PATTERN).test(date) ||
+    Number.isNaN(parsed.getTime()) ||
+    parsed.toISOString().slice(0, 10) !== date
+  ) {
+    throw new Error(`date ${JSON.stringify(date)} is not a YYYY-MM-DD calendar day`);
+  }
+  return value;
+}
+
+/**
+ * A stored datetime back to its UTC calendar day (YYYY-MM-DD). An unreadable value returns a description,
+ * so the comparison against the source string fails instead of throwing.
+ * @param {unknown} stored
+ * @returns {string}
+ */
+export function datetimeToDate(stored) {
+  if (typeof stored !== "string") return `unexpected column type ${typeof stored}`;
+  const parsed = new Date(stored);
+  if (Number.isNaN(parsed.getTime())) return `invalid datetime ${JSON.stringify(stored)}`;
+  return parsed.toISOString().slice(0, 10);
+}
 
 // Table identifiers are the only values ever interpolated into SQL; every value is bound with ?.
 export const TABLES = Object.freeze({
@@ -90,10 +122,9 @@ export function projectsCollection(tagOptions) {
     {
       slug: "date",
       label: "Date",
-      type: "string",
+      type: "datetime",
       required: true,
       indexed: true,
-      validation: { pattern: DATE_PATTERN },
     },
     {
       slug: "category",

@@ -33,12 +33,9 @@
         {
           "slug": "date",
           "label": "Date",
-          "type": "string",
+          "type": "datetime",
           "required": true,
-          "indexed": true,
-          "validation": {
-            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-          }
+          "indexed": true
         },
         {
           "slug": "category",
