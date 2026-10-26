@@ -6,7 +6,7 @@
 <domain>
 ## Phase Boundary
 
-dev.zeikcookson.com is served by a Dokploy Node container with SQLite and uploads on one persistent volume. The admin is claimed on the real hostname with two passkeys. Migrations run as an explicit step before deploy, CI fails on pending migrations, and a post-deploy smoke test checks `/` and one project page.
+dev.zeikcookson.com is served by a Dokploy Node container with SQLite and uploads on one persistent volume. The admin is claimed on the real hostname with two passkeys. CI fails on pending migrations (migrations themselves run on boot), and a post-deploy smoke test checks `/` and one project page.
 
 Guiding principle from the user: keep it simple. This is a personal site run on their own server. Downtime during cutover is acceptable. Do not build zero-downtime, staged-claim or multi-environment machinery.
 
@@ -18,8 +18,8 @@ Guiding principle from the user: keep it simple. This is a personal site run on 
 ### Build and deploy
 
 - **D-01:** Dokploy builds from git using the repo Dockerfile on the host. No GitHub Actions image build, no registry. Build arch is the Dokploy host's, so the planner confirms the host arch and that the Dockerfile builds there (the Phase 1 spike image was arm64). — **Reversibility:** reversible, switching to a registry flow later is a config change.
-- **D-02:** Migrations run as a pre-deploy command in Dokploy (`emdash migrate` against the volume before the new container takes traffic). A failure aborts the deploy so the old container keeps serving. Researcher must confirm what Dokploy supports for a pre-deploy step on a git-built app and fall back to the closest equivalent that is still explicit, not an implicit entrypoint migration.
-- **D-03:** CI gets `emdash migrate --check` (GUARD-02) appended to the existing job in `.github/workflows/ci.yml`.
+- **D-02 (amended 2026-10-26, user wants it simple):** No separate pre-deploy migration step. EmDash creates the SQLite file and runs its migrations itself on boot (Phase 1 spike), so a plain container deploy is enough. First-time setup is: start the container, choose Import in the setup wizard using the committed `.emdash/seed.json` (Phase 2 D-13), then enroll passkeys. The seed is for first setup only; after go-live content lives in the production database and the seed is never re-applied. Researcher confirms the wizard Import path loads schema, content, nav and settings from the seed, and reports anything it leaves out. Accepted tradeoff: a future EmDash upgrade with a schema change migrates on boot, so take a backup before upgrading.
+- **D-03:** CI keeps this cheap check: `emdash migrate --check` (GUARD-02), appended to the existing job in `.github/workflows/ci.yml`.
 - **D-04:** The post-deploy smoke test (GUARD-03) runs in GitHub Actions after deploy, checks `/` and one project page return 200, and alerts only (goes red). No auto-rollback and no Dokploy healthcheck requirement. Researcher decides how the workflow knows the deploy finished (webhook trigger or poll loop).
 
 ### Branches and cutover
@@ -47,7 +47,6 @@ Guiding principle from the user: keep it simple. This is a personal site run on 
 - Backup destination, schedule and retention.
 - Security headers and session store handling (D-11).
 - Webhook versus poll for triggering the post-deploy smoke test.
-- Pre-deploy mechanism details within D-02.
 
 ### Pending items not discussed
 
