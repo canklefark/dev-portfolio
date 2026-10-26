@@ -147,7 +147,20 @@ Plans:
 3. A schema-changing call made with the agent token is refused
 4. Following the documented Claude Code MCP setup from a clean session produces a working connection, with the endpoint URL set per environment
 
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+**Wave 1**
+
+- [ ] 04-01-PLAN.md: Tracer: committed .mcp.json to the registered PreToolUse guard hook; deny rules for the publish-class and taxonomy-definition tools, the content_update draft-only allowlist and the content_create rules, all tested offline in npm test
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
+- [ ] 04-02-PLAN.md: README Agent access section (token, connection, guard boundaries, CLI fallback with --draft, rotation, residual risk) and the AGENT-01 and AGENT-02 wording amendment
+
+**Wave 3** _(blocked on Wave 2 completion)_
+
+- [ ] 04-03-PLAN.md: Live evidence pass on the user's dev server: negative control, clean-session connection from the README, draft then publish on a throwaway card, schema and publish refusals, independent token and cleanup checks
 
 ### Phase 5: Dokploy Deploy and Cutover
 
@@ -187,7 +200,7 @@ Phases execute in numeric order: 1, 2, 3, 4, 5, 6
 | -------------------------------- | -------------- | ----------- | ---------- |
 | 1. Spike, Baseline and Decisions | 5/5            | Complete    | 2026-10-23 |
 | 2. Content Model and Import      | 4/4            | Complete    | 2026-10-26 |
-| 3. Read Path Rewire and Parity   | 6/6 | Complete    | 2026-10-26 |
+| 3. Read Path Rewire and Parity   | 6/6            | Complete    | 2026-10-26 |
 | 4. Agent Access                  | 0/TBD          | Not started | -          |
 | 5. Dokploy Deploy and Cutover    | 0/TBD          | Not started | -          |
 | 6. Live Editing and Docs         | 0/TBD          | Not started | -          |
