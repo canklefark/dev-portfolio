@@ -20,7 +20,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Spike, Baseline and Decisions** - Pin dependencies, capture the current site as a baseline, and settle the platform questions with measurements (completed 2026-10-23)
 - [x] **Phase 2: Content Model and Import** - Build the EmDash schema and import all 13 projects, About, nav and settings with a zero-diff parity report (completed 2026-10-26)
 - [x] **Phase 3: Read Path Rewire and Parity** - Public pages read from EmDash, look identical, ship no new JavaScript, and the markdown sources are gone (completed 2026-10-26)
-- [ ] **Phase 4: Agent Access** - Claude manages content through MCP or CLI with a draft-first token that cannot touch the schema
+- [x] **Phase 4: Agent Access** - Claude manages content through MCP or CLI with a draft-first token that cannot touch the schema (completed 2026-10-26)
 - [ ] **Phase 5: Dokploy Deploy and Cutover** - dev.zeikcookson.com moves to a Dokploy Node container with SQLite on a persistent volume, a claimed passkey admin, and migration-safe deploys
 - [ ] **Phase 6: Live Editing and Docs** - The live site is edited from the admin end to end, and the repo docs describe the new workflow
 
@@ -147,7 +147,7 @@ Plans:
 3. A schema-changing call made with the agent token is refused
 4. Following the documented Claude Code MCP setup from a clean session produces a working connection, with the endpoint URL set per environment
 
-**Plans**: 3/3 plans executed
+**Plans**: 3/3 plans complete
 
 Plans:
 **Wave 1**
@@ -201,6 +201,6 @@ Phases execute in numeric order: 1, 2, 3, 4, 5, 6
 | 1. Spike, Baseline and Decisions | 5/5            | Complete    | 2026-10-23 |
 | 2. Content Model and Import      | 4/4            | Complete    | 2026-10-26 |
 | 3. Read Path Rewire and Parity   | 6/6            | Complete    | 2026-10-26 |
-| 4. Agent Access                  | 3/3 | In Progress | -          |
+| 4. Agent Access                  | 3/3 | Complete    | 2026-10-26 |
 | 5. Dokploy Deploy and Cutover    | 0/TBD          | Not started | -          |
 | 6. Live Editing and Docs         | 0/TBD          | Not started | -          |
