@@ -3,7 +3,13 @@
 // run: node --test scripts/import-content.test.mjs  (name the file; Node 24 treats a directory argument as a file)
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
@@ -11,7 +17,13 @@ import { describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
 import { RESERVED_COLLECTION_SLUGS, RESERVED_FIELD_SLUGS } from "emdash";
 import { markdownToPortableText, portableTextToMarkdown } from "emdash/client";
-import { applySeedFile, buildSeed } from "./import-content.mjs";
+import {
+  SCHEMA_CHECK_SLUG,
+  applySeedFile,
+  buildSchemaCheckSeed,
+  buildSeed,
+  structureSeed,
+} from "./import-content.mjs";
 import {
   ABOUT_FIELD_SLUGS,
   CELL_VARIANT_OPTIONS,
@@ -164,7 +176,14 @@ describe("about, menu and settings in the seed", () => {
     assert.throws(
       () =>
         validateAboutOptions(
-          [{ name: "Fortran", level: /** @type {StackLevel} */ (/** @type {unknown} */ ("EXPERT")) }],
+          [
+            {
+              name: "Fortran",
+              level: /** @type {StackLevel} */ (
+                /** @type {unknown} */ ("EXPERT")
+              ),
+            },
+          ],
           [],
         ),
       /Fortran.*EXPERT/,
@@ -175,7 +194,9 @@ describe("about, menu and settings in the seed", () => {
           [],
           [
             {
-              icon: /** @type {ContactIcon} */ (/** @type {unknown} */ ("mastodon")),
+              icon: /** @type {ContactIcon} */ (
+                /** @type {unknown} */ ("mastodon")
+              ),
               label: "Fediverse",
               href: "https://example.com",
             },
@@ -436,6 +457,159 @@ describe("throwaway databases", () => {
       );
       assert.ok(unexpected, "no unexpected difference for stray-project");
       assert.equal(unexpected.ok, false);
+    });
+  });
+});
+
+describe("schema-check seed (decision Q4 4a)", () => {
+  const real = loadSourceModel(REPO_ROOT);
+  const seed = buildSchemaCheckSeed(real);
+  const full = buildSeed(real);
+
+  // Computed independently of the importer: largest UTF-8 byte length, ties by slug ascending.
+  const expected = [...real.projects].sort(
+    (a, b) =>
+      Buffer.byteLength(b.body, "utf8") - Buffer.byteLength(a.body, "utf8") ||
+      (a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0),
+  )[0];
+
+  it("holds exactly one draft project with the longest source body and that project's fields", () => {
+    assert.equal(SCHEMA_CHECK_SLUG, "schema-check-longest-body");
+    const entries = seed.content?.projects ?? [];
+    assert.equal(entries.length, 1);
+    const [entry] = entries;
+    assert.equal(entry.id, SCHEMA_CHECK_SLUG);
+    assert.equal(entry.slug, SCHEMA_CHECK_SLUG);
+    assert.equal(entry.status, "draft");
+    assert.equal(entry.data.title, "Schema check: longest body");
+    assert.equal(entry.data.title.includes("\u2014"), false);
+    const source = full.content?.projects.find((p) => p.slug === expected.slug);
+    assert.ok(source);
+    for (const field of [
+      "date",
+      "category",
+      "project_status",
+      "status_variant",
+      "surface",
+      "time_label",
+      "period",
+      "tags",
+      "summary",
+      "sub",
+      "stats",
+    ]) {
+      assert.deepEqual(entry.data[field], source.data[field], field);
+    }
+    assert.deepEqual(
+      withoutKeys(entry.data.body),
+      withoutKeys(markdownToPortableText(expected.body)),
+    );
+  });
+
+  it("picks the largest body by UTF-8 bytes and breaks ties by slug", () => {
+    const base = real.projects[0];
+    const wide = { ...base, slug: "b-wide", body: "\u00e9".repeat(10) };
+    const narrow = { ...base, slug: "a-narrow", body: "e".repeat(15) };
+    const tieLow = { ...base, slug: "a-tie", body: "e".repeat(20) };
+    const tieHigh = { ...base, slug: "z-tie", body: "e".repeat(20) };
+    const picked = buildSchemaCheckSeed({
+      ...real,
+      projects: [tieHigh, narrow, wide, tieLow],
+    });
+    const body = picked.content?.projects[0].data.body;
+    assert.deepEqual(
+      withoutKeys(body),
+      withoutKeys(markdownToPortableText(tieLow.body)),
+    );
+    const pickedWide = buildSchemaCheckSeed({
+      ...real,
+      projects: [narrow, wide],
+    });
+    assert.deepEqual(
+      withoutKeys(pickedWide.content?.projects[0].data.body),
+      withoutKeys(markdownToPortableText(wide.body)),
+    );
+  });
+
+  it("keeps the full seed's settings, collections, menus and about unchanged", () => {
+    assert.deepEqual(seed.settings, full.settings);
+    assert.deepEqual(seed.collections, full.collections);
+    assert.deepEqual(seed.menus, full.menus);
+    assert.deepEqual(
+      withoutKeys(seed.content?.about),
+      withoutKeys(full.content?.about),
+    );
+  });
+
+  it("structureSeed keeps version, meta, settings, collections and menus and drops content", () => {
+    const structure = structureSeed(full);
+    assert.deepEqual(Object.keys(structure).sort(), [
+      "collections",
+      "menus",
+      "meta",
+      "settings",
+      "version",
+    ]);
+    assert.equal("content" in structure, false);
+    assert.deepEqual(structure.collections, full.collections);
+    assert.deepEqual(structure.menus, full.menus);
+    assert.deepEqual(structure.settings, full.settings);
+    assert.equal(structure.version, full.version);
+    assert.deepEqual(structure.meta, full.meta);
+  });
+
+  it("the default run never writes .emdash/seed.json", () => {
+    withRoot((root) => {
+      const run = spawnSync(
+        process.execPath,
+        ["scripts/import-content.mjs", "--root", root],
+        { cwd: REPO_ROOT, encoding: "utf8" },
+      );
+      assert.equal(run.status, 0, run.stderr);
+      assert.equal(existsSync(join(root, ".emdash/seed.json")), false);
+      assert.equal(existsSync(join(root, "data/emdash.db")), true);
+    });
+  });
+
+  it("--schema-check writes the structure seed and one draft project, the about, the menu and the settings", () => {
+    withRoot((root) => {
+      const run = spawnSync(
+        process.execPath,
+        ["scripts/import-content.mjs", "--schema-check", "--root", root],
+        { cwd: REPO_ROOT, encoding: "utf8" },
+      );
+      assert.equal(run.status, 0, run.stderr);
+      assert.match(
+        run.stdout,
+        new RegExp(
+          `import: schema-check entry ${SCHEMA_CHECK_SLUG} \\(body from ${expected.slug}, ${Buffer.byteLength(expected.body, "utf8")} bytes\\) and 1 about applied to `,
+        ),
+      );
+      const written = JSON.parse(
+        readFileSync(join(root, ".emdash/seed.json"), "utf8"),
+      );
+      assert.equal("content" in written, false);
+      assert.equal(written.collections.length, 2);
+      assert.equal(written.menus.length, 1);
+      assert.deepEqual(written, JSON.parse(JSON.stringify(structureSeed(full))));
+      assert.equal(
+        readFileSync(join(root, ".emdash/seed.json"), "utf8").endsWith("}\n"),
+        true,
+      );
+      const dbPath = join(root, "data/emdash.db");
+      const projects = query(
+        dbPath,
+        `SELECT slug, status, live_revision_id FROM ${TABLES.projects} WHERE deleted_at IS NULL`,
+      );
+      assert.equal(projects.length, 1);
+      assert.equal(projects[0].slug, SCHEMA_CHECK_SLUG);
+      assert.equal(projects[0].status, "draft");
+      assert.equal(projects[0].live_revision_id, null);
+      const about = query(
+        dbPath,
+        `SELECT COUNT(1) AS n FROM ${TABLES.about} WHERE deleted_at IS NULL`,
+      );
+      assert.equal(about[0].n, 1);
     });
   });
 });

@@ -1,6 +1,7 @@
 // @ts-check
 // Builds an EmDash seed from the project markdown sources and applies it with the emdash seed CLI.
-// usage: node scripts/import-content.mjs [--root DIR]  (DIR defaults to the repo root; the database lands in DIR/data/emdash.db)
+// usage: node scripts/import-content.mjs [--schema-check] [--root DIR]  (DIR defaults to the repo root; the database lands in DIR/data/emdash.db)
+// --schema-check writes the structure seed to DIR/.emdash/seed.json and applies one draft project (the longest body) plus About, instead of the 13 projects.
 import { execFileSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -23,7 +24,10 @@ import { loadSourceModel } from "./lib/sources.mjs";
  * @typedef {import("./lib/sources.mjs").SourceModel} SourceModel
  */
 
-const USAGE = "usage: node scripts/import-content.mjs [--root DIR]";
+const USAGE =
+  "usage: node scripts/import-content.mjs [--schema-check] [--root DIR]";
+export const SCHEMA_CHECK_SLUG = "schema-check-longest-body";
+const SCHEMA_CHECK_TITLE = "Schema check: longest body";
 const REPO_ROOT = fileURLToPath(new URL("..", import.meta.url));
 
 /**
@@ -99,6 +103,67 @@ export function buildSeed(model) {
 }
 
 /**
+ * The project with the largest body by UTF-8 bytes; a tie goes to the lowest slug.
+ * @param {SourceModel["projects"]} projects
+ * @returns {{ project: SourceModel["projects"][number], bytes: number }}
+ */
+export function longestBodyProject(projects) {
+  const sized = projects.map((project) => ({
+    project,
+    bytes: Buffer.byteLength(project.body, "utf8"),
+  }));
+  const [first, ...rest] = sized;
+  if (!first) throw new Error("no projects to pick a longest body from");
+  return rest.reduce(
+    (best, next) =>
+      next.bytes > best.bytes ||
+      (next.bytes === best.bytes && next.project.slug < best.project.slug)
+        ? next
+        : best,
+    first,
+  );
+}
+
+/**
+ * The full seed with one draft project in place of the 13: the longest source body under a test slug and title,
+ * every other field from that project. Settings, collections, menus and About are unchanged (decision Q4 4a).
+ * @param {SourceModel} model
+ * @returns {SeedFile}
+ */
+export function buildSchemaCheckSeed(model) {
+  const full = buildSeed(model);
+  const { project } = longestBodyProject(model.projects);
+  const source = full.content?.projects.find(
+    (entry) => entry.slug === project.slug,
+  );
+  if (!source) throw new Error(`${project.slug}: missing from the seed`);
+  /** @type {SeedContentEntry} */
+  const check = {
+    ...source,
+    id: SCHEMA_CHECK_SLUG,
+    slug: SCHEMA_CHECK_SLUG,
+    status: "draft",
+    data: { ...source.data, title: SCHEMA_CHECK_TITLE },
+  };
+  return { ...full, content: { ...full.content, projects: [check] } };
+}
+
+/**
+ * Structure only: no content key, so a setup flow that applies it adds the schema, menus and settings and no entries.
+ * @param {SeedFile} seed
+ * @returns {SeedFile}
+ */
+export function structureSeed(seed) {
+  return structuredClone({
+    version: seed.version,
+    meta: seed.meta,
+    settings: seed.settings,
+    collections: seed.collections,
+    menus: seed.menus,
+  });
+}
+
+/**
  * Validate and apply the seed through the emdash seed CLI, never through SQLite directly (D-10).
  * @param {SeedFile} seed
  * @param {string} targetRoot
@@ -144,9 +209,12 @@ export function applySeedFile(seed, targetRoot, { quiet = false } = {}) {
  */
 function main(argv) {
   let root = REPO_ROOT;
+  let schemaCheck = false;
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === "--root" && i + 1 < argv.length) {
       root = argv[++i];
+    } else if (argv[i] === "--schema-check") {
+      schemaCheck = true;
     } else {
       console.error(USAGE);
       return 2;
@@ -154,9 +222,24 @@ function main(argv) {
   }
   const targetRoot = resolve(root);
   const model = loadSourceModel(REPO_ROOT);
+  const dbPath = join(targetRoot, "data/emdash.db");
+  if (schemaCheck) {
+    // Written before any server starts: the setup flows apply .emdash/seed.json, or the built-in posts and pages without it.
+    mkdirSync(join(targetRoot, ".emdash"), { recursive: true });
+    writeFileSync(
+      join(targetRoot, ".emdash/seed.json"),
+      `${JSON.stringify(structureSeed(buildSeed(model)), null, 2)}\n`,
+    );
+    applySeedFile(buildSchemaCheckSeed(model), targetRoot);
+    const { project, bytes } = longestBodyProject(model.projects);
+    console.log(
+      `import: schema-check entry ${SCHEMA_CHECK_SLUG} (body from ${project.slug}, ${bytes} bytes) and 1 about applied to ${dbPath}`,
+    );
+    return 0;
+  }
   applySeedFile(buildSeed(model), targetRoot);
   console.log(
-    `import: ${model.projects.length} projects and 1 about applied to ${join(targetRoot, "data/emdash.db")}`,
+    `import: ${model.projects.length} projects and 1 about applied to ${dbPath}`,
   );
   return 0;
 }

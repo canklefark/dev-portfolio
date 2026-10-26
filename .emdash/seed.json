@@ -1,0 +1,359 @@
+{
+  "version": "1",
+  "meta": {
+    "name": "portfolio"
+  },
+  "settings": {
+    "title": "Zeik Cookson",
+    "tagline": "DevOps and platform engineering portfolio. Infrastructure work from the homelab and beyond.",
+    "social": {
+      "github": "https://github.com/canklefark",
+      "linkedin": "https://linkedin.com/in/zeikcookson"
+    }
+  },
+  "collections": [
+    {
+      "slug": "projects",
+      "label": "Projects",
+      "labelSingular": "Project",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview"
+      ],
+      "urlPattern": "/projects/{slug}",
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "slug": "date",
+          "label": "Date",
+          "type": "string",
+          "required": true,
+          "indexed": true,
+          "validation": {
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          }
+        },
+        {
+          "slug": "category",
+          "label": "Category",
+          "type": "select",
+          "required": true,
+          "validation": {
+            "options": [
+              "Agency Tooling",
+              "Client Work",
+              "Developer Tools",
+              "Homelab Infrastructure",
+              "Observability",
+              "Personal Projects",
+              "Revenue Intelligence",
+              "Self-Hosted Services",
+              "Web Development"
+            ]
+          }
+        },
+        {
+          "slug": "project_status",
+          "label": "Status",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "status_variant",
+          "label": "Status variant",
+          "type": "select",
+          "required": true,
+          "defaultValue": "default",
+          "validation": {
+            "options": [
+              "accent",
+              "green",
+              "default"
+            ]
+          }
+        },
+        {
+          "slug": "surface",
+          "label": "Surface",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "time_label",
+          "label": "Time label",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "period",
+          "label": "Period",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "tags",
+          "label": "Tags",
+          "type": "multiSelect",
+          "validation": {
+            "options": [
+              "Agent Skills",
+              "Ansible",
+              "Astro",
+              "Azure Pipelines",
+              "Bash",
+              "Better Auth",
+              "Claude Code Plugin",
+              "Cloudflare Pages",
+              "Cloudflare R2",
+              "Cloudflare Workers",
+              "Cron Workers",
+              "Docker",
+              "Docker Compose",
+              "Dokploy",
+              "Drizzle",
+              "Entra ID",
+              "Flux",
+              "GitHub",
+              "Google Workspace SSO",
+              "Grafana",
+              "IIS",
+              "Immich",
+              "Kubernetes",
+              "MCP",
+              "Marketplace",
+              "Mealie",
+              "Ollama",
+              "PWA",
+              "Paperless-ngx",
+              "Playwright",
+              "PostgreSQL",
+              "Prometheus",
+              "Puppeteer",
+              "SQL Server",
+              "SQLite",
+              "Svelte 5",
+              "SvelteKit",
+              "Tailwind",
+              "Tailwind CSS",
+              "Turborepo",
+              "TypeScript",
+              "WordPress",
+              "k3s",
+              "node_exporter",
+              "shadcn-svelte"
+            ]
+          }
+        },
+        {
+          "slug": "summary",
+          "label": "Summary",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "sub",
+          "label": "Sub",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "stats",
+          "label": "Stats",
+          "type": "repeater",
+          "validation": {
+            "subFields": [
+              {
+                "slug": "label",
+                "type": "string",
+                "label": "Label",
+                "required": true
+              },
+              {
+                "slug": "value",
+                "type": "string",
+                "label": "Value",
+                "required": true
+              },
+              {
+                "slug": "variant",
+                "type": "select",
+                "label": "Variant",
+                "required": true,
+                "options": [
+                  "default",
+                  "green",
+                  "accent"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "slug": "body",
+          "label": "Body",
+          "type": "portableText",
+          "searchable": true
+        }
+      ]
+    },
+    {
+      "slug": "about",
+      "label": "About",
+      "labelSingular": "About",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview"
+      ],
+      "urlPattern": "/about",
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "slug": "role",
+          "label": "Role",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "show_availability",
+          "label": "Show availability",
+          "type": "boolean"
+        },
+        {
+          "slug": "body",
+          "label": "Body",
+          "type": "portableText",
+          "searchable": true
+        },
+        {
+          "slug": "cells",
+          "label": "Cells",
+          "type": "repeater",
+          "validation": {
+            "subFields": [
+              {
+                "slug": "label",
+                "type": "string",
+                "label": "Label",
+                "required": true
+              },
+              {
+                "slug": "value",
+                "type": "string",
+                "label": "Value",
+                "required": true
+              },
+              {
+                "slug": "variant",
+                "type": "select",
+                "label": "Variant",
+                "required": true,
+                "options": [
+                  "default",
+                  "accent",
+                  "green"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "slug": "stack",
+          "label": "Stack",
+          "type": "repeater",
+          "validation": {
+            "subFields": [
+              {
+                "slug": "name",
+                "type": "string",
+                "label": "Name",
+                "required": true
+              },
+              {
+                "slug": "level",
+                "type": "select",
+                "label": "Level",
+                "required": true,
+                "options": [
+                  "DAILY",
+                  "PROFICIENT",
+                  "FAMILIAR",
+                  "LEARNING",
+                  "NEXT"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "slug": "contacts",
+          "label": "Contacts",
+          "type": "repeater",
+          "validation": {
+            "subFields": [
+              {
+                "slug": "icon",
+                "type": "select",
+                "label": "Icon",
+                "required": true,
+                "options": [
+                  "email",
+                  "github",
+                  "linkedin"
+                ]
+              },
+              {
+                "slug": "label",
+                "type": "string",
+                "label": "Label",
+                "required": true
+              },
+              {
+                "slug": "href",
+                "type": "url",
+                "label": "Link",
+                "required": true
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "menus": [
+    {
+      "name": "primary",
+      "label": "Primary",
+      "items": [
+        {
+          "type": "custom",
+          "label": "Home",
+          "url": "/"
+        },
+        {
+          "type": "custom",
+          "label": "Projects",
+          "url": "/projects"
+        },
+        {
+          "type": "custom",
+          "label": "About",
+          "url": "/about"
+        }
+      ]
+    }
+  ]
+}
