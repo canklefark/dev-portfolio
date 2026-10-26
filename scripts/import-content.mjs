@@ -102,9 +102,11 @@ export function buildSeed(model) {
  * Validate and apply the seed through the emdash seed CLI, never through SQLite directly (D-10).
  * @param {SeedFile} seed
  * @param {string} targetRoot
+ * @param {{ quiet?: boolean }} [options] quiet captures the CLI output (a failure still throws with it attached)
  * @returns {void}
  */
-export function applySeedFile(seed, targetRoot) {
+export function applySeedFile(seed, targetRoot, { quiet = false } = {}) {
+  const stdio = quiet ? "pipe" : "inherit";
   const cli = fileURLToPath(import.meta.resolve("emdash/cli"));
   // The CLI does not create data/ and fails with SQLite error 14 when it is missing.
   mkdirSync(join(targetRoot, "data"), { recursive: true });
@@ -113,7 +115,7 @@ export function applySeedFile(seed, targetRoot) {
     const seedPath = join(dir, "seed.json");
     writeFileSync(seedPath, JSON.stringify(seed));
     execFileSync(process.execPath, [cli, "seed", seedPath, "--validate"], {
-      stdio: "inherit",
+      stdio,
     });
     execFileSync(
       process.execPath,
@@ -129,7 +131,7 @@ export function applySeedFile(seed, targetRoot) {
         "update",
         "--skip-media",
       ],
-      { stdio: "inherit" },
+      { stdio },
     );
   } finally {
     rmSync(dir, { recursive: true, force: true });
