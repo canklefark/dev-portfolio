@@ -308,6 +308,43 @@ describe("guarded tools", () => {
   }
 });
 
+describe("server name", () => {
+  for (const server of ["claude_ai_EmDash", "plugin_emdash_emdash", "EMDASH"]) {
+    it(`guards ${server} like emdash`, () => {
+      const blocked = runRegisteredHook({
+        tool_name: `mcp__${server}__content_publish`,
+        tool_input: {},
+      });
+      assert.equal(blocked.status, 2, blocked.stderr);
+      const live = runRegisteredHook({
+        tool_name: `mcp__${server}__content_update`,
+        tool_input: { ...DRAFT_EDIT, status: "published" },
+      });
+      assert.equal(live.status, 2, live.stderr);
+      const draft = runRegisteredHook({
+        tool_name: `mcp__${server}__content_update`,
+        tool_input: DRAFT_EDIT,
+      });
+      assert.equal(draft.status, 0, draft.stderr);
+    });
+  }
+
+  it("defers a server without emdash in its name, even if the hook is run on it", () => {
+    const [command] = registeredEntries().flatMap((e) =>
+      e.hooks.map((h) => h.command),
+    );
+    const result = runHookCommand(
+      command,
+      JSON.stringify({
+        tool_name: "mcp__other__content_publish",
+        tool_input: {},
+      }),
+      ROOT,
+    );
+    assert.equal(result.status, 0, result.stderr);
+  });
+});
+
 describe("deferred tools", () => {
   const deferred = [
     "content_get",

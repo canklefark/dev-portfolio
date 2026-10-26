@@ -9,7 +9,11 @@
 //   by hand: node .claude/hooks/emdash-guard.mjs < payload.json
 import { readFileSync } from "node:fs";
 
-const TOOL_PREFIX = "mcp__emdash__";
+// Claude Code names an MCP tool mcp__<server>__<tool>. The guard keys on the tool part under any server whose name
+// contains "emdash" (mcp__emdash__, a plugin or connector name such as mcp__claude_ai_EmDash__), so registering the
+// same endpoint under another emdash-flavored name does not skip it. A server name without "emdash" is not guarded.
+const MCP_TOOL = /^mcp__(.+?)__(.+)$/;
+const EMDASH_SERVER = /emdash/i;
 
 // The content_update inputs that EmDash stages as a draft revision, plus the identity and revision keys.
 // Any other key writes the live row, so an allowlist refuses a key a later EmDash version adds until reviewed.
@@ -84,8 +88,9 @@ function isPlainObject(value) {
  * @returns {string | null} a block reason, or null to defer to the normal permission flow
  */
 function check(toolName, toolInput) {
-  if (!toolName.startsWith(TOOL_PREFIX)) return null;
-  const tool = toolName.slice(TOOL_PREFIX.length);
+  const match = MCP_TOOL.exec(toolName);
+  if (match === null || !EMDASH_SERVER.test(match[1])) return null;
+  const tool = match[2];
 
   const destructive =
     !SERVER_REFUSED_PREFIXES.some((prefix) => tool.startsWith(prefix)) &&

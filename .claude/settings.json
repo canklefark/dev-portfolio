@@ -20,7 +20,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "mcp__emdash__.*",
+        "matcher": "mcp__.*[Ee][Mm][Dd][Aa][Ss][Hh].*",
         "hooks": [
           {
             "type": "command",
