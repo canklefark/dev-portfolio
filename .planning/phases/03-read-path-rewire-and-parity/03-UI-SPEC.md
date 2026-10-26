@@ -1,7 +1,8 @@
 ---
 phase: "03"
 slug: read-path-rewire-and-parity
-status: draft
+status: approved
+reviewed_at: "2026-10-26"
 shadcn_initialized: false
 preset: none
 created: "2026-10-26"
