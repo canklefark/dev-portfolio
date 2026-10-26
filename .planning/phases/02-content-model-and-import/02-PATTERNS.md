@@ -142,7 +142,7 @@ stats: z.array(z.object({ label: z.string(), value: z.string(), variant: z.enum(
 draft: z.boolean().default(false),
 ```
 
-Note `date` is `z.coerce.date()` today, but D-07 stores the exact source string. Parse with `yaml` and throw if `typeof fm.date !== "string"` (RESEARCH Pitfall 13). Tags span multi-line flow arrays (see `src/content/projects/revlog.md` lines 8-19), which is why `yaml` is needed instead of a split.
+Note `date` is `z.coerce.date()` today, but D-07 (amended 2026-10-26) stores the source day as a native datetime at midnight UTC. Parse with `yaml` and throw if `typeof fm.date !== "string"` (RESEARCH Pitfall 13). Tags span multi-line flow arrays (see `src/content/projects/revlog.md` lines 8-19), which is why `yaml` is needed instead of a split.
 
 **About source** (`src/data/about.ts` lines 1-71): import the real exports (`role`, `showAvailability`, `cells`, `stack`, `contacts`) from plain Node by relative path rather than copying values. `Cell.variant` is optional (`"accent" | "green"`), so absent maps to `"default"` in storage. Body comes from `src/data/about.md` (no frontmatter, paragraphs only).
 
