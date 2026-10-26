@@ -4,18 +4,18 @@ milestone: v1.0
 milestone_name: EmDash Migration
 current_phase: 04
 current_phase_name: Agent Access
-current_plan: 2
+current_plan: 3
 status: executing
-stopped_at: Completed 04-01-PLAN.md
-last_updated: "2026-10-26T18:23:51.386Z"
+stopped_at: Completed 04-02-PLAN.md
+last_updated: "2026-10-26T18:25:58.010Z"
 last_activity: 2026-10-26
 last_activity_desc: Phase 04 execution started
-state_head: a2384b6ecb80eb5970a021543f37e30d2c7d4e84
+state_head: 33c80c796ec26404dd3a1cd7987c3ebc2306232c
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 18
-  completed_plans: 16
+  completed_plans: 17
 ---
 
 # Project State
@@ -30,7 +30,7 @@ See: .planning/PROJECT.md (updated 2026-10-26)
 ## Current Position
 
 Phase: 04 (Agent Access) — EXECUTING
-Current Plan: 2
+Current Plan: 3
 Total Plans in Phase: 3
 Status: Ready to execute
 Last activity: 2026-10-26 — Phase 04 execution started
@@ -79,6 +79,7 @@ _Updated after each plan completion_
 | Phase 03 P05 | 5 min | 2 tasks | 8 files |
 | Phase 03 P06 | about 1 session | 2 tasks | 5 files |
 | Phase 04 P01 | 5 min | 2 tasks | 4 files |
+| Phase 04 P02 | 6 min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -118,6 +119,7 @@ Recent decisions affecting current work:
 - [Phase 03]: 03-05: pageMeta wraps getSeoMeta and returns the full title for title, og:title and twitter:title; Layout reads getMenu(primary) and settings, EmDashHead stays unused; loadSingleton pins getEmDashEntry<K, EmDashCollections[K]>
 - [Phase 03]: AboutPage keeps the raw about entry as source so an editor's SEO panel value reaches pageMeta, matching ProjectDetail
 - [Phase 04]: 04-01: nine emdash tools guarded by bare-name deny rules plus hook BLOCKED_TOOLS; content_update uses a draft-only key allowlist, content_create allows status draft only; schema and settings tools deferred to the server (AGENT-03)
+- [Phase 04]: 04-02: README Agent access section documents the setup and states the residual risk (publish block is a Claude Code guard, token can itself publish); AGENT-01 and AGENT-02 amended, traceability rows stay Pending until 04-03
 
 ### Pending Todos
 
@@ -145,6 +147,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-26T18:23:51.174Z
-Stopped at: Completed 04-01-PLAN.md
+Last session: 2026-10-26T18:25:57.868Z
+Stopped at: Completed 04-02-PLAN.md
 Resume file: None
