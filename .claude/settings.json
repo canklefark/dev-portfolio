@@ -1,1 +1,15 @@
-{}
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "mcp__emdash__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/emdash-guard.mjs\" || exit 2"
+          }
+        ]
+      }
+    ]
+  }
+}
