@@ -48,9 +48,9 @@ Milestone v1.0: EmDash Migration. Each maps to roadmap phases.
 ### Agent access
 
 - [x] **AGENT-01**: A scoped personal access token (`content:read`, `content:write`, `media:read`, `media:write`, `menus:manage`, `taxonomies:manage`; no schema, settings, transfer or admin scope) works against the MCP endpoint (D-06 amended by the user on 2026-10-26: these are the EmDash token scopes; draft reading comes from the owner's role, and `content:write` implies the menu and taxonomy scopes)
-- [ ] **AGENT-02**: Claude creates and updates a project card through MCP or CLI with every write landing as a draft, and the user publishes it as a separate explicit step in the admin; a committed Claude Code guard (deny rules and a PreToolUse hook) refuses the agent's publish-class calls and live-write arguments (D-01, D-03 and D-12 amended by the user on 2026-10-26: EmDash 1.3.1 has no publish scope, so the guard is client-side)
+- [x] **AGENT-02**: Claude creates and updates a project card through MCP or CLI with every write landing as a draft, and the user publishes it as a separate explicit step in the admin; a committed Claude Code guard (deny rules and a PreToolUse hook) refuses the agent's publish-class calls and live-write arguments (D-01, D-03 and D-12 amended by the user on 2026-10-26: EmDash 1.3.1 has no publish scope, so the guard is client-side)
 - [x] **AGENT-03**: Schema-changing calls are refused for the agent token
-- [ ] **AGENT-04**: The working Claude Code MCP setup is documented
+- [x] **AGENT-04**: The working Claude Code MCP setup is documented
 
 ### Deployment
 
@@ -129,9 +129,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ADMIN-01    | Phase 3 | Complete |
 | GUARD-01    | Phase 3 | Complete |
 | AGENT-01    | Phase 4 | Complete |
-| AGENT-02    | Phase 4 | Pending |
+| AGENT-02    | Phase 4 | Complete |
 | AGENT-03    | Phase 4 | Complete |
-| AGENT-04    | Phase 4 | Pending |
+| AGENT-04    | Phase 4 | Complete |
 | DEPLOY-01   | Phase 5 | Pending |
 | DEPLOY-02   | Phase 5 | Pending |
 | DEPLOY-03   | Phase 5 | Pending |
