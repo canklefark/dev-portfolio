@@ -156,3 +156,140 @@ export function projectsCollection(tagOptions) {
     fields,
   };
 }
+
+// D-04: constrained About values mirror the unions in src/data/about.ts. A cell with no variant is stored as default.
+export const CELL_VARIANT_OPTIONS = Object.freeze(["default", "accent", "green"]);
+export const STACK_LEVEL_OPTIONS = Object.freeze([
+  "DAILY",
+  "PROFICIENT",
+  "FAMILIAR",
+  "LEARNING",
+  "NEXT",
+]);
+export const CONTACT_ICON_OPTIONS = Object.freeze([
+  "email",
+  "github",
+  "linkedin",
+]);
+
+// D-03: exactly one about entry. The title is an admin list label only; the page H1 stays in about.astro (Pitfall 14).
+export const ABOUT_SLUG = "about";
+export const ABOUT_TITLE = "About";
+
+export const ABOUT_FIELD_SLUGS = Object.freeze([
+  "title",
+  "role",
+  "show_availability",
+  "body",
+  "cells",
+  "stack",
+  "contacts",
+]);
+
+/**
+ * The about collection (D-03, D-04): one entry that holds everything src/data/about.* provides.
+ * @returns {SeedCollection}
+ */
+export function aboutCollection() {
+  /** @type {SeedField[]} */
+  const fields = [
+    {
+      slug: "title",
+      label: "Title",
+      type: "string",
+      required: true,
+      searchable: true,
+    },
+    { slug: "role", label: "Role", type: "string", required: true },
+    {
+      slug: "show_availability",
+      label: "Show availability",
+      type: "boolean",
+    },
+    { slug: "body", label: "Body", type: "portableText", searchable: true },
+    {
+      slug: "cells",
+      label: "Cells",
+      type: "repeater",
+      validation: {
+        subFields: [
+          { slug: "label", type: "string", label: "Label", required: true },
+          { slug: "value", type: "string", label: "Value", required: true },
+          {
+            slug: "variant",
+            type: "select",
+            label: "Variant",
+            required: true,
+            options: [...CELL_VARIANT_OPTIONS],
+          },
+        ],
+      },
+    },
+    {
+      slug: "stack",
+      label: "Stack",
+      type: "repeater",
+      validation: {
+        subFields: [
+          { slug: "name", type: "string", label: "Name", required: true },
+          {
+            slug: "level",
+            type: "select",
+            label: "Level",
+            required: true,
+            options: [...STACK_LEVEL_OPTIONS],
+          },
+        ],
+      },
+    },
+    {
+      slug: "contacts",
+      label: "Contacts",
+      type: "repeater",
+      validation: {
+        subFields: [
+          {
+            slug: "icon",
+            type: "select",
+            label: "Icon",
+            required: true,
+            options: [...CONTACT_ICON_OPTIONS],
+          },
+          { slug: "label", type: "string", label: "Label", required: true },
+          { slug: "href", type: "url", label: "Link", required: true },
+        ],
+      },
+    },
+  ];
+  return {
+    slug: ABOUT_SLUG,
+    label: "About",
+    labelSingular: "About",
+    supports: ["drafts", "revisions", "preview"],
+    urlPattern: "/about",
+    fields,
+  };
+}
+
+// D-14: the primary nav menu mirrors the links in src/components/Nav.astro, in the same order.
+export const NAV_MENU = Object.freeze({
+  name: "primary",
+  label: "Primary",
+  items: Object.freeze([
+    Object.freeze({ type: "custom", label: "Home", url: "/" }),
+    Object.freeze({ type: "custom", label: "Projects", url: "/projects" }),
+    Object.freeze({ type: "custom", label: "About", url: "/about" }),
+  ]),
+});
+
+// D-14 and decision Q2 = 2a: title, tagline (the Layout default description, verbatim) and two socials.
+// No url key (export-seed drops it; Phase 5 sets EMDASH_SITE_URL) and no seo key (no em dash enters new copy).
+export const SITE_SETTINGS = Object.freeze({
+  title: "Zeik Cookson",
+  tagline:
+    "DevOps and platform engineering portfolio. Infrastructure work from the homelab and beyond.",
+  social: Object.freeze({
+    github: "https://github.com/canklefark",
+    linkedin: "https://linkedin.com/in/zeikcookson",
+  }),
+});

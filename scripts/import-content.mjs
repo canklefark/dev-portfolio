@@ -7,7 +7,14 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { markdownToPortableText } from "emdash/client";
-import { projectsCollection } from "./lib/schema.mjs";
+import {
+  ABOUT_SLUG,
+  ABOUT_TITLE,
+  NAV_MENU,
+  SITE_SETTINGS,
+  aboutCollection,
+  projectsCollection,
+} from "./lib/schema.mjs";
 import { loadSourceModel } from "./lib/sources.mjs";
 
 /**
@@ -60,11 +67,34 @@ export function buildSeed(model) {
       },
     };
   });
+  /** @type {SeedContentEntry} */
+  const about = {
+    id: ABOUT_SLUG,
+    slug: ABOUT_SLUG,
+    status: "published",
+    data: {
+      title: ABOUT_TITLE,
+      role: model.about.role,
+      show_availability: model.about.showAvailability,
+      body: markdownToPortableText(model.about.body),
+      cells: model.about.cells.map((cell) => ({ ...cell })),
+      stack: model.about.stack.map((item) => ({ ...item })),
+      contacts: model.about.contacts.map((contact) => ({ ...contact })),
+    },
+  };
   return {
     version: "1",
     meta: { name: "portfolio" },
-    collections: [projectsCollection(model.tagOptions)],
-    content: { projects },
+    settings: structuredClone(SITE_SETTINGS),
+    collections: [projectsCollection(model.tagOptions), aboutCollection()],
+    menus: [
+      {
+        name: NAV_MENU.name,
+        label: NAV_MENU.label,
+        items: NAV_MENU.items.map((item) => ({ ...item })),
+      },
+    ],
+    content: { projects, about: [about] },
   };
 }
 
@@ -124,7 +154,7 @@ function main(argv) {
   const model = loadSourceModel(REPO_ROOT);
   applySeedFile(buildSeed(model), targetRoot);
   console.log(
-    `import: ${model.projects.length} projects applied to ${join(targetRoot, "data/emdash.db")}`,
+    `import: ${model.projects.length} projects and 1 about applied to ${join(targetRoot, "data/emdash.db")}`,
   );
   return 0;
 }
