@@ -4,10 +4,21 @@
 // run: node --test scripts/emdash-guard.test.mjs
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { describe, it } from "node:test";
+import { fileURLToPath } from "node:url";
+
+// Paths come from this file's location, never from the process cwd.
+const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
+const SETTINGS_PATH = join(ROOT, ".claude", "settings.json");
 
 const MCP_URL = "${EMDASH_MCP_URL:-http://localhost:4321/_emdash/api/mcp}";
 const MCP_AUTH = "Bearer ${EMDASH_TOKEN}";
@@ -28,32 +39,61 @@ const GUARDED_TOOLS = [
 
 /** @returns {HookEntry[]} */
 function registeredEntries() {
-  const settings = JSON.parse(readFileSync(".claude/settings.json", "utf8"));
+  const settings = JSON.parse(readFileSync(SETTINGS_PATH, "utf8"));
   return settings.hooks.PreToolUse;
 }
 
 /**
- * Run the command that Claude Code would run for this payload.
- * @param {Record<string, unknown> | string} payload hook JSON, or raw stdin text
- * @param {string} [projectDir] value for CLAUDE_PROJECT_DIR
+ * Run one registered hook command the way Claude Code does. The cwd is a directory outside the
+ * repository, so a command that relied on the working directory would fail here.
+ * @param {string} command
+ * @param {string} input raw stdin text
+ * @param {string} projectDir value for CLAUDE_PROJECT_DIR
  * @returns {{ status: number | null, stderr: string }}
  */
-function runRegisteredHook(payload, projectDir = process.cwd()) {
-  const toolName =
-    typeof payload === "string"
-      ? `${PREFIX}content_update`
-      : String(payload.tool_name);
-  const entry = registeredEntries().find((e) =>
-    new RegExp(e.matcher).test(toolName),
-  );
-  if (!entry) return { status: 0, stderr: "" };
-  const result = spawnSync(entry.hooks[0].command, {
+function runHookCommand(command, input, projectDir) {
+  const result = spawnSync(command, {
     shell: true,
-    input: typeof payload === "string" ? payload : JSON.stringify(payload),
+    input,
     encoding: "utf8",
+    cwd: tmpdir(),
     env: { ...process.env, CLAUDE_PROJECT_DIR: projectDir },
   });
   return { status: result.status, stderr: result.stderr };
+}
+
+/**
+ * Run every hook command that Claude Code would run for this payload. Claude Code runs all matching
+ * entries and all hooks inside them, and one exit 2 blocks the call, so the first non-zero result wins.
+ * The runner throws when nothing matches, so a typo in a matcher cannot make a case pass vacuously.
+ * @param {Record<string, unknown> | string} payload hook JSON, or raw stdin text
+ * @param {{ projectDir?: string, expectMatch?: boolean, matchAs?: string }} [options] matchAs is
+ *   the tool name used to pick entries when the payload has no usable tool_name
+ * @returns {{ status: number | null, stderr: string }}
+ */
+function runRegisteredHook(
+  payload,
+  { projectDir = ROOT, expectMatch = true, matchAs } = {},
+) {
+  const toolName =
+    matchAs ??
+    (typeof payload === "string"
+      ? `${PREFIX}content_update`
+      : String(payload.tool_name));
+  const commands = registeredEntries()
+    .filter((e) => new RegExp(e.matcher).test(toolName))
+    .flatMap((e) => e.hooks.map((h) => h.command));
+  if (commands.length === 0) {
+    if (expectMatch) {
+      throw new Error(`no registered hook matches ${toolName}`);
+    }
+    return { status: 0, stderr: "" };
+  }
+  const input = typeof payload === "string" ? payload : JSON.stringify(payload);
+  const results = commands.map((command) =>
+    runHookCommand(command, input, projectDir),
+  );
+  return results.find((r) => r.status !== 0) ?? results[0];
 }
 
 /**
@@ -74,7 +114,7 @@ const DRAFT_EDIT = {
 
 describe("client config", () => {
   it("defines one emdash HTTP server with env references and no token", () => {
-    const raw = readFileSync(".mcp.json", "utf8");
+    const raw = readFileSync(join(ROOT, ".mcp.json"), "utf8");
     const servers = JSON.parse(raw).mcpServers;
     assert.deepEqual(Object.keys(servers), ["emdash"]);
     assert.equal(servers.emdash.type, "http");
@@ -88,9 +128,22 @@ describe("client config", () => {
       new RegExp(e.matcher).test(`${PREFIX}content_update`),
     );
     assert.ok(entry, "a PreToolUse entry matches mcp__emdash__content_update");
-    const command = entry.hooks[0].command;
-    assert.ok(command.includes(".claude/hooks/emdash-guard.mjs"), command);
-    assert.ok(command.endsWith("|| exit 2"), command);
+  });
+
+  it("registers only fail-closed guard commands, in every entry and hook", () => {
+    const entries = registeredEntries();
+    assert.ok(entries.length > 0);
+    for (const entry of entries) {
+      assert.ok(entry.hooks.length > 0, `${entry.matcher} has no hooks`);
+      for (const hook of entry.hooks) {
+        assert.equal(hook.type, "command", entry.matcher);
+        assert.ok(
+          hook.command.includes(".claude/hooks/emdash-guard.mjs"),
+          hook.command,
+        );
+        assert.ok(hook.command.endsWith("|| exit 2"), hook.command);
+      }
+    }
   });
 });
 
@@ -106,6 +159,14 @@ describe("content_update", () => {
     );
     assert.equal(result.status, 2, result.stderr);
     assert.match(result.stderr, /emdash-guard: blocked/);
+    assert.match(result.stderr, /status/);
+  });
+
+  it("blocks status draft, which unpublishes a published entry", () => {
+    const result = runRegisteredHook(
+      call("content_update", { ...DRAFT_EDIT, status: "draft" }),
+    );
+    assert.equal(result.status, 2, result.stderr);
     assert.match(result.stderr, /status/);
   });
 });
@@ -143,13 +204,20 @@ describe("content_update live-write keys", () => {
     assert.equal(result.status, 0, result.stderr);
   });
 
-  it("blocks tool_input that is an array", () => {
-    const result = runRegisteredHook({
-      tool_name: `${PREFIX}content_update`,
-      tool_input: [],
+  for (const [name, toolInput] of [
+    ["an array", []],
+    ["a string", "projects"],
+    ["null", null],
+  ]) {
+    it(`blocks tool_input that is ${name}`, () => {
+      const result = runRegisteredHook({
+        tool_name: `${PREFIX}content_update`,
+        tool_input: toolInput,
+      });
+      assert.equal(result.status, 2, result.stderr);
+      assert.match(result.stderr, /tool_input is not an object/);
     });
-    assert.equal(result.status, 2, result.stderr);
-  });
+  }
 });
 
 describe("content_create", () => {
@@ -175,13 +243,20 @@ describe("content_create", () => {
     });
   }
 
-  it("blocks tool_input null", () => {
-    const result = runRegisteredHook({
-      tool_name: `${PREFIX}content_create`,
-      tool_input: null,
+  for (const [name, toolInput] of [
+    ["null", null],
+    ["an array", []],
+    ["a string", "projects"],
+  ]) {
+    it(`blocks tool_input that is ${name}`, () => {
+      const result = runRegisteredHook({
+        tool_name: `${PREFIX}content_create`,
+        tool_input: toolInput,
+      });
+      assert.equal(result.status, 2, result.stderr);
+      assert.match(result.stderr, /tool_input is not an object/);
     });
-    assert.equal(result.status, 2, result.stderr);
-  });
+  }
 });
 
 describe("guarded tools", () => {
@@ -215,10 +290,10 @@ describe("deferred tools", () => {
   }
 
   it("does not route a tool outside the emdash prefix to the hook", () => {
-    const result = runRegisteredHook({
-      tool_name: "mcp__other__content_publish",
-      tool_input: {},
-    });
+    const result = runRegisteredHook(
+      { tool_name: "mcp__other__content_publish", tool_input: {} },
+      { expectMatch: false },
+    );
     assert.equal(result.status, 0, result.stderr);
   });
 });
@@ -237,22 +312,65 @@ describe("fail closed", () => {
     assert.equal(result.status, 2, result.stderr);
   });
 
+  it("blocks a tool_name that is not a string", () => {
+    const result = runRegisteredHook(
+      { tool_name: 42, tool_input: {} },
+      { matchAs: `${PREFIX}content_get` },
+    );
+    assert.equal(result.status, 2, result.stderr);
+    assert.match(result.stderr, /no tool_name/);
+  });
+
   it("blocks when the hook file is missing", () => {
     const dir = mkdtempSync(join(tmpdir(), "emdash-guard-test-"));
     try {
-      const result = runRegisteredHook(call("content_get", {}), dir);
+      const result = runRegisteredHook(call("content_get", {}), {
+        projectDir: dir,
+      });
       assert.equal(result.status, 2, result.stderr);
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
+  });
+
+  it("blocks when the hook file exits 1 mid-run", () => {
+    const dir = mkdtempSync(join(tmpdir(), "emdash-guard-test-"));
+    try {
+      mkdirSync(join(dir, ".claude", "hooks"), { recursive: true });
+      writeFileSync(
+        join(dir, ".claude", "hooks", "emdash-guard.mjs"),
+        "process.exit(1);\n",
+      );
+      const result = runRegisteredHook(call("content_get", {}), {
+        projectDir: dir,
+      });
+      assert.equal(result.status, 2, result.stderr);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("blocks malformed input in every registered hook command", () => {
+    for (const entry of registeredEntries()) {
+      for (const hook of entry.hooks) {
+        const result = runHookCommand(hook.command, "not json", ROOT);
+        assert.equal(result.status, 2, `${entry.matcher}: ${result.stderr}`);
+      }
+    }
+  });
+
+  it("makes the runner fail loudly when no entry matches", () => {
+    assert.throws(
+      () => runRegisteredHook({ tool_name: "NoSuchTool", tool_input: {} }),
+      /no registered hook matches NoSuchTool/,
+    );
   });
 });
 
 describe("deny rules", () => {
   /** @returns {string[]} */
   function denyList() {
-    return JSON.parse(readFileSync(".claude/settings.json", "utf8")).permissions
-      .deny;
+    return JSON.parse(readFileSync(SETTINGS_PATH, "utf8")).permissions.deny;
   }
 
   it("denies exactly the nine guarded tools by bare name", () => {
