@@ -9,7 +9,12 @@
       "mcp__emdash__content_permanent_delete",
       "mcp__emdash__taxonomy_create",
       "mcp__emdash__taxonomy_update",
-      "mcp__emdash__taxonomy_delete"
+      "mcp__emdash__taxonomy_delete",
+      "mcp__emdash__taxonomy_delete_term",
+      "mcp__emdash__menu_delete",
+      "mcp__emdash__menu_set_items",
+      "mcp__emdash__media_delete",
+      "mcp__emdash__byline_delete"
     ]
   },
   "hooks": {

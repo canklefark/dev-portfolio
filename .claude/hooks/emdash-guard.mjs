@@ -1,9 +1,9 @@
 // @ts-check
 // Client-side publish guard for the emdash MCP tools (D-01 amended, D-12). EmDash 1.3.1 has no publish scope
 // and a token inherits its owner's admin role, so the server alone cannot keep the agent draft-only. This
-// hook refuses the publish-class and taxonomy definition tools, the live-write arguments on content_update and
-// a publish on content_create before the request leaves the session. Schema and settings tools are deferred so
-// the server's INSUFFICIENT_SCOPE refusal (AGENT-03) is what shows.
+// hook refuses the publish-class, live-destructive and taxonomy definition tools, the live-write arguments on
+// content_update and a publish on content_create before the request leaves the session. Schema, settings and site
+// tools are deferred so the server's INSUFFICIENT_SCOPE refusal (AGENT-03) is what shows.
 // usage: Claude Code PreToolUse command hook. Reads the hook JSON on stdin. Exit 2 with the reason on stderr
 //   blocks the call, exit 0 defers to the normal permission flow.
 //   by hand: node .claude/hooks/emdash-guard.mjs < payload.json
@@ -25,8 +25,9 @@ const UPDATE_ALLOWED_KEYS = new Set([
   "replaceBlocks",
 ]);
 
-// Publish-class tools (D-01) and the taxonomy definition tools (AGENT-03). The deny rules in settings.json
-// list the same nine names; the hook refuses them again as a second layer.
+// Publish-class and live-destructive tools (D-01), and the taxonomy definition tools (AGENT-03). The deny rules
+// in settings.json list the same names; the hook refuses them again as a second layer. A trashed card can be
+// restored, but a deleted media file, menu, term or byline cannot, and menu_set_items replaces a whole live menu.
 const BLOCKED_TOOLS = new Set([
   "content_publish",
   "content_unpublish",
@@ -37,7 +38,19 @@ const BLOCKED_TOOLS = new Set([
   "taxonomy_create",
   "taxonomy_update",
   "taxonomy_delete",
+  "taxonomy_delete_term",
+  "menu_delete",
+  "menu_set_items",
+  "media_delete",
+  "byline_delete",
 ]);
+
+// Backstop for tools this list does not name yet: a tool whose name carries a publish-class or delete word is
+// refused, so a later EmDash version that adds one does not slip through. The schema, settings and site families
+// are left to the server on purpose, so its INSUFFICIENT_SCOPE refusal is what the agent sees (AGENT-03).
+const SERVER_REFUSED_PREFIXES = ["schema_", "settings_", "site_"];
+const DESTRUCTIVE_TOOL =
+  /(^|_)(publish|unpublish|schedule|unschedule|delete)(_|$)/;
 
 // content_create inputs. A new entry starts as a draft and drafts answer 404 on the public site, so tagging
 // one touches no live page. status is allowed here only as "draft", checked in check(). publishedAt is absent on
@@ -74,10 +87,17 @@ function check(toolName, toolInput) {
   if (!toolName.startsWith(TOOL_PREFIX)) return null;
   const tool = toolName.slice(TOOL_PREFIX.length);
 
-  if (BLOCKED_TOOLS.has(tool)) {
-    return tool.startsWith("taxonomy_")
-      ? "taxonomy definitions are part of the content model and are changed in the admin (AGENT-03)."
-      : "the user publishes, unpublishes, schedules and deletes in the admin (D-01).";
+  const destructive =
+    !SERVER_REFUSED_PREFIXES.some((prefix) => tool.startsWith(prefix)) &&
+    DESTRUCTIVE_TOOL.test(tool);
+  if (BLOCKED_TOOLS.has(tool) || destructive) {
+    if (
+      ["taxonomy_create", "taxonomy_update", "taxonomy_delete"].includes(tool)
+    )
+      return "taxonomy definitions are part of the content model and are changed in the admin (AGENT-03).";
+    if (tool === "menu_set_items")
+      return "menu_set_items replaces the whole live menu, so menu items are edited in the admin (D-01).";
+    return "the user publishes, unpublishes, schedules and deletes in the admin (D-01).";
   }
 
   if (tool === "content_create") {

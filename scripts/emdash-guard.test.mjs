@@ -33,6 +33,11 @@ const GUARDED_TOOLS = [
   "taxonomy_create",
   "taxonomy_update",
   "taxonomy_delete",
+  "taxonomy_delete_term",
+  "menu_delete",
+  "menu_set_items",
+  "media_delete",
+  "byline_delete",
 ];
 
 /** @typedef {{ matcher: string, hooks: { type: string, command: string }[] }} HookEntry */
@@ -287,6 +292,20 @@ describe("guarded tools", () => {
       assert.match(result.stderr, /emdash-guard: blocked/);
     });
   }
+
+  // The backstop: a tool name the list does not carry, but with a publish-class or delete word in it.
+  for (const tool of [
+    "content_archive_delete",
+    "media_bulk_delete",
+    "collection_publish_all",
+    "delete_everything",
+  ]) {
+    it(`blocks the unlisted destructive-looking tool ${tool}`, () => {
+      const result = runRegisteredHook(call(tool, {}));
+      assert.equal(result.status, 2, result.stderr);
+      assert.match(result.stderr, /emdash-guard: blocked/);
+    });
+  }
 });
 
 describe("deferred tools", () => {
@@ -295,12 +314,20 @@ describe("deferred tools", () => {
     "content_list",
     "content_compare",
     "content_discard_draft",
+    "content_restore",
+    "content_duplicate",
     "revision_restore",
-    "menu_set_items",
+    "menu_create",
+    "menu_update",
     "media_upload",
+    "media_get",
     "taxonomy_create_term",
+    "taxonomy_update_term",
+    "byline_create",
     "schema_create_field",
+    "schema_delete_collection",
     "settings_update",
+    "site_import_start",
   ];
   for (const tool of deferred) {
     it(`defers ${tool} to the server`, () => {
@@ -393,7 +420,7 @@ describe("deny rules", () => {
     return JSON.parse(readFileSync(SETTINGS_PATH, "utf8")).permissions.deny;
   }
 
-  it("denies exactly the nine guarded tools by bare name", () => {
+  it("denies exactly the guarded tools by bare name", () => {
     const want = GUARDED_TOOLS.map((tool) => `${PREFIX}${tool}`).sort();
     assert.deepEqual([...denyList()].sort(), want);
     assert.ok(!denyList().some((rule) => rule.includes("(")));
