@@ -13,9 +13,12 @@ import {
   NAV_MENU,
   SITE_SETTINGS,
   TABLES,
+  TAXONOMY_NAMES,
   aboutCollection,
   datetimeToDate,
   projectsCollection,
+  taxonomyDefinitions,
+  termSlug,
 } from "./lib/schema.mjs";
 import { loadSourceModel } from "./lib/sources.mjs";
 
@@ -23,7 +26,7 @@ import { loadSourceModel } from "./lib/sources.mjs";
  * @typedef {import("./lib/sources.mjs").SourceModel} SourceModel
  * @typedef {import("./lib/sources.mjs").ProjectSource} ProjectSource
  * @typedef {{ section: string, key: string, field: string, ok: boolean, expected: unknown, actual: unknown }} Check
- * @typedef {{ generatedAt: string, dbPath: string, projects: { expected: number, stored: number }, about: { expected: number, stored: number }, menu: { items: number }, settings: { keys: string[] }, schema: { collections: string[] }, checks: Check[], differences: Check[] }} Report
+ * @typedef {{ generatedAt: string, dbPath: string, projects: { expected: number, stored: number }, about: { expected: number, stored: number }, menu: { items: number }, settings: { keys: string[] }, schema: { collections: string[], taxonomies: string[] }, tagOrder: { matchesSource: boolean, reordered: string[] }, checks: Check[], differences: Check[] }} Report
  * @typedef {Record<string, unknown>} Row
  */
 
@@ -175,6 +178,30 @@ export function verify(model, dbPath) {
       }
     }
 
+    // Term assignments, read in the order EmDash lists them: term sort order, label, id.
+    /** @type {Row[]} */
+    const assignmentRows = db
+      .prepare(
+        `SELECT p.slug AS project, t.name AS taxonomy, t.slug AS term_slug, t.label AS label FROM ${TABLES.contentTaxonomies} ct JOIN ${TABLES.projects} p ON p.translation_group = ct.entry_id JOIN ${TABLES.taxonomies} t ON t.translation_group = ct.taxonomy_id WHERE ct.collection = ? AND ct.deleted_at IS NULL AND p.deleted_at IS NULL ORDER BY t.sort_order, t.label, t.id`,
+      )
+      .all("projects");
+    /** @type {Map<string, { category: Row[], tag: Row[], other: string[] }>} */
+    const assignments = new Map();
+    for (const term of assignmentRows) {
+      const project = String(term.project);
+      const entry = assignments.get(project) ?? {
+        category: [],
+        tag: [],
+        other: [],
+      };
+      if (term.taxonomy === TAXONOMY_NAMES.category) entry.category.push(term);
+      else if (term.taxonomy === TAXONOMY_NAMES.tag) entry.tag.push(term);
+      else entry.other.push(`${term.taxonomy}:${term.label}`);
+      assignments.set(project, entry);
+    }
+    /** @type {string[]} */
+    const reordered = [];
+
     for (const project of model.projects) {
       const row = bySlug.get(project.slug)?.[0];
       if (!row) {
@@ -184,7 +211,6 @@ export function verify(model, dbPath) {
       /** @type {[string, string][]} */
       const copy = [
         ["title", project.title],
-        ["category", project.category],
         ["project_status", project.status],
         ["status_variant", project.statusVariant],
         ["surface", project.surface],
@@ -198,14 +224,50 @@ export function verify(model, dbPath) {
       }
       // D-07 as amended: the stored datetime, read back as its UTC calendar day, equals the source string.
       record(project.slug, "date", project.date, datetimeToDate(row.date));
-      const tags = parseList(row.tags);
+      // D-05 and D-09 as amended: category and tags are term assignments. The admin does not limit a project
+      // to one category, so exactly one category term is enforced here.
+      const assigned = assignments.get(project.slug) ?? {
+        category: [],
+        tag: [],
+        other: [],
+      };
+      const categoryLabels = assigned.category.map((term) =>
+        String(term.label),
+      );
+      record(
+        project.slug,
+        "category",
+        project.category,
+        categoryLabels,
+        assigned.category.length === 1 &&
+          assigned.category[0].label === project.category &&
+          assigned.category[0].term_slug === termSlug(project.category),
+      );
+      const tagLabels = assigned.tag.map((term) => String(term.label));
+      const expectedTags = [...project.tags].sort();
       record(
         project.slug,
         "tags",
-        project.tags,
-        tags,
-        canonical(project.tags) === canonical(tags),
+        expectedTags,
+        [...tagLabels].sort(),
+        canonical(expectedTags) === canonical([...tagLabels].sort()) &&
+          assigned.tag.every(
+            (term) => term.term_slug === termSlug(String(term.label)),
+          ),
       );
+      if (assigned.other.length > 0) {
+        record(
+          project.slug,
+          "taxonomies",
+          "category and tag only",
+          assigned.other,
+          false,
+        );
+      }
+      // EmDash lists terms by term order, not by assignment order, so source tag order is not preserved.
+      if (canonical(project.tags) !== canonical(tagLabels)) {
+        reordered.push(project.slug);
+      }
       const stats = parseList(row.stats);
       record(
         project.slug,
@@ -369,7 +431,8 @@ export function verify(model, dbPath) {
       const stored = db
         .prepare(`SELECT value FROM ${TABLES.options} WHERE name = ?`)
         .get(`site:${key}`);
-      const expected = SITE_SETTINGS[/** @type {keyof typeof SITE_SETTINGS} */ (key)];
+      const expected =
+        SITE_SETTINGS[/** @type {keyof typeof SITE_SETTINGS} */ (key)];
       const actual = stored ? parseList(stored.value) : "missing";
       add(
         "settings",
@@ -398,10 +461,7 @@ export function verify(model, dbPath) {
       .prepare(`SELECT slug FROM ${TABLES.collections} ORDER BY slug`)
       .all()
       .map((row) => String(row.slug));
-    const definitions = [
-      projectsCollection(model.tagOptions),
-      aboutCollection(),
-    ];
+    const definitions = [projectsCollection(), aboutCollection()];
     const expectedCollections = definitions.map((d) => d.slug).sort();
     add(
       "schema",
@@ -453,6 +513,67 @@ export function verify(model, dbPath) {
       }
     }
 
+    // schema: the category and tag taxonomies attach to projects and hold exactly the derived terms.
+    const expectedTaxonomies = taxonomyDefinitions(model.tagOptions);
+    const expectedNames = expectedTaxonomies.map((t) => t.name).sort();
+    /** @type {Row[]} */
+    const storedDefs = db
+      .prepare(
+        `SELECT name, hierarchical, collections FROM ${TABLES.taxonomyDefs} ORDER BY name`,
+      )
+      .all();
+    const storedNames = storedDefs.map((def) => String(def.name));
+    add(
+      "schema",
+      "taxonomies",
+      "names",
+      expectedNames,
+      storedNames,
+      canonical(expectedNames) === canonical(storedNames),
+    );
+    for (const taxonomy of expectedTaxonomies) {
+      const def = storedDefs.find((d) => d.name === taxonomy.name);
+      const expectedDef = {
+        hierarchical: taxonomy.hierarchical,
+        collections: taxonomy.collections,
+      };
+      const actualDef = def
+        ? {
+            hierarchical: Boolean(def.hierarchical),
+            collections: parseList(def.collections),
+          }
+        : "missing";
+      add(
+        "schema",
+        taxonomy.name,
+        "definition",
+        expectedDef,
+        actualDef,
+        canonical(expectedDef) === canonical(actualDef),
+      );
+      /** @type {Row[]} */
+      const storedTerms = db
+        .prepare(
+          `SELECT slug, label FROM ${TABLES.taxonomies} WHERE name = ? ORDER BY slug`,
+        )
+        .all(taxonomy.name);
+      const expectedTerms = [...(taxonomy.terms ?? [])]
+        .map(({ slug, label }) => ({ slug, label }))
+        .sort((a, b) => (a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0));
+      const actualTerms = storedTerms.map((term) => ({
+        slug: term.slug,
+        label: term.label,
+      }));
+      add(
+        "schema",
+        taxonomy.name,
+        "terms",
+        expectedTerms,
+        actualTerms,
+        canonical(expectedTerms) === canonical(actualTerms),
+      );
+    }
+
     return {
       generatedAt: new Date().toISOString(),
       dbPath,
@@ -460,7 +581,8 @@ export function verify(model, dbPath) {
       about: { expected: 1, stored: aboutLive.length },
       menu: { items: menuItems.length },
       settings: { keys: settingKeys },
-      schema: { collections: storedCollections },
+      schema: { collections: storedCollections, taxonomies: storedNames },
+      tagOrder: { matchesSource: reordered.length === 0, reordered },
       checks,
       differences: checks.filter((check) => !check.ok),
     };
@@ -522,6 +644,11 @@ function main(argv) {
   for (const diff of report.differences) {
     console.log(
       `DIFF ${diff.section} ${diff.key}.${diff.field}: ${firstDifference(diff)}`,
+    );
+  }
+  if (!report.tagOrder.matchesSource) {
+    console.log(
+      `note: EmDash lists tags in term order, so ${report.tagOrder.reordered.length} of ${report.projects.expected} projects read their tags in a different order than the source (not a difference; Phase 3 decision)`,
     );
   }
   const total = report.checks.length;

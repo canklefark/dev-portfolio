@@ -38,25 +38,6 @@
           "indexed": true
         },
         {
-          "slug": "category",
-          "label": "Category",
-          "type": "select",
-          "required": true,
-          "validation": {
-            "options": [
-              "Agency Tooling",
-              "Client Work",
-              "Developer Tools",
-              "Homelab Infrastructure",
-              "Observability",
-              "Personal Projects",
-              "Revenue Intelligence",
-              "Self-Hosted Services",
-              "Web Development"
-            ]
-          }
-        },
-        {
           "slug": "project_status",
           "label": "Status",
           "type": "string",
@@ -93,60 +74,6 @@
           "label": "Period",
           "type": "string",
           "required": true
-        },
-        {
-          "slug": "tags",
-          "label": "Tags",
-          "type": "multiSelect",
-          "validation": {
-            "options": [
-              "Agent Skills",
-              "Ansible",
-              "Astro",
-              "Azure Pipelines",
-              "Bash",
-              "Better Auth",
-              "Claude Code Plugin",
-              "Cloudflare Pages",
-              "Cloudflare R2",
-              "Cloudflare Workers",
-              "Cron Workers",
-              "Docker",
-              "Docker Compose",
-              "Dokploy",
-              "Drizzle",
-              "Entra ID",
-              "Flux",
-              "GitHub",
-              "Google Workspace SSO",
-              "Grafana",
-              "IIS",
-              "Immich",
-              "Kubernetes",
-              "MCP",
-              "Marketplace",
-              "Mealie",
-              "Ollama",
-              "PWA",
-              "Paperless-ngx",
-              "Playwright",
-              "PostgreSQL",
-              "Prometheus",
-              "Puppeteer",
-              "SQL Server",
-              "SQLite",
-              "Svelte 5",
-              "SvelteKit",
-              "Tailwind",
-              "Tailwind CSS",
-              "Turborepo",
-              "TypeScript",
-              "WordPress",
-              "k3s",
-              "node_exporter",
-              "shadcn-svelte"
-            ]
-          }
         },
         {
           "slug": "summary",
@@ -326,6 +253,246 @@
               }
             ]
           }
+        }
+      ]
+    }
+  ],
+  "taxonomies": [
+    {
+      "name": "category",
+      "label": "Categories",
+      "labelSingular": "Category",
+      "hierarchical": true,
+      "collections": [
+        "projects"
+      ],
+      "terms": [
+        {
+          "slug": "agency-tooling",
+          "label": "Agency Tooling"
+        },
+        {
+          "slug": "client-work",
+          "label": "Client Work"
+        },
+        {
+          "slug": "developer-tools",
+          "label": "Developer Tools"
+        },
+        {
+          "slug": "homelab-infrastructure",
+          "label": "Homelab Infrastructure"
+        },
+        {
+          "slug": "observability",
+          "label": "Observability"
+        },
+        {
+          "slug": "personal-projects",
+          "label": "Personal Projects"
+        },
+        {
+          "slug": "revenue-intelligence",
+          "label": "Revenue Intelligence"
+        },
+        {
+          "slug": "self-hosted-services",
+          "label": "Self-Hosted Services"
+        },
+        {
+          "slug": "web-development",
+          "label": "Web Development"
+        }
+      ]
+    },
+    {
+      "name": "tag",
+      "label": "Tags",
+      "labelSingular": "Tag",
+      "hierarchical": false,
+      "collections": [
+        "projects"
+      ],
+      "terms": [
+        {
+          "slug": "agent-skills",
+          "label": "Agent Skills"
+        },
+        {
+          "slug": "ansible",
+          "label": "Ansible"
+        },
+        {
+          "slug": "astro",
+          "label": "Astro"
+        },
+        {
+          "slug": "azure-pipelines",
+          "label": "Azure Pipelines"
+        },
+        {
+          "slug": "bash",
+          "label": "Bash"
+        },
+        {
+          "slug": "better-auth",
+          "label": "Better Auth"
+        },
+        {
+          "slug": "claude-code-plugin",
+          "label": "Claude Code Plugin"
+        },
+        {
+          "slug": "cloudflare-pages",
+          "label": "Cloudflare Pages"
+        },
+        {
+          "slug": "cloudflare-r2",
+          "label": "Cloudflare R2"
+        },
+        {
+          "slug": "cloudflare-workers",
+          "label": "Cloudflare Workers"
+        },
+        {
+          "slug": "cron-workers",
+          "label": "Cron Workers"
+        },
+        {
+          "slug": "docker",
+          "label": "Docker"
+        },
+        {
+          "slug": "docker-compose",
+          "label": "Docker Compose"
+        },
+        {
+          "slug": "dokploy",
+          "label": "Dokploy"
+        },
+        {
+          "slug": "drizzle",
+          "label": "Drizzle"
+        },
+        {
+          "slug": "entra-id",
+          "label": "Entra ID"
+        },
+        {
+          "slug": "flux",
+          "label": "Flux"
+        },
+        {
+          "slug": "github",
+          "label": "GitHub"
+        },
+        {
+          "slug": "google-workspace-sso",
+          "label": "Google Workspace SSO"
+        },
+        {
+          "slug": "grafana",
+          "label": "Grafana"
+        },
+        {
+          "slug": "iis",
+          "label": "IIS"
+        },
+        {
+          "slug": "immich",
+          "label": "Immich"
+        },
+        {
+          "slug": "kubernetes",
+          "label": "Kubernetes"
+        },
+        {
+          "slug": "mcp",
+          "label": "MCP"
+        },
+        {
+          "slug": "marketplace",
+          "label": "Marketplace"
+        },
+        {
+          "slug": "mealie",
+          "label": "Mealie"
+        },
+        {
+          "slug": "ollama",
+          "label": "Ollama"
+        },
+        {
+          "slug": "pwa",
+          "label": "PWA"
+        },
+        {
+          "slug": "paperless-ngx",
+          "label": "Paperless-ngx"
+        },
+        {
+          "slug": "playwright",
+          "label": "Playwright"
+        },
+        {
+          "slug": "postgresql",
+          "label": "PostgreSQL"
+        },
+        {
+          "slug": "prometheus",
+          "label": "Prometheus"
+        },
+        {
+          "slug": "puppeteer",
+          "label": "Puppeteer"
+        },
+        {
+          "slug": "sql-server",
+          "label": "SQL Server"
+        },
+        {
+          "slug": "sqlite",
+          "label": "SQLite"
+        },
+        {
+          "slug": "svelte-5",
+          "label": "Svelte 5"
+        },
+        {
+          "slug": "sveltekit",
+          "label": "SvelteKit"
+        },
+        {
+          "slug": "tailwind",
+          "label": "Tailwind"
+        },
+        {
+          "slug": "tailwind-css",
+          "label": "Tailwind CSS"
+        },
+        {
+          "slug": "turborepo",
+          "label": "Turborepo"
+        },
+        {
+          "slug": "typescript",
+          "label": "TypeScript"
+        },
+        {
+          "slug": "wordpress",
+          "label": "WordPress"
+        },
+        {
+          "slug": "k3s",
+          "label": "k3s"
+        },
+        {
+          "slug": "node-exporter",
+          "label": "node_exporter"
+        },
+        {
+          "slug": "shadcn-svelte",
+          "label": "shadcn-svelte"
         }
       ]
     }

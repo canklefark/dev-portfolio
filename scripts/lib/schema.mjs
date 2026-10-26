@@ -3,9 +3,11 @@
 
 /** @typedef {import("emdash").SeedCollection} SeedCollection */
 /** @typedef {import("emdash").SeedField} SeedField */
+/** @typedef {import("emdash").SeedTaxonomy} SeedTaxonomy */
 /** @typedef {{ tags: string[] }} TaggedProject */
 
-// D-05: today's nine categories, in this order.
+// D-05 (amended by the user on 2026-10-26, reason: use EmDash taxonomies as intended): today's nine categories,
+// in this order, are the terms of the category taxonomy, not a select field.
 export const CATEGORY_OPTIONS = Object.freeze([
   "Agency Tooling",
   "Client Work",
@@ -48,7 +50,9 @@ export function dateToDatetime(date) {
     Number.isNaN(parsed.getTime()) ||
     parsed.toISOString().slice(0, 10) !== date
   ) {
-    throw new Error(`date ${JSON.stringify(date)} is not a YYYY-MM-DD calendar day`);
+    throw new Error(
+      `date ${JSON.stringify(date)} is not a YYYY-MM-DD calendar day`,
+    );
   }
   return value;
 }
@@ -60,9 +64,11 @@ export function dateToDatetime(date) {
  * @returns {string}
  */
 export function datetimeToDate(stored) {
-  if (typeof stored !== "string") return `unexpected column type ${typeof stored}`;
+  if (typeof stored !== "string")
+    return `unexpected column type ${typeof stored}`;
   const parsed = new Date(stored);
-  if (Number.isNaN(parsed.getTime())) return `invalid datetime ${JSON.stringify(stored)}`;
+  if (Number.isNaN(parsed.getTime()))
+    return `invalid datetime ${JSON.stringify(stored)}`;
   return parsed.toISOString().slice(0, 10);
 }
 
@@ -75,19 +81,26 @@ export const TABLES = Object.freeze({
   menus: "_emdash_menus",
   menuItems: "_emdash_menu_items",
   options: "options",
+  taxonomies: "taxonomies",
+  contentTaxonomies: "content_taxonomies",
+  taxonomyDefs: "_emdash_taxonomy_defs",
+});
+
+// D-05 and D-09 as amended: category and tag are EmDash taxonomies attached to the projects collection.
+export const TAXONOMY_NAMES = Object.freeze({
+  category: "category",
+  tag: "tag",
 });
 
 // D-09: non-reserved slugs (project_status, status_variant, time_label), in field order.
 export const PROJECT_FIELD_SLUGS = Object.freeze([
   "title",
   "date",
-  "category",
   "project_status",
   "status_variant",
   "surface",
   "time_label",
   "period",
-  "tags",
   "summary",
   "sub",
   "stats",
@@ -105,11 +118,69 @@ export function deriveTagOptions(projects) {
 }
 
 /**
- * The projects collection (decision Q1 = 1a: tags are a multiSelect over the derived options).
+ * The term slug for a label: lower case, every run of characters outside a to z and 0 to 9 becomes one hyphen.
+ * The label itself stays the exact source string (k3s, node_exporter, shadcn-svelte keep their case and marks).
+ * @param {string} label
+ * @returns {string}
+ */
+export function termSlug(label) {
+  const slug = label
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  if (slug === "")
+    throw new Error(`term ${JSON.stringify(label)} has no slug characters`);
+  return slug;
+}
+
+/**
+ * The category and tag taxonomies with all their terms, attached to projects. The built-in definitions
+ * are kept (category hierarchical, tag flat) so the admin matches the defaults; only the collection changes.
+ * Throws when two labels in one taxonomy share a slug, because the second term would be silently merged.
  * @param {string[]} tagOptions
+ * @returns {SeedTaxonomy[]}
+ */
+export function taxonomyDefinitions(tagOptions) {
+  /** @param {string[]} labels */
+  const terms = (labels) => {
+    const seen = new Map();
+    return labels.map((label) => {
+      const slug = termSlug(label);
+      const other = seen.get(slug);
+      if (other !== undefined) {
+        throw new Error(
+          `terms ${JSON.stringify(other)} and ${JSON.stringify(label)} share the slug ${slug}`,
+        );
+      }
+      seen.set(slug, label);
+      return { slug, label };
+    });
+  };
+  return [
+    {
+      name: TAXONOMY_NAMES.category,
+      label: "Categories",
+      labelSingular: "Category",
+      hierarchical: true,
+      collections: ["projects"],
+      terms: terms([...CATEGORY_OPTIONS]),
+    },
+    {
+      name: TAXONOMY_NAMES.tag,
+      label: "Tags",
+      labelSingular: "Tag",
+      hierarchical: false,
+      collections: ["projects"],
+      terms: terms(tagOptions),
+    },
+  ];
+}
+
+/**
+ * The projects collection. Category and tags are taxonomies (D-05 and D-09 as amended), not fields.
  * @returns {SeedCollection}
  */
-export function projectsCollection(tagOptions) {
+export function projectsCollection() {
   /** @type {SeedField[]} */
   const fields = [
     {
@@ -125,13 +196,6 @@ export function projectsCollection(tagOptions) {
       type: "datetime",
       required: true,
       indexed: true,
-    },
-    {
-      slug: "category",
-      label: "Category",
-      type: "select",
-      required: true,
-      validation: { options: [...CATEGORY_OPTIONS] },
     },
     {
       slug: "project_status",
@@ -150,12 +214,6 @@ export function projectsCollection(tagOptions) {
     { slug: "surface", label: "Surface", type: "string", required: true },
     { slug: "time_label", label: "Time label", type: "string", required: true },
     { slug: "period", label: "Period", type: "string", required: true },
-    {
-      slug: "tags",
-      label: "Tags",
-      type: "multiSelect",
-      validation: { options: [...tagOptions] },
-    },
     { slug: "summary", label: "Summary", type: "text", required: true },
     { slug: "sub", label: "Sub", type: "text", required: true },
     {
@@ -189,7 +247,11 @@ export function projectsCollection(tagOptions) {
 }
 
 // D-04: constrained About values mirror the unions in src/data/about.ts. A cell with no variant is stored as default.
-export const CELL_VARIANT_OPTIONS = Object.freeze(["default", "accent", "green"]);
+export const CELL_VARIANT_OPTIONS = Object.freeze([
+  "default",
+  "accent",
+  "green",
+]);
 export const STACK_LEVEL_OPTIONS = Object.freeze([
   "DAILY",
   "PROFICIENT",

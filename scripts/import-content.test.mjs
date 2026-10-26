@@ -26,9 +26,11 @@ import {
 } from "./import-content.mjs";
 import {
   ABOUT_FIELD_SLUGS,
+  CATEGORY_OPTIONS,
   CELL_VARIANT_OPTIONS,
   CONTACT_ICON_OPTIONS,
   NAV_MENU,
+  PROJECT_FIELD_SLUGS,
   SITE_SETTINGS,
   STACK_LEVEL_OPTIONS,
   TABLES,
@@ -37,6 +39,8 @@ import {
   datetimeToDate,
   deriveTagOptions,
   projectsCollection,
+  taxonomyDefinitions,
+  termSlug,
 } from "./lib/schema.mjs";
 import {
   loadAbout,
@@ -284,7 +288,7 @@ describe("converter and schema invariants", () => {
 
   it("keeps every field and collection slug out of the emdash reserved lists", () => {
     const fields = [
-      ...projectsCollection(model.tagOptions).fields,
+      ...projectsCollection().fields,
       ...aboutCollection().fields,
     ].map((field) => field.slug);
     for (const slug of fields) {
@@ -489,19 +493,20 @@ describe("schema-check seed (decision Q4 4a)", () => {
     assert.ok(source);
     for (const field of [
       "date",
-      "category",
       "project_status",
       "status_variant",
       "surface",
       "time_label",
       "period",
-      "tags",
       "summary",
       "sub",
       "stats",
     ]) {
       assert.deepEqual(entry.data[field], source.data[field], field);
     }
+    // The terms travel with the entry: one category and the source tags.
+    assert.deepEqual(entry.taxonomies, source.taxonomies);
+    assert.equal(entry.taxonomies?.category.length, 1);
     assert.deepEqual(
       withoutKeys(entry.data.body),
       withoutKeys(markdownToPortableText(expected.body)),
@@ -543,15 +548,18 @@ describe("schema-check seed (decision Q4 4a)", () => {
     );
   });
 
-  it("structureSeed keeps version, meta, settings, collections and menus and drops content", () => {
+  it("structureSeed keeps version, meta, settings, collections, taxonomies with terms and menus and drops content", () => {
     const structure = structureSeed(full);
     assert.deepEqual(Object.keys(structure).sort(), [
       "collections",
       "menus",
       "meta",
       "settings",
+      "taxonomies",
       "version",
     ]);
+    assert.deepEqual(structure.taxonomies, full.taxonomies);
+    assert.equal(structure.taxonomies?.length, 2);
     assert.equal("content" in structure, false);
     assert.deepEqual(structure.collections, full.collections);
     assert.deepEqual(structure.menus, full.menus);
@@ -593,7 +601,10 @@ describe("schema-check seed (decision Q4 4a)", () => {
       assert.equal("content" in written, false);
       assert.equal(written.collections.length, 2);
       assert.equal(written.menus.length, 1);
-      assert.deepEqual(written, JSON.parse(JSON.stringify(structureSeed(full))));
+      assert.deepEqual(
+        written,
+        JSON.parse(JSON.stringify(structureSeed(full))),
+      );
       assert.equal(
         readFileSync(join(root, ".emdash/seed.json"), "utf8").endsWith("}\n"),
         true,
@@ -620,9 +631,7 @@ describe("date field is a native datetime at midnight UTC (D-07 amended)", () =>
   const real = loadSourceModel(REPO_ROOT);
 
   it("defines date as a required, indexed datetime with no pattern validation", () => {
-    const field = projectsCollection(real.tagOptions).fields.find(
-      (f) => f.slug === "date",
-    );
+    const field = projectsCollection().fields.find((f) => f.slug === "date");
     assert.ok(field);
     assert.equal(field.type, "datetime");
     assert.equal(field.required, true);
@@ -714,7 +723,9 @@ describe("date field is a native datetime at midnight UTC (D-07 amended)", () =>
     withRoot((root) => {
       const dbPath = applyModel(mutated, root);
       const report = verify(real, dbPath);
-      assert.deepEqual(report.differences.map(label), ["projects catalog-cms date"]);
+      assert.deepEqual(report.differences.map(label), [
+        "projects catalog-cms date",
+      ]);
       const run = spawnSync(
         process.execPath,
         [
@@ -728,6 +739,226 @@ describe("date field is a native datetime at midnight UTC (D-07 amended)", () =>
       );
       assert.equal(run.status, 1, run.stderr);
       assert.match(run.stdout, /DIFF projects catalog-cms\.date/);
+    });
+  });
+});
+
+describe("category and tag are EmDash taxonomies (D-05 and D-09 amended)", () => {
+  const real = loadSourceModel(REPO_ROOT);
+
+  /**
+   * Apply the real model with a change to one project's term assignment, then verify against the real model.
+   * @param {string} slug
+   * @param {(taxonomies: { category: string[], tag: string[] }) => void} change
+   * @returns {import("./verify-import.mjs").Report}
+   */
+  function verifyWithAssignment(slug, change) {
+    const seed = buildSeed(real);
+    const entry = seed.content?.projects.find((p) => p.slug === slug);
+    assert.ok(entry?.taxonomies, slug);
+    const taxonomies = {
+      category: [...entry.taxonomies.category],
+      tag: [...entry.taxonomies.tag],
+    };
+    change(taxonomies);
+    entry.taxonomies = taxonomies;
+    return withRoot((root) => {
+      applySeedFile(seed, root, { quiet: true });
+      return verify(real, join(root, "data/emdash.db"));
+    });
+  }
+
+  it("has no category or tags field on projects", () => {
+    const slugs = projectsCollection().fields.map((f) => f.slug);
+    assert.equal(slugs.includes("category"), false);
+    assert.equal(slugs.includes("tags"), false);
+    assert.deepEqual(slugs, [...PROJECT_FIELD_SLUGS]);
+  });
+
+  it("defines the built-in category and tag taxonomies on projects with every term", () => {
+    const [category, tag] = taxonomyDefinitions(real.tagOptions);
+    assert.equal(category.name, "category");
+    assert.equal(category.hierarchical, true);
+    assert.deepEqual(category.collections, ["projects"]);
+    assert.deepEqual(
+      category.terms?.map((t) => t.label),
+      [...CATEGORY_OPTIONS],
+    );
+    assert.equal(tag.name, "tag");
+    assert.equal(tag.hierarchical, false);
+    assert.deepEqual(tag.collections, ["projects"]);
+    assert.equal(tag.terms?.length, 45);
+    const labels = tag.terms?.map((t) => t.label) ?? [];
+    for (const lower of ["k3s", "node_exporter", "shadcn-svelte"]) {
+      assert.ok(labels.includes(lower), lower);
+    }
+    for (const taxonomy of [category, tag]) {
+      const slugs = taxonomy.terms?.map((t) => t.slug) ?? [];
+      assert.equal(new Set(slugs).size, slugs.length, taxonomy.name);
+    }
+    const slugOf = Object.fromEntries(
+      (tag.terms ?? []).map((t) => [t.label, t.slug]),
+    );
+    assert.equal(slugOf["k3s"], "k3s");
+    assert.equal(slugOf["node_exporter"], "node-exporter");
+    assert.equal(slugOf["shadcn-svelte"], "shadcn-svelte");
+    assert.equal(slugOf["Svelte 5"], "svelte-5");
+  });
+
+  it("derives term slugs from labels and refuses a label with no slug characters or a slug collision", () => {
+    assert.equal(termSlug("k3s"), "k3s");
+    assert.equal(termSlug("node_exporter"), "node-exporter");
+    assert.equal(termSlug("shadcn-svelte"), "shadcn-svelte");
+    assert.equal(termSlug("Svelte 5"), "svelte-5");
+    assert.equal(termSlug("Self-Hosted Services"), "self-hosted-services");
+    assert.throws(() => termSlug("---"), /no slug characters/);
+    assert.throws(
+      () => taxonomyDefinitions(["Node Exporter", "node_exporter"]),
+      /share the slug node-exporter/,
+    );
+  });
+
+  it("seeds one category slug and the source tags in source order on every entry", () => {
+    const seed = buildSeed(real);
+    for (const entry of seed.content?.projects ?? []) {
+      const source = real.projects.find((p) => p.slug === entry.slug);
+      assert.ok(source);
+      assert.deepEqual(entry.taxonomies?.category, [termSlug(source.category)]);
+      assert.deepEqual(entry.taxonomies?.tag, source.tags.map(termSlug));
+      assert.equal("category" in entry.data, false);
+      assert.equal("tags" in entry.data, false);
+    }
+  });
+
+  it("throws naming the slug when a category is outside the category terms", () => {
+    const project = { ...real.projects[0], category: "Not A Category" };
+    assert.throws(
+      () => buildSeed({ ...real, projects: [project] }),
+      new RegExp(`${project.slug}.*Not A Category`),
+    );
+  });
+
+  it("applies idempotently: 54 terms, 79 assignments, none duplicated, 0 differences, and a draft keeps its terms", () => {
+    const draft = fixture("draft-project.md");
+    const model = { ...real, projects: [...real.projects, draft] };
+    withRoot((root) => {
+      applyModel(model, root);
+      const dbPath = applyModel(model, root);
+      const terms = query(
+        dbPath,
+        `SELECT name, COUNT(1) AS n FROM ${TABLES.taxonomies} GROUP BY name ORDER BY name`,
+      );
+      assert.deepEqual(
+        terms.map((t) => [t.name, t.n]),
+        [
+          ["category", 9],
+          ["tag", 45],
+        ],
+      );
+      const rows = query(
+        dbPath,
+        `SELECT COUNT(1) AS n FROM ${TABLES.contentTaxonomies} WHERE collection = ?`,
+        "projects",
+      );
+      const distinct = query(
+        dbPath,
+        `SELECT COUNT(1) AS n FROM (SELECT DISTINCT entry_id, taxonomy_id FROM ${TABLES.contentTaxonomies} WHERE collection = ?)`,
+        "projects",
+      );
+      const expected = model.projects.reduce(
+        (n, p) => n + 1 + p.tags.length,
+        0,
+      );
+      assert.equal(rows[0].n, expected);
+      assert.equal(distinct[0].n, expected);
+      const report = verify(model, dbPath);
+      assert.deepEqual(report.differences, []);
+      assert.deepEqual(report.schema.taxonomies, ["category", "tag"]);
+    });
+  });
+
+  it("reports that EmDash lists tags in term order, not source order", () => {
+    withRoot((root) => {
+      const report = verify(real, applyModel(real, root));
+      assert.equal(report.tagOrder.matchesSource, false);
+      assert.ok(report.tagOrder.reordered.includes("homelab-k8s"));
+      assert.deepEqual(report.differences, []);
+    });
+  });
+
+  it("reports a wrong category term", () => {
+    const report = verifyWithAssignment("homelab-k8s", (t) => {
+      t.category = [termSlug("Observability")];
+    });
+    assert.deepEqual(report.differences.map(label), [
+      "projects homelab-k8s category",
+    ]);
+  });
+
+  it("reports a missing tag", () => {
+    const report = verifyWithAssignment("homelab-k8s", (t) => {
+      t.tag = t.tag.slice(1);
+    });
+    assert.deepEqual(report.differences.map(label), [
+      "projects homelab-k8s tags",
+    ]);
+  });
+
+  it("reports an extra tag", () => {
+    const report = verifyWithAssignment("homelab-k8s", (t) => {
+      t.tag = [...t.tag, termSlug("Docker")];
+    });
+    assert.deepEqual(report.differences.map(label), [
+      "projects homelab-k8s tags",
+    ]);
+  });
+
+  it("reports two categories and zero categories", () => {
+    const two = verifyWithAssignment("homelab-k8s", (t) => {
+      t.category = [...t.category, termSlug("Observability")];
+    });
+    assert.deepEqual(two.differences.map(label), [
+      "projects homelab-k8s category",
+    ]);
+    const none = verifyWithAssignment("homelab-k8s", (t) => {
+      t.category = [];
+    });
+    assert.deepEqual(none.differences.map(label), [
+      "projects homelab-k8s category",
+    ]);
+  });
+
+  it("reports a term slug the seed does not define as a missing tag, because EmDash skips it silently", () => {
+    const report = verifyWithAssignment("homelab-k8s", (t) => {
+      t.tag = [...t.tag.slice(1), "no-such-term"];
+    });
+    assert.deepEqual(report.differences.map(label), [
+      "projects homelab-k8s tags",
+    ]);
+  });
+
+  it("reports an extra term in a taxonomy and exits 1 from the CLI", () => {
+    const seed = buildSeed(real);
+    const tag = seed.taxonomies?.find((t) => t.name === "tag");
+    assert.ok(tag?.terms);
+    tag.terms.push({ slug: "extra-tag", label: "Extra tag" });
+    withRoot((root) => {
+      applySeedFile(seed, root, { quiet: true });
+      const report = verify(real, join(root, "data/emdash.db"));
+      assert.deepEqual(report.differences.map(label), ["schema tag terms"]);
+      const run = spawnSync(
+        process.execPath,
+        [
+          "scripts/verify-import.mjs",
+          "--root",
+          root,
+          "--report",
+          join(root, "report.json"),
+        ],
+        { cwd: REPO_ROOT, encoding: "utf8" },
+      );
+      assert.equal(run.status, 1, run.stderr);
+      assert.match(run.stdout, /DIFF schema tag\.terms/);
     });
   });
 });

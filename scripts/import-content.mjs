@@ -11,11 +11,14 @@ import { markdownToPortableText } from "emdash/client";
 import {
   ABOUT_SLUG,
   ABOUT_TITLE,
+  CATEGORY_OPTIONS,
   NAV_MENU,
   SITE_SETTINGS,
   aboutCollection,
   dateToDatetime,
   projectsCollection,
+  taxonomyDefinitions,
+  termSlug,
 } from "./lib/schema.mjs";
 import { loadSourceModel } from "./lib/sources.mjs";
 
@@ -38,12 +41,19 @@ const REPO_ROOT = fileURLToPath(new URL("..", import.meta.url));
  */
 export function buildSeed(model) {
   const allowedTags = new Set(model.tagOptions);
+  const allowedCategories = new Set(CATEGORY_OPTIONS);
   /** @type {SeedContentEntry[]} */
   const projects = model.projects.map((project) => {
+    // A term slug the seed does not define is skipped silently by the seed CLI, so refuse it here.
+    if (!allowedCategories.has(project.category)) {
+      throw new Error(
+        `${project.slug}: category ${JSON.stringify(project.category)} is not in the category terms`,
+      );
+    }
     for (const tag of project.tags) {
       if (!allowedTags.has(tag)) {
         throw new Error(
-          `${project.slug}: tag ${JSON.stringify(tag)} is not in the tag options`,
+          `${project.slug}: tag ${JSON.stringify(tag)} is not in the tag terms`,
         );
       }
     }
@@ -54,13 +64,11 @@ export function buildSeed(model) {
       data: {
         title: project.title,
         date: dateToDatetime(project.date),
-        category: project.category,
         project_status: project.status,
         status_variant: project.statusVariant,
         surface: project.surface,
         time_label: project.timeLabel,
         period: project.period,
-        tags: project.tags,
         summary: project.summary,
         sub: project.sub,
         stats: project.stats.map((stat) => ({
@@ -69,6 +77,11 @@ export function buildSeed(model) {
           variant: stat.variant,
         })),
         body: markdownToPortableText(project.body),
+      },
+      // D-05 and D-09 as amended: terms are content, assigned by slug; the seed CLI clears and re-attaches them on update.
+      taxonomies: {
+        category: [termSlug(project.category)],
+        tag: project.tags.map(termSlug),
       },
     };
   });
@@ -91,7 +104,8 @@ export function buildSeed(model) {
     version: "1",
     meta: { name: "portfolio" },
     settings: structuredClone(SITE_SETTINGS),
-    collections: [projectsCollection(model.tagOptions), aboutCollection()],
+    collections: [projectsCollection(), aboutCollection()],
+    taxonomies: taxonomyDefinitions(model.tagOptions),
     menus: [
       {
         name: NAV_MENU.name,
@@ -150,7 +164,7 @@ export function buildSchemaCheckSeed(model) {
 }
 
 /**
- * Structure only: no content key, so a setup flow that applies it adds the schema, menus and settings and no entries.
+ * Structure only: no content key, so a setup flow that applies it adds the schema, taxonomies with their terms, menus and settings and no entries.
  * @param {SeedFile} seed
  * @returns {SeedFile}
  */
@@ -160,6 +174,7 @@ export function structureSeed(seed) {
     meta: seed.meta,
     settings: seed.settings,
     collections: seed.collections,
+    taxonomies: seed.taxonomies,
     menus: seed.menus,
   });
 }
