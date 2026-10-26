@@ -5,16 +5,16 @@ milestone_name: EmDash Migration
 current_phase: 02
 current_phase_name: Content Model and Import
 status: executing
-stopped_at: Phase 2 context gathered
-last_updated: "2026-10-26T12:56:46.378Z"
-last_activity: 2026-10-23
-last_activity_desc: Phase 01 complete, transitioned to Phase 2
-state_head: 93cfb020a926d4c35cbd9af4d02988399ce85c1b
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-10-26T13:18:53.027Z"
+last_activity: 2026-10-26
+last_activity_desc: Phase 02 execution started
+state_head: 8ab6c911e2d684eb2560cf9306a746e62812cd53
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 9
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -24,14 +24,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-10-23)
 
 **Core value:** A hiring manager lands on an honest, fast, distinctive site that makes the project work carry the argument.
-**Current focus:** Phase 01 — Spike, Baseline and Decisions
+**Current focus:** Phase 02 — Content Model and Import
 
 ## Current Position
 
-Phase: 02 (Content Model and Import) — READY TO EXECUTE
-Plan: Not started
+Phase: 02 (Content Model and Import) — EXECUTING
+Plan: 2 of 4
 Status: Ready to execute
-Last activity: 2026-10-23 — Phase 01 complete, transitioned to Phase 2
+Last activity: 2026-10-26 — Phase 02 execution started
 
 Progress: [██░░░░░░░░] 17%
 
@@ -64,6 +64,7 @@ _Updated after each plan completion_
 | Phase 01 P03 | 45min | 2 tasks | 7 files |
 | Phase 01 P04 | 9min | 2 tasks | 0 files |
 | Phase 01 P05 | 6 min | 2 tasks | 1 files |
+| Phase 02 P01 | 5 min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -86,6 +87,10 @@ Recent decisions affecting current work:
 - [Phase 01]: No-email recovery is a tested SQL procedure: stop server, sqlite3 .backup, integrity_check ok, DELETE users and emdash:setup_complete/setup_state with foreign_keys ON; schema and media survive and the wizard re-prompts site title and tagline
 - [Phase 01]: Media gate for Phase 5: cookie-authenticated writes need X-EmDash-Request (403 CSRF_REJECTED without it); uploads are served anonymously with a sandbox CSP and Range 206
 - [Phase 01]: Astro 6 residual npm audit advisories are a named gate before the Phase 5 cutover; extra recovery path (GitHub login versus ingress block) is a Phase 5 gate
+- [Phase 02]: Q1 = 1a: tags are a multiSelect over the 45 sorted source tags (admin-editable, string[] stored)
+- [Phase 02]: Q2 = 2a: seed title, tagline and two socials; leave seo.titleSeparator and url unset (no em dash in new copy)
+- [Phase 02]: Q3 = 3a: commit .emdash/types.ts, .emdash/schema.json and emdash-env.d.ts
+- [Phase 02]: Q4 = 4a: long-body admin test on a seeded draft entry before the import, then rebuild data/
 
 ### Pending Todos
 
@@ -113,6 +118,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-26T12:04:24.904Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-content-model-and-import/02-CONTEXT.md
+Last session: 2026-10-26T13:18:52.960Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: None
