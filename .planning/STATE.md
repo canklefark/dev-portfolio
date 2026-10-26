@@ -6,16 +6,16 @@ current_phase: 03
 current_phase_name: Read Path Rewire and Parity
 current_plan: 6
 status: executing
-stopped_at: Completed 03-05-PLAN.md
-last_updated: "2026-10-26T16:37:41.038Z"
+stopped_at: Completed 03-06-PLAN.md
+last_updated: "2026-10-26T16:43:54.843Z"
 last_activity: 2026-10-26
 last_activity_desc: Phase 02 complete, transitioned to Phase 3
-state_head: 55e8728dc8d6fc572d77e74b288fbf71adc5e95a
+state_head: 250d69e134dbda1623ebd9a4938e8eb975e77fc2
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 15
-  completed_plans: 14
+  completed_plans: 15
 ---
 
 # Project State
@@ -76,6 +76,7 @@ _Updated after each plan completion_
 | Phase 03 P03 | 9 min    | 3 tasks | 9 files  |
 | Phase 03 P04 | 9 min    | 3 tasks | 5 files  |
 | Phase 03 P05 | 5 min | 2 tasks | 8 files |
+| Phase 03 P06 | about 1 session | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -113,6 +114,7 @@ Recent decisions affecting current work:
 - [Phase 03]: 03-03: parity canonicalizer fixed to five rules (CSS counts reported, scripts strict); guard crawls /projects/ with a /projects/* allowlist wildcard and asserts five 404 cases, the admin hop and no /_emdash/ on public pages; CI job verify pinned to actions v7, first GitHub run pending push approval
 - [Phase 03]: 03-04: EmDash delta applied via one-off EmDashClient helper (devBypass) outside the repo, then export-seed; seed never hand-edited; emdash-env.d.ts is the only committed generated types file
 - [Phase 03]: 03-05: pageMeta wraps getSeoMeta and returns the full title for title, og:title and twitter:title; Layout reads getMenu(primary) and settings, EmDashHead stays unused; loadSingleton pins getEmDashEntry<K, EmDashCollections[K]>
+- [Phase 03]: AboutPage keeps the raw about entry as source so an editor's SEO panel value reaches pageMeta, matching ProjectDetail
 
 ### Pending Todos
 
@@ -140,6 +142,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-26T16:37:40.897Z
-Stopped at: Completed 03-05-PLAN.md
+Last session: 2026-10-26T16:43:48.822Z
+Stopped at: Completed 03-06-PLAN.md
 Resume file: None

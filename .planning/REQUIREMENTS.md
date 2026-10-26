@@ -33,13 +33,13 @@ Milestone v1.0: EmDash Migration. Each maps to roadmap phases.
 
 - [x] **REND-01**: Projects index and detail pages read from EmDash through `src/lib/projects.ts` and keep their current props and order (newest first)
 - [x] **REND-02**: A missing project returns a real 404 status
-- [ ] **REND-03**: The About page, nav and head metadata read from EmDash
-- [ ] **REND-04**: Rendered pages match the baseline in copy and layout in light and dark, including long-form body styling
-- [ ] **REND-05**: Markdown sources, `src/data/about.*` and the file collection are removed in the same change that flips the read path
+- [x] **REND-03**: The About page, nav and head metadata read from EmDash
+- [x] **REND-04**: Rendered pages match the baseline in copy and layout in light and dark, including long-form body styling
+- [x] **REND-05**: Markdown sources, `src/data/about.*` and the file collection are removed in the same change that flips the read path
 
 ### Admin
 
-- [ ] **ADMIN-01**: Admin runs under `/_emdash/admin` and loads no admin JS on public routes
+- [x] **ADMIN-01**: Admin runs under `/_emdash/admin` and loads no admin JS on public routes
 - [ ] **ADMIN-02**: The setup wizard is completed at first deploy, before the URL is shared, and the login page (not setup) is what a visitor sees afterward
 - [ ] **ADMIN-03**: Two passkeys are enrolled on `dev.zeikcookson.com`, with a tested recovery path
 - [ ] **ADMIN-04**: Draft, preview and publish are exercised end to end on one real project, including restoring a revision
@@ -123,10 +123,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MIGR-04     | Phase 2 | Complete |
 | REND-01     | Phase 3 | Complete |
 | REND-02     | Phase 3 | Complete |
-| REND-03     | Phase 3 | Pending |
-| REND-04     | Phase 3 | Pending |
-| REND-05     | Phase 3 | Pending |
-| ADMIN-01    | Phase 3 | Pending |
+| REND-03     | Phase 3 | Complete |
+| REND-04     | Phase 3 | Complete |
+| REND-05     | Phase 3 | Complete |
+| ADMIN-01    | Phase 3 | Complete |
 | GUARD-01    | Phase 3 | Complete |
 | AGENT-01    | Phase 4 | Pending |
 | AGENT-02    | Phase 4 | Pending |
