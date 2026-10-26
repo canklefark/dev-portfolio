@@ -1,5 +1,4 @@
-import { getCollection, type CollectionEntry } from "astro:content";
-import { getEmDashEntry } from "emdash";
+import { getEmDashCollection, getEmDashEntry } from "emdash";
 import type { ContentEntry, PortableTextBlock } from "emdash";
 import type { Project } from "../../emdash-env";
 
@@ -64,10 +63,11 @@ export async function getProject(slug: string): Promise<ProjectDetail | null> {
   return { ...toProject(entry), source: entry };
 }
 
-export async function getSortedProjects(): Promise<
-  CollectionEntry<"projects">[]
-> {
-  return (await getCollection("projects", ({ data }) => !data.draft)).sort(
-    (a, b) => b.data.date.getTime() - a.data.date.getTime(),
-  );
+export async function getSortedProjects(): Promise<ProjectEntry[]> {
+  // EmDash defaults to created_at descending, so the order is explicit; a draft is never returned.
+  const { entries, error } = await getEmDashCollection("projects", {
+    orderBy: { date: "desc" },
+  });
+  if (error) throw error;
+  return entries.map(toProject);
 }

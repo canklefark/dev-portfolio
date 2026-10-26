@@ -1,10 +1,10 @@
 ---
-import type { CollectionEntry } from "astro:content";
 import Chip from "./Chip.astro";
 import type { HeadingLevel } from "../lib/types";
+import type { ProjectEntry } from "../lib/projects";
 
 interface Props {
-  entry: CollectionEntry<"projects">;
+  entry: ProjectEntry;
   headingLevel?: HeadingLevel;
   style?: string;
 }
