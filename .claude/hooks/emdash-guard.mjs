@@ -11,8 +11,9 @@ import { readFileSync } from "node:fs";
 
 const TOOL_PREFIX = "mcp__emdash__";
 
-// The content_update inputs that EmDash stages as a draft revision, plus the identity, revision and lock keys.
+// The content_update inputs that EmDash stages as a draft revision, plus the identity and revision keys.
 // Any other key writes the live row, so an allowlist refuses a key a later EmDash version adds until reviewed.
+// overrideLock is deliberately absent: it overrides the editor's lock on an entry, so it is the user's call.
 const UPDATE_ALLOWED_KEYS = new Set([
   "collection",
   "id",
@@ -20,7 +21,6 @@ const UPDATE_ALLOWED_KEYS = new Set([
   "data",
   "slug",
   "_rev",
-  "overrideLock",
   "migrateBlocks",
   "replaceBlocks",
 ]);
@@ -100,6 +100,9 @@ function check(toolName, toolInput) {
   if (tool === "content_update") {
     if (!isPlainObject(toolInput)) {
       return "tool_input is not an object";
+    }
+    if ("overrideLock" in toolInput) {
+      return "overrideLock overrides the editor's lock on the entry. Close the entry in the admin and retry instead.";
     }
     const extra = Object.keys(toolInput).filter(
       (key) => !UPDATE_ALLOWED_KEYS.has(key),

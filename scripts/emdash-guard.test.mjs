@@ -191,18 +191,27 @@ describe("content_update live-write keys", () => {
     });
   }
 
-  it("lets slug, locale, overrideLock and migrateBlocks through next to data", () => {
+  it("lets slug, locale and migrateBlocks through next to data", () => {
     const result = runRegisteredHook(
       call("content_update", {
         ...DRAFT_EDIT,
         slug: "new-slug",
         locale: "en",
-        overrideLock: true,
         migrateBlocks: false,
       }),
     );
     assert.equal(result.status, 0, result.stderr);
   });
+
+  for (const value of [true, false]) {
+    it(`blocks overrideLock ${value} with the lock explanation`, () => {
+      const result = runRegisteredHook(
+        call("content_update", { ...DRAFT_EDIT, overrideLock: value }),
+      );
+      assert.equal(result.status, 2, result.stderr);
+      assert.match(result.stderr, /overrideLock overrides the editor's lock/);
+    });
+  }
 
   for (const [name, toolInput] of [
     ["an array", []],
