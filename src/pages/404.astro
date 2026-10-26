@@ -1,8 +1,12 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { getSiteContext, pageMeta } from "../lib/site";
+
+const site = await getSiteContext();
+const meta = pageMeta({ data: { title: "404" } }, site, { withSiteTitle: true, defaultDescription: "Page not found." });
 ---
 
-<Layout title="404 — Zeik Cookson" description="Page not found." canonicalPath="/404/">
+<Layout title={meta.title} description={meta.description} canonicalPath="/404/">
   <section class="section">
     <div class="u-gutters">
       <div class="detail-stage">404 · NOT FOUND</div>

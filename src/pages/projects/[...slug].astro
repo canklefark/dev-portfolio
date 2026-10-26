@@ -9,14 +9,17 @@ import ProseBlock from "../../components/prose/ProseBlock.astro";
 import ProseLink from "../../components/prose/ProseLink.astro";
 import { getProject } from "../../lib/projects";
 import { prepareBody } from "../../lib/prose";
+import { getSiteContext, pageMeta } from "../../lib/site";
 
 const slug = Astro.params.slug;
 const detail = slug ? await getProject(slug) : null;
 if (!detail) return new Response(null, { status: 404 });
 const project = detail.data;
+const site = await getSiteContext();
+const meta = pageMeta(detail.source, site, { withSiteTitle: true, defaultDescription: project.summary });
 ---
 
-<Layout title={`${project.title} — Zeik Cookson`} description={project.summary} activeNav="projects">
+<Layout title={meta.title} description={meta.description} activeNav="projects">
   <section class="section">
     <div class="u-gutters">
       <BackButton href="/projects" label="Back to Projects" />
