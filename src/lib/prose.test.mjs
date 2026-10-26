@@ -26,6 +26,13 @@ function idOf(b) {
 }
 
 /** @param {unknown} b */
+function allTexts(b) {
+  return /** @type {{ children: { text: string }[] }} */ (b).children.map(
+    (c) => c.text,
+  );
+}
+
+/** @param {unknown} b */
 function firstText(b) {
   return /** @type {{ children: { text: string }[] }} */ (b).children[0].text;
 }
@@ -55,10 +62,7 @@ describe("prepareBody smart punctuation", () => {
       ],
     };
     const [out] = prepareBody([input]);
-    const texts = /** @type {{ children: { text: string }[] }} */ (
-      out
-    ).children.map((c) => c.text);
-    assert.deepEqual(texts, ["don’t ", "it's"]);
+    assert.deepEqual(allTexts(out), ["don’t ", "it's"]);
   });
 });
 
