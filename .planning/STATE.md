@@ -4,17 +4,18 @@ milestone: v1.0
 milestone_name: EmDash Migration
 current_phase: 03
 current_phase_name: Read Path Rewire and Parity
+current_plan: 6
 status: executing
-stopped_at: Completed 03-04-PLAN.md
-last_updated: "2026-10-26T16:31:56.733Z"
+stopped_at: Completed 03-05-PLAN.md
+last_updated: "2026-10-26T16:37:41.038Z"
 last_activity: 2026-10-26
 last_activity_desc: Phase 02 complete, transitioned to Phase 3
-state_head: fd56e371e190cd0b6404976ac4fc08f73311f13c
+state_head: 55e8728dc8d6fc572d77e74b288fbf71adc5e95a
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 15
-  completed_plans: 13
+  completed_plans: 14
 ---
 
 # Project State
@@ -29,10 +30,10 @@ See: .planning/PROJECT.md (updated 2026-10-23)
 ## Current Position
 
 Phase: 03 (Read Path Rewire and Parity) — EXECUTING
-Current Plan: 5
+Current Plan: 6
 Total Plans in Phase: 6
-Status: Ready to execute plan 03-05
-Last activity: 2026-10-26 — Completed 03-04 (EmDash content delta)
+Status: Ready to execute plan 03-06
+Last activity: 2026-10-26 — Completed 03-05 (head and nav on EmDash)
 
 Progress: [███░░░░░░░] 33%
 
@@ -74,6 +75,7 @@ _Updated after each plan completion_
 | Phase 03 P02 | 4 min    | 2 tasks | 9 files  |
 | Phase 03 P03 | 9 min    | 3 tasks | 9 files  |
 | Phase 03 P04 | 9 min    | 3 tasks | 5 files  |
+| Phase 03 P05 | 5 min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -110,6 +112,7 @@ Recent decisions affecting current work:
 - [Phase 03]: 03-02: heading ids slugged from raw span text with one GithubSlugger per body; smart punctuation per span via retext-smartypants on non-code spans; og:url from Astro.site with canonicalPath /404/ pinned
 - [Phase 03]: 03-03: parity canonicalizer fixed to five rules (CSS counts reported, scripts strict); guard crawls /projects/ with a /projects/* allowlist wildcard and asserts five 404 cases, the admin hop and no /_emdash/ on public pages; CI job verify pinned to actions v7, first GitHub run pending push approval
 - [Phase 03]: 03-04: EmDash delta applied via one-off EmDashClient helper (devBypass) outside the repo, then export-seed; seed never hand-edited; emdash-env.d.ts is the only committed generated types file
+- [Phase 03]: 03-05: pageMeta wraps getSeoMeta and returns the full title for title, og:title and twitter:title; Layout reads getMenu(primary) and settings, EmDashHead stays unused; loadSingleton pins getEmDashEntry<K, EmDashCollections[K]>
 
 ### Pending Todos
 
@@ -137,6 +140,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-26T16:31:56.604Z
-Stopped at: Completed 03-04-PLAN.md
+Last session: 2026-10-26T16:37:40.897Z
+Stopped at: Completed 03-05-PLAN.md
 Resume file: None
