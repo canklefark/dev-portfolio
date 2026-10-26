@@ -147,12 +147,12 @@ Plans:
 3. A schema-changing call made with the agent token is refused
 4. Following the documented Claude Code MCP setup from a clean session produces a working connection, with the endpoint URL set per environment
 
-**Plans**: 3 plans
+**Plans**: 1/3 plans executed
 
 Plans:
 **Wave 1**
 
-- [ ] 04-01-PLAN.md: Tracer: committed .mcp.json to the registered PreToolUse guard hook; deny rules for the publish-class and taxonomy-definition tools, the content_update draft-only allowlist and the content_create rules, all tested offline in npm test
+- [x] 04-01-PLAN.md: Tracer: committed .mcp.json to the registered PreToolUse guard hook; deny rules for the publish-class and taxonomy-definition tools, the content_update draft-only allowlist and the content_create rules, all tested offline in npm test
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
@@ -201,6 +201,6 @@ Phases execute in numeric order: 1, 2, 3, 4, 5, 6
 | 1. Spike, Baseline and Decisions | 5/5            | Complete    | 2026-10-23 |
 | 2. Content Model and Import      | 4/4            | Complete    | 2026-10-26 |
 | 3. Read Path Rewire and Parity   | 6/6            | Complete    | 2026-10-26 |
-| 4. Agent Access                  | 0/TBD          | Not started | -          |
+| 4. Agent Access                  | 1/3 | In Progress | -          |
 | 5. Dokploy Deploy and Cutover    | 0/TBD          | Not started | -          |
 | 6. Live Editing and Docs         | 0/TBD          | Not started | -          |

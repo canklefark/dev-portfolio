@@ -4,18 +4,18 @@ milestone: v1.0
 milestone_name: EmDash Migration
 current_phase: 04
 current_phase_name: Agent Access
-current_plan: Not started
+current_plan: 2
 status: executing
-stopped_at: Phase 4 context gathered
-last_updated: "2026-10-26T18:20:46.355Z"
+stopped_at: Completed 04-01-PLAN.md
+last_updated: "2026-10-26T18:23:51.386Z"
 last_activity: 2026-10-26
-last_activity_desc: Phase 03 complete, transitioned to Phase 4
-state_head: d190e0256cb929f66287da49afc9aca23126c0d3
+last_activity_desc: Phase 04 execution started
+state_head: a2384b6ecb80eb5970a021543f37e30d2c7d4e84
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 18
-  completed_plans: 15
+  completed_plans: 16
 ---
 
 # Project State
@@ -29,11 +29,11 @@ See: .planning/PROJECT.md (updated 2026-10-26)
 
 ## Current Position
 
-Phase: 04 (Agent Access) — READY TO EXECUTE
-Current Plan: Not started
+Phase: 04 (Agent Access) — EXECUTING
+Current Plan: 2
 Total Plans in Phase: 3
 Status: Ready to execute
-Last activity: 2026-10-26 — Phase 03 complete, transitioned to Phase 4
+Last activity: 2026-10-26 — Phase 04 execution started
 
 Progress: [█████░░░░░] 50%
 
@@ -78,6 +78,7 @@ _Updated after each plan completion_
 | Phase 03 P04 | 9 min    | 3 tasks | 5 files  |
 | Phase 03 P05 | 5 min | 2 tasks | 8 files |
 | Phase 03 P06 | about 1 session | 2 tasks | 5 files |
+| Phase 04 P01 | 5 min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -116,6 +117,7 @@ Recent decisions affecting current work:
 - [Phase 03]: 03-04: EmDash delta applied via one-off EmDashClient helper (devBypass) outside the repo, then export-seed; seed never hand-edited; emdash-env.d.ts is the only committed generated types file
 - [Phase 03]: 03-05: pageMeta wraps getSeoMeta and returns the full title for title, og:title and twitter:title; Layout reads getMenu(primary) and settings, EmDashHead stays unused; loadSingleton pins getEmDashEntry<K, EmDashCollections[K]>
 - [Phase 03]: AboutPage keeps the raw about entry as source so an editor's SEO panel value reaches pageMeta, matching ProjectDetail
+- [Phase 04]: 04-01: nine emdash tools guarded by bare-name deny rules plus hook BLOCKED_TOOLS; content_update uses a draft-only key allowlist, content_create allows status draft only; schema and settings tools deferred to the server (AGENT-03)
 
 ### Pending Todos
 
@@ -143,6 +145,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-26T17:36:37.801Z
-Stopped at: Phase 4 context gathered
-Resume file: .planning/phases/04-agent-access/04-CONTEXT.md
+Last session: 2026-10-26T18:23:51.174Z
+Stopped at: Completed 04-01-PLAN.md
+Resume file: None
