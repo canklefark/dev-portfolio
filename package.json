@@ -9,7 +9,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "node --test \"scripts/*.test.mjs\" \"src/lib/*.test.mjs\"",
+    "check:public-js": "node scripts/check-public-js.mjs"
   },
   "dependencies": {
     "@astrojs/node": "^10.1.4",
@@ -24,7 +26,6 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
-    "typescript": "^6.0.3",
-    "yaml": "^2.8.4"
+    "typescript": "^6.0.3"
   }
 }

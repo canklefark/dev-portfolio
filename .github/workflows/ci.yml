@@ -1,0 +1,23 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      # GUARD-01: builds, seeds a throwaway database, serves the Node build, fetches every public route
+      - run: npm run check:public-js
+      # Phase 5 appends `emdash migrate --check` (GUARD-02) and the post-deploy smoke test (GUARD-03) to this job.
