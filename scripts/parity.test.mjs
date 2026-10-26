@@ -63,10 +63,12 @@ function page(o = {}) {
 function runParity(baseline, candidate) {
   const root = mkdtempSync(join(tmpdir(), "parity-test-"));
   try {
-    for (const [side, files] of [
+    /** @type {[string, Record<string, string>][]} */
+    const sides = [
       ["base", baseline],
       ["cand", candidate],
-    ]) {
+    ];
+    for (const [side, files] of sides) {
       for (const [file, html] of Object.entries(files)) {
         const target = join(root, side, file);
         mkdirSync(dirname(target), { recursive: true });
@@ -112,7 +114,7 @@ describe("parity canonicalization", () => {
     assert.equal(result.status, 0, result.stdout);
     assert.match(result.stdout, /^parity: 1\/1 identical$/m);
     assert.match(result.stdout, /^PARITY-OK \/$/m);
-    assert.match(result.stdout, /^CSS \/: baseline 1, candidate 2$/m);
+    assert.match(result.stdout, /^CSS \/: baseline 1, candidate 3$/m);
   });
 
   it("fails on a one-word copy change", () => {

@@ -222,6 +222,103 @@ function compareDirs(baseDir, candDir) {
 }
 
 /**
+ * The parity canonicalization: exactly five rules, applied in this order and nothing else.
+ *  (a) drop stylesheet links and style blocks (counted, never compared)
+ *  (b) strip data-astro-cid-<hash> attributes
+ *  (c) decode the entity forms the two builds disagree on (&amp; last)
+ *  (d) remove whitespace between tags, collapse every other whitespace run, trim
+ *  (e) sort the stage-tag spans inside each stage-tags container (tags compare as a set, D-02)
+ * Scripts are compared strictly before this runs.
+ * @param {string} html
+ * @returns {{ text: string, stylesheets: number }}
+ */
+function canonical(html) {
+  let stylesheets = 0;
+  let text = html
+    .replace(/<link\b([^>]*)>/gi, (whole, attrs) => {
+      const rels = (attr(attrs, "rel") ?? "").toLowerCase().split(/\s+/);
+      if (!rels.includes("stylesheet")) return whole;
+      stylesheets++;
+      return "";
+    })
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, () => {
+      stylesheets++;
+      return "";
+    });
+  text = text.replace(/\sdata-astro-cid-[\w-]+(?:="[^"]*")?/g, "");
+  text = text
+    .replace(/&#39;|&#x27;/gi, "'")
+    .replace(/&quot;|&#34;/gi, '"')
+    .replace(/&gt;/g, ">")
+    .replace(/&lt;/g, "<")
+    .replace(/&amp;/g, "&");
+  text = text.replace(/>\s+</g, "><").replace(/\s+/g, " ").trim();
+  text = text.replace(
+    /(<div class="l-cluster stage-tags"[^>]*>)((?:<span class="stage-tag">[\s\S]*?<\/span>)*)(<\/div>)/g,
+    (_whole, open, spans, close) =>
+      open +
+      (spans.match(/<span class="stage-tag">[\s\S]*?<\/span>/g) ?? [])
+        .sort()
+        .join("") +
+      close,
+  );
+  return { text, stylesheets };
+}
+
+/**
+ * Canonicalizing compare of two build directories (REND-04, D-02).
+ * Prints PARITY-OK or PARITY-DIFF per route, CSS lines where the stylesheet delivery differs,
+ * and a final "parity: N/M identical" line.
+ * @param {string} baseDir
+ * @param {string} candDir
+ * @returns {number}
+ */
+function runParity(baseDir, candDir) {
+  const base = loadRoutes(baseDir);
+  const cand = loadRoutes(candDir);
+  const routes = [...new Set([...Object.keys(base), ...Object.keys(cand)])];
+  let identical = 0;
+  for (const route of routes.sort()) {
+    const a = base[route];
+    const b = cand[route];
+    if (!a || !b) {
+      console.log(
+        `PARITY-DIFF ${route}: route missing from ${a ? "candidate" : "baseline"}`,
+      );
+      continue;
+    }
+    const x = canonical(a.html);
+    const y = canonical(b.html);
+    if (x.stylesheets !== y.stylesheets) {
+      console.log(
+        `CSS ${route}: baseline ${x.stylesheets}, candidate ${y.stylesheets}`,
+      );
+    }
+    const scripts = scriptDiff(a.scripts, b.scripts);
+    if (scripts) {
+      console.log(`PARITY-DIFF ${route}: ${scripts}`);
+      continue;
+    }
+    if (x.text === y.text) {
+      console.log(`PARITY-OK ${route}`);
+      identical++;
+      continue;
+    }
+    let i = 0;
+    while (i < x.text.length && i < y.text.length && x.text[i] === y.text[i])
+      i++;
+    const from = Math.max(0, i - 20);
+    const side = (/** @type {string} */ s) =>
+      JSON.stringify(s.slice(from, from + 60));
+    console.log(
+      `PARITY-DIFF ${route}: canonical HTML differs at offset ${i}: baseline ${side(x.text)} vs candidate ${side(y.text)}`,
+    );
+  }
+  console.log(`parity: ${identical}/${routes.length} identical`);
+  return identical === routes.length ? 0 : 1;
+}
+
+/**
  * Request every baseline route from a running server and write each body to the route's
  * relative file path under outDir, so the result compares like a build directory.
  * "/404" is requested through an unmatched path and must answer 404; all others must answer 200.
@@ -534,6 +631,12 @@ const COMMANDS = {
     min: 2,
     max: 2,
     run: ([baseline, candidate]) => runCompare(baseline, candidate),
+  },
+  parity: {
+    usage: "parity BASELINE_DIST_DIR CANDIDATE_DIR",
+    min: 2,
+    max: 2,
+    run: ([baseline, candidate]) => runParity(baseline, candidate),
   },
   fetch: {
     usage: "fetch BASE_URL BASELINE_DIST_DIR OUT_DIR",
