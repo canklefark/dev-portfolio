@@ -105,6 +105,7 @@ No specific requirements beyond the decisions above. Open to standard approaches
 
 - Page titles with em dash separators (parity keeps them; copy decision is separate) — carried from earlier phases.
 - Tag taxonomies with archive routes (v2 CONT-02) and homepage hero as editable singleton (v2 CONT-04) — already in v2 requirements.
+- Searchable tags widget via an EmDash plugin field widget (field.widget = pluginId:widgetName); storage stays string[], so non-breaking. The user locked the multiSelect checkboxes (1a) on 2026-10-26.
 
 </deferred>
 
