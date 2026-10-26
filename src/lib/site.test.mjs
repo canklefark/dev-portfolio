@@ -38,7 +38,13 @@ describe("pageMeta", () => {
         data: {
           title: "Entry title",
           excerpt: "Excerpt",
-          seo: { title: "Panel Title", description: "Panel description" },
+          seo: {
+            title: "Panel Title",
+            description: "Panel description",
+            image: null,
+            canonical: null,
+            noIndex: false,
+          },
         },
       },
       site,

@@ -1,15 +1,13 @@
 ---
+import { sanitizeHref } from "emdash";
+import { isActiveLink, type NavId } from "../lib/site";
+
 interface Props {
-  activeNav?: "home" | "projects" | "about";
+  links: { label: string; url: string }[];
+  activeNav?: NavId;
 }
 
-const { activeNav } = Astro.props;
-
-const links = [
-  { id: "home", label: "Home", href: "/" },
-  { id: "projects", label: "Projects", href: "/projects" },
-  { id: "about", label: "About", href: "/about" },
-] as const;
+const { links, activeNav } = Astro.props;
 ---
 
 <nav aria-label="Primary navigation">
@@ -21,10 +19,10 @@ const links = [
     {
       links.map((link) => (
         <a
-          href={link.href}
+          href={sanitizeHref(link.url)}
           class="nav-link"
-          data-state={activeNav === link.id ? "active" : undefined}
-          aria-current={activeNav === link.id ? "page" : undefined}
+          data-state={isActiveLink(link.url, activeNav) ? "active" : undefined}
+          aria-current={isActiveLink(link.url, activeNav) ? "page" : undefined}
         >
           {link.label}
         </a>

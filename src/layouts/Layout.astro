@@ -1,19 +1,22 @@
 ---
+import { getMenu } from "emdash";
 import Nav from "../components/Nav.astro";
+import { getSiteContext, ogUrl, type NavId } from "../lib/site";
 import "../styles/global.css";
 
 interface Props {
   title: string;
   description?: string;
-  activeNav?: "home" | "projects" | "about";
+  activeNav?: NavId;
   canonicalPath?: string;
 }
 
 const { title, description, activeNav, canonicalPath } = Astro.props;
-if (!Astro.site) throw new Error("astro.config.mjs must set `site`; og:url is built from it");
-const ogPath = canonicalPath ?? Astro.url.pathname.replace(/\/?$/, "/");
-const ogUrl = new URL(ogPath, Astro.site).href;
-const desc = description ?? "DevOps and platform engineering portfolio. Infrastructure work from the homelab and beyond.";
+const site = await getSiteContext();
+const menu = await getMenu("primary");
+if (!menu) throw new Error('The EmDash menu "primary" is missing; the nav is built from it');
+const desc = description ?? site.tagline;
+const ogHref = ogUrl(canonicalPath ?? Astro.url.pathname, Astro.site);
 ---
 
 <html lang="en">
@@ -25,7 +28,7 @@ const desc = description ?? "DevOps and platform engineering portfolio. Infrastr
     <meta property="og:title" content={title} />
     <meta property="og:description" content={desc} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={ogUrl} />
+    <meta property="og:url" content={ogHref} />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={desc} />
@@ -81,7 +84,7 @@ const desc = description ?? "DevOps and platform engineering portfolio. Infrastr
   <body>
     <div class="l-center page-col" style="--max: 800px">
       <a href="#main-content" class="skip-link">Skip to content</a>
-      <Nav activeNav={activeNav} />
+      <Nav links={menu.items} activeNav={activeNav} />
       <main id="main-content" tabindex="-1">
         <slot />
       </main>
