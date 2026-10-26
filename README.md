@@ -107,6 +107,8 @@ npx emdash content get projects SLUG --published --json
 
 SLUG is the project slug and REV is the `_rev` value from `content get`. The commands `emdash content create` and `emdash content update` publish automatically unless `--draft` is passed, so every CLI write carries `--draft`. The command `emdash whoami` is expected to fail for this token, because its route needs the admin scope, so the list call is the proof. The CLI publish, unpublish, schedule and delete commands and the CLI login are not part of the agent workflow.
 
+The same hook reads every Bash command before it runs. It refuses `content publish`, `content unpublish`, `content schedule`, `content delete`, `media delete` and any other `content` subcommand that is not list, get, create, update, restore or translations. It also refuses `content create` and `content update` without `--draft`, and any `--override-lock`. The matching deny rules cover the `npx emdash` and `emdash` spellings, plus `curl` calls to `_emdash` paths. This narrows the accidental path only, as the residual risk section explains. A command that merely quotes one of these strings, such as a heredoc that documents them, can also be refused, and a file write through the Write tool avoids that.
+
 ### Rotation and recovery
 
 The token expires after 90 days. Create a replacement with the same six scopes and a 90-day expiry, export the new value as `EMDASH_TOKEN`, restart `claude`, and then revoke the old token on the same admin page.
@@ -115,4 +117,4 @@ Tokens are deleted together with the user that owns them, so both the recovery p
 
 ### Residual risk
 
-The publish block is enforced by Claude Code, not by EmDash. EmDash 1.3.1 has no publish scope, and a token carries its owner's admin role narrowed only by its scopes, so this token can itself publish, unpublish and delete. The token sits in the environment of every shell Claude runs, so a `curl` call, a CLI write without `--draft`, or a session whose settings disable hooks would bypass the guard. The mitigations in place are the minimal scopes, the 90-day expiry, the guard, and the user reviewing every draft before publishing.
+The publish block is enforced by Claude Code, not by EmDash. EmDash 1.3.1 has no publish scope, and a token carries its owner's admin role narrowed only by its scopes, so this token can itself publish, unpublish and delete. The token sits in the environment of every shell Claude runs, so a `curl` call that the deny rule does not match, a command the hook cannot parse (the CLI name held in a variable, or passed through `xargs`), or a session whose settings disable hooks would bypass the guard. The Bash check catches the accidental CLI publish, such as a forgotten `--draft`. It is not a sandbox, and it does not stop a determined bypass. The mitigations in place are the minimal scopes, the 90-day expiry, the guard, and the user reviewing every draft before publishing.

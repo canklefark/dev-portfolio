@@ -135,6 +135,13 @@ describe("client config", () => {
     assert.ok(entry, "a PreToolUse entry matches mcp__emdash__content_update");
   });
 
+  it("registers the hook for the Bash tool", () => {
+    const entry = registeredEntries().find((e) =>
+      new RegExp(e.matcher).test("Bash"),
+    );
+    assert.ok(entry, "a PreToolUse entry matches Bash");
+  });
+
   it("registers only fail-closed guard commands, in every entry and hook", () => {
     const entries = registeredEntries();
     assert.ok(entries.length > 0);
@@ -308,6 +315,124 @@ describe("guarded tools", () => {
   }
 });
 
+/**
+ * @param {string} command
+ * @returns {{ tool_name: string, tool_input: { command: string } }}
+ */
+function bash(command) {
+  return { tool_name: "Bash", tool_input: { command } };
+}
+
+describe("Bash and the emdash CLI", () => {
+  const draftUpdate =
+    'npx emdash content update projects SLUG --draft --rev REV --data \'{"sub":"x"}\'';
+
+  /** @type {[string, string][]} */
+  const blocked = [
+    ["publish", "npx emdash content publish projects SLUG"],
+    ["unpublish", "npx emdash content unpublish projects SLUG"],
+    ["schedule", "npx emdash content schedule projects SLUG --at 2027-01-01"],
+    ["delete", "npx emdash content delete projects SLUG"],
+    ["media delete", "npx emdash media delete MEDIA_ID"],
+    ["a bare emdash bin", "emdash content publish projects SLUG"],
+    ["the em alias", "em content publish projects SLUG"],
+    ["a versioned bin", "npx -y emdash@latest content delete projects SLUG"],
+    [
+      "the dist entry",
+      "node node_modules/emdash/dist/cli/index.mjs content publish projects SLUG",
+    ],
+    [
+      "env variables first",
+      "EMDASH_URL=http://x npx emdash content publish p s",
+    ],
+    ["a flag before the subcommand", "npx emdash content --json publish p s"],
+    [
+      "create without --draft",
+      "npx emdash content create projects --data '{}'",
+    ],
+    [
+      "update without --draft",
+      "npx emdash content update projects SLUG --rev REV --data '{}'",
+    ],
+    [
+      "--draft only in a comment",
+      "npx emdash content update p s --rev r # --draft",
+    ],
+    [
+      "--draft in a different command",
+      "npx emdash content update p s --rev r; echo --draft",
+    ],
+    ["--override-lock", `${draftUpdate} --override-lock`],
+    ["a chained command", "ls && npx emdash content publish projects SLUG"],
+    [
+      "a command substitution",
+      "echo $(npx emdash content publish projects SLUG)",
+    ],
+    ["bash -c", 'bash -c "npx emdash content publish projects SLUG"'],
+    ["bash -lc", "bash -lc 'npx emdash content delete projects SLUG'"],
+    ["eval", 'eval "npx emdash content publish projects SLUG"'],
+    ["an unknown content subcommand", "npx emdash content purge projects SLUG"],
+  ];
+  for (const [name, command] of blocked) {
+    it(`blocks ${name}`, () => {
+      const result = runRegisteredHook(bash(command));
+      assert.equal(result.status, 2, `${command}: ${result.stderr}`);
+      assert.match(result.stderr, /emdash-guard: blocked Bash/);
+    });
+  }
+
+  /** @type {[string, string][]} */
+  const allowed = [
+    ["content list", "npx emdash content list projects --json"],
+    ["content get", "npx emdash content get projects SLUG --published --json"],
+    ["a draft update", draftUpdate],
+    [
+      "a draft create",
+      'npx emdash content create projects --draft --data \'{"title":"t"}\'',
+    ],
+    [
+      "a draft update across lines",
+      "npx emdash content update p s \\\n  --rev r --draft",
+    ],
+    [
+      "a draft update with a semicolon inside the data",
+      'npx emdash content update p s --rev r --data \'{"a":"x; y"}\' --draft',
+    ],
+    ["content restore", "npx emdash content restore projects SLUG"],
+    ["media list", "npx emdash media list --json"],
+    ["a taxonomy term", "npx emdash taxonomy add-term tag --name x"],
+    ["whoami", "npx emdash whoami"],
+    ["an unrelated command", "ls -la && git status"],
+    ["the guard's own test", "node --test scripts/emdash-guard.test.mjs"],
+    [
+      "a commit message that names a publish command",
+      'git commit -m "docs: npx emdash content publish is blocked"',
+    ],
+  ];
+  for (const [name, command] of allowed) {
+    it(`lets ${name} through`, () => {
+      const result = runRegisteredHook(bash(command));
+      assert.equal(result.status, 0, `${command}: ${result.stderr}`);
+    });
+  }
+
+  for (const [name, toolInput] of [
+    ["no command", {}],
+    ["a command that is not a string", { command: 42 }],
+    ["tool_input that is null", null],
+    ["tool_input that is an array", []],
+  ]) {
+    it(`blocks Bash with ${name}`, () => {
+      const result = runRegisteredHook({
+        tool_name: "Bash",
+        tool_input: toolInput,
+      });
+      assert.equal(result.status, 2, result.stderr);
+      assert.match(result.stderr, /Bash tool_input has no command string/);
+    });
+  }
+});
+
 describe("server name", () => {
   for (const server of ["claude_ai_EmDash", "plugin_emdash_emdash", "EMDASH"]) {
     it(`guards ${server} like emdash`, () => {
@@ -457,15 +582,41 @@ describe("deny rules", () => {
     return JSON.parse(readFileSync(SETTINGS_PATH, "utf8")).permissions.deny;
   }
 
+  const mcpRules = () => denyList().filter((rule) => rule.startsWith("mcp__"));
+  const bashRules = () => denyList().filter((rule) => rule.startsWith("Bash("));
+
   it("denies exactly the guarded tools by bare name", () => {
     const want = GUARDED_TOOLS.map((tool) => `${PREFIX}${tool}`).sort();
-    assert.deepEqual([...denyList()].sort(), want);
-    assert.ok(!denyList().some((rule) => rule.includes("(")));
+    assert.deepEqual([...mcpRules()].sort(), want);
+    assert.ok(!mcpRules().some((rule) => rule.includes("(")));
   });
 
   it("also blocks every denied tool through the hook", () => {
-    for (const rule of denyList()) {
+    for (const rule of mcpRules()) {
       const result = runRegisteredHook({ tool_name: rule, tool_input: {} });
+      assert.equal(result.status, 2, `${rule}: ${result.stderr}`);
+    }
+  });
+
+  it("denies the publish-class CLI commands in both bin spellings", () => {
+    for (const bin of ["npx emdash", "emdash"]) {
+      for (const sub of ["publish", "unpublish", "schedule", "delete"]) {
+        assert.ok(
+          bashRules().includes(`Bash(${bin} content ${sub} *)`),
+          `${bin} content ${sub}`,
+        );
+      }
+      assert.ok(bashRules().includes(`Bash(${bin} media delete *)`));
+    }
+    assert.ok(bashRules().includes("Bash(curl *_emdash*)"));
+  });
+
+  it("also blocks every denied CLI command through the hook", () => {
+    for (const rule of bashRules().filter((r) => !r.startsWith("Bash(curl"))) {
+      const command = rule
+        .slice("Bash(".length, -")".length)
+        .replace(/ \*$/, " projects SLUG");
+      const result = runRegisteredHook(bash(command));
       assert.equal(result.status, 2, `${rule}: ${result.stderr}`);
     }
   });

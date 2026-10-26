@@ -14,13 +14,33 @@
       "mcp__emdash__menu_delete",
       "mcp__emdash__menu_set_items",
       "mcp__emdash__media_delete",
-      "mcp__emdash__byline_delete"
+      "mcp__emdash__byline_delete",
+      "Bash(npx emdash content publish *)",
+      "Bash(npx emdash content unpublish *)",
+      "Bash(npx emdash content schedule *)",
+      "Bash(npx emdash content delete *)",
+      "Bash(npx emdash media delete *)",
+      "Bash(emdash content publish *)",
+      "Bash(emdash content unpublish *)",
+      "Bash(emdash content schedule *)",
+      "Bash(emdash content delete *)",
+      "Bash(emdash media delete *)",
+      "Bash(curl *_emdash*)"
     ]
   },
   "hooks": {
     "PreToolUse": [
       {
         "matcher": "mcp__.*[Ee][Mm][Dd][Aa][Ss][Hh].*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/emdash-guard.mjs\" || exit 2"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "command",

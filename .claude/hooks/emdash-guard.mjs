@@ -3,7 +3,10 @@
 // and a token inherits its owner's admin role, so the server alone cannot keep the agent draft-only. This
 // hook refuses the publish-class, live-destructive and taxonomy definition tools, the live-write arguments on
 // content_update and a publish on content_create before the request leaves the session. Schema, settings and site
-// tools are deferred so the server's INSUFFICIENT_SCOPE refusal (AGENT-03) is what shows.
+// tools are deferred so the server's INSUFFICIENT_SCOPE refusal (AGENT-03) is what shows. It also reads Bash
+// commands and refuses the emdash CLI calls that publish or delete (the CLI publishes on create and update unless
+// --draft is passed). That narrows the accidental path only: a curl call with the token, or a command the parser
+// cannot see through (a variable holding the command name, xargs), still gets past it.
 // usage: Claude Code PreToolUse command hook. Reads the hook JSON on stdin. Exit 2 with the reason on stderr
 //   blocks the call, exit 0 defers to the normal permission flow.
 //   by hand: node .claude/hooks/emdash-guard.mjs < payload.json
@@ -81,13 +84,146 @@ function isPlainObject(value) {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+// The emdash CLI is the documented fallback (D-04). EmDash 1.3.1 `content create` and `content update` publish
+// unless --draft is passed, and `content publish|unpublish|schedule|delete` and `media delete` are live writes,
+// so only the read and draft-safe content subcommands pass. The bin is `emdash` or `em`, possibly versioned
+// (npx emdash@latest) or run from node_modules.
+const CLI_BIN = /(^|\/)(emdash|em)(@[^/]*)?$|emdash\/dist\/cli\/index\.mjs$/;
+const CLI_CONTENT_ALLOWED = new Set([
+  "list",
+  "get",
+  "create",
+  "update",
+  "restore",
+  "translations",
+]);
+
 /**
- * Decide whether an emdash tool call may proceed.
+ * Split a shell command line into commands, each a list of words. Quotes group words and are removed, a
+ * backslash escapes the next character, and an unquoted # starts a comment, so a --draft in a comment does not
+ * count. Commands end at ; | & ( ) a backtick or a newline.
+ * @param {string} command
+ * @returns {string[][]}
+ */
+function shellCommands(command) {
+  /** @type {string[][]} */
+  const commands = [];
+  /** @type {string[]} */
+  let words = [];
+  let word = "";
+  let inWord = false;
+  let quote = "";
+  const endWord = () => {
+    if (inWord) words.push(word);
+    word = "";
+    inWord = false;
+  };
+  const endCommand = () => {
+    endWord();
+    if (words.length > 0) commands.push(words);
+    words = [];
+  };
+  for (let i = 0; i < command.length; i++) {
+    const ch = command[i];
+    if (quote !== "") {
+      if (ch === quote) {
+        quote = "";
+      } else if (ch === "\\" && quote === '"' && i + 1 < command.length) {
+        word += command[++i];
+      } else {
+        word += ch;
+      }
+    } else if (ch === "'" || ch === '"') {
+      quote = ch;
+      inWord = true;
+    } else if (ch === "\\" && i + 1 < command.length) {
+      i++;
+      if (command[i] !== "\n") {
+        word += command[i];
+        inWord = true;
+      }
+    } else if (ch === "#" && !inWord) {
+      while (i + 1 < command.length && command[i + 1] !== "\n") i++;
+    } else if (ch === " " || ch === "\t" || ch === "\r") {
+      endWord();
+    } else if (";|&()`\n".includes(ch)) {
+      endCommand();
+    } else {
+      word += ch;
+      inWord = true;
+    }
+  }
+  endCommand();
+  return commands;
+}
+
+/**
+ * @param {string[]} words one command, as split by shellCommands
+ * @returns {string | null} a block reason, or null if this command is not a guarded emdash CLI call
+ */
+function checkCliCommand(words) {
+  const bin = words.findIndex((word) => CLI_BIN.test(word));
+  if (bin === -1) return null;
+  const args = words.slice(bin + 1);
+  const group = args.findIndex((word) => word === "content" || word === "media");
+  if (group === -1) return null;
+  const rest = args.slice(group + 1);
+  const sub = rest.find((word) => !word.startsWith("-"));
+  if (args[group] === "media") {
+    return sub === "delete"
+      ? "emdash media delete cannot be undone. The user deletes media in the admin (D-01)."
+      : null;
+  }
+  if (sub === undefined) return null;
+  if (!CLI_CONTENT_ALLOWED.has(sub)) {
+    return `emdash content ${sub} is not allowed. Publish, unpublish, schedule and delete are the user's call in the admin (D-01).`;
+  }
+  if (rest.includes("--override-lock")) {
+    return "--override-lock overrides the editor's lock on the entry. Close the entry in the admin and retry instead.";
+  }
+  if ((sub === "create" || sub === "update") && !rest.includes("--draft")) {
+    return `emdash content ${sub} publishes unless --draft is passed. Pass --draft (D-12).`;
+  }
+  return null;
+}
+
+/**
+ * Check a Bash command line for emdash CLI calls that would publish or delete.
+ * @param {string} command
+ * @returns {string | null} a block reason, or null to defer to the normal permission flow
+ */
+function checkBash(command) {
+  for (const words of shellCommands(command)) {
+    const reason = checkCliCommand(words);
+    if (reason !== null) return reason;
+    // The script given to `sh -c`, `bash -lc` or eval is a command line of its own.
+    if (words[0] === "eval") {
+      const inner = checkBash(words.slice(1).join(" "));
+      if (inner !== null) return inner;
+    }
+    for (let i = 1; i < words.length; i++) {
+      if (/^-[A-Za-z]*c$/.test(words[i - 1]) && /\s/.test(words[i])) {
+        const inner = checkBash(words[i]);
+        if (inner !== null) return inner;
+      }
+    }
+  }
+  return null;
+}
+
+/**
+ * Decide whether an emdash tool call or a Bash command may proceed.
  * @param {string} toolName full tool name as Claude Code reports it
  * @param {unknown} toolInput the tool arguments
  * @returns {string | null} a block reason, or null to defer to the normal permission flow
  */
 function check(toolName, toolInput) {
+  if (toolName === "Bash") {
+    if (!isPlainObject(toolInput) || typeof toolInput.command !== "string") {
+      return "Bash tool_input has no command string";
+    }
+    return checkBash(toolInput.command);
+  }
   const match = MCP_TOOL.exec(toolName);
   if (match === null || !EMDASH_SERVER.test(match[1])) return null;
   const tool = match[2];
