@@ -16,10 +16,10 @@ Milestone v1.0: EmDash Migration. Each maps to roadmap phases.
 
 ### Schema
 
-- [ ] **SCHEMA-01**: A `projects` collection mirrors current frontmatter, using non-reserved field slugs (`project_status`, `status_variant`, `time_label`), `category` and `tags` as EmDash taxonomies (D-05 and D-09 amended by the user on 2026-10-26), `date` stored as a native datetime at midnight UTC converted from the source YYYY-MM-DD string (D-07 amended by the user on 2026-10-26, admin date picker), and native draft status in place of `draft`
-- [ ] **SCHEMA-02**: Per-project `stats` are an editable repeater (label, value, variant) and `tags` are editable as EmDash taxonomy terms (D-09 amended by the user on 2026-10-26: a new tag is a term, not a schema edit)
-- [ ] **SCHEMA-03**: An `about` entry holds the About page copy and its stat cells as editable fields
-- [ ] **SCHEMA-04**: A primary navigation menu and fixed site settings (General, Social, SEO) are editable in the admin
+- [x] **SCHEMA-01**: A `projects` collection mirrors current frontmatter, using non-reserved field slugs (`project_status`, `status_variant`, `time_label`), `category` and `tags` as EmDash taxonomies (D-05 and D-09 amended by the user on 2026-10-26), `date` stored as a native datetime at midnight UTC converted from the source YYYY-MM-DD string (D-07 amended by the user on 2026-10-26, admin date picker), and native draft status in place of `draft`
+- [x] **SCHEMA-02**: Per-project `stats` are an editable repeater (label, value, variant) and `tags` are editable as EmDash taxonomy terms (D-09 amended by the user on 2026-10-26: a new tag is a term, not a schema edit)
+- [x] **SCHEMA-03**: An `about` entry holds the About page copy and its stat cells as editable fields
+- [x] **SCHEMA-04**: A primary navigation menu and fixed site settings (General, Social, SEO) are editable in the admin
 - [ ] **SCHEMA-05**: Types are generated from the schema and committed
 
 ### Migration
@@ -112,10 +112,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FOUND-02    | Phase 1 | Complete |
 | FOUND-03    | Phase 1 | Complete |
 | FOUND-04    | Phase 1 | Complete |
-| SCHEMA-01   | Phase 2 | Pending |
-| SCHEMA-02   | Phase 2 | Pending |
-| SCHEMA-03   | Phase 2 | Pending |
-| SCHEMA-04   | Phase 2 | Pending |
+| SCHEMA-01   | Phase 2 | Complete |
+| SCHEMA-02   | Phase 2 | Complete |
+| SCHEMA-03   | Phase 2 | Complete |
+| SCHEMA-04   | Phase 2 | Complete |
 | SCHEMA-05   | Phase 2 | Pending |
 | MIGR-01     | Phase 2 | Pending |
 | MIGR-02     | Phase 2 | Pending |

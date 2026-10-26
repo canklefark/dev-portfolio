@@ -5,16 +5,16 @@ milestone_name: EmDash Migration
 current_phase: 02
 current_phase_name: Content Model and Import
 status: executing
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-10-26T13:26:43.182Z"
+stopped_at: Completed 02-03-PLAN.md
+last_updated: "2026-10-26T14:05:58.495Z"
 last_activity: 2026-10-26
 last_activity_desc: Phase 02 execution started
-state_head: d292281f13dd0d0bc5562cc6c1f49755c1007779
+state_head: b5a64c6884ac094ee4911837f9fa0351c2a4a73c
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 9
-  completed_plans: 7
+  completed_plans: 8
 ---
 
 # Project State
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-10-23)
 ## Current Position
 
 Phase: 02 (Content Model and Import) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 Status: Ready to execute
 Last activity: 2026-10-26 — Phase 02 execution started
 
@@ -66,6 +66,7 @@ _Updated after each plan completion_
 | Phase 01 P05 | 6 min | 2 tasks | 1 files |
 | Phase 02 P01 | 5 min | 2 tasks | 7 files |
 | Phase 02 P02 | 7 min | 2 tasks | 8 files |
+| Phase 02 P03 | 45 min | 3 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -93,6 +94,9 @@ Recent decisions affecting current work:
 - [Phase 02]: Q3 = 3a: commit .emdash/types.ts, .emdash/schema.json and emdash-env.d.ts
 - [Phase 02]: Q4 = 4a: long-body admin test on a seeded draft entry before the import, then rebuild data/
 - [Phase 02]: 02-02: Settings follow Q2 2a (title, tagline, two socials; no url, no seo key); About cells without a variant store default; schema verifier requires collections exactly about and projects
+- [Phase 02]: D-07 amended: project date is a native datetime at midnight UTC (user, admin date picker)
+- [Phase 02]: D-05 and D-09 amended: category and tags are EmDash taxonomies (category hierarchical 9 terms, tag flat 45 terms) attached to projects; supersedes Q1 = 1a
+- [Phase 02]: EmDash lists terms in term order, so tag order per project is not preserved; accepted as a Phase 3 decision
 
 ### Pending Todos
 
@@ -120,6 +124,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-26T13:26:43.115Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-10-26T14:05:58.424Z
+Stopped at: Completed 02-03-PLAN.md
 Resume file: None
