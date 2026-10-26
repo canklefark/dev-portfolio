@@ -40,7 +40,8 @@ const BLOCKED_TOOLS = new Set([
 ]);
 
 // content_create inputs. A new entry starts as a draft and drafts answer 404 on the public site, so tagging
-// one touches no live page. status is allowed here only as "draft", checked in check().
+// one touches no live page. status is allowed here only as "draft", checked in check(). publishedAt is absent on
+// purpose, so the allowlist refuses it like any other key (it would set a publish date, which is the user's call).
 const CREATE_ALLOWED_KEYS = new Set([
   "collection",
   "data",
@@ -88,9 +89,6 @@ function check(toolName, toolInput) {
     );
     if (extra.length > 0) {
       return `${extra.join(", ")} is not a key a new draft may carry.`;
-    }
-    if ("publishedAt" in toolInput) {
-      return "publishedAt would set a publish date. New entries start as drafts and the user publishes in the admin (D-01).";
     }
     if (toolInput.status !== undefined && toolInput.status !== "draft") {
       return "status must be draft. The user publishes in the admin (D-01).";

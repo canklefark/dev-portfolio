@@ -252,6 +252,17 @@ describe("content_create", () => {
     });
   }
 
+  it("names publishedAt as the refused key", () => {
+    const result = runRegisteredHook(
+      call("content_create", { ...base, publishedAt: "2026-01-01T00:00:00Z" }),
+    );
+    assert.equal(result.status, 2, result.stderr);
+    assert.match(
+      result.stderr,
+      /publishedAt is not a key a new draft may carry/,
+    );
+  });
+
   for (const [name, toolInput] of [
     ["null", null],
     ["an array", []],
