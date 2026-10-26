@@ -12,6 +12,8 @@ import {
   ABOUT_TITLE,
   NAV_MENU,
   SITE_SETTINGS,
+  STAT_VARIANT_OPTIONS,
+  STATUS_VARIANT_OPTIONS,
   TABLES,
   TAXONOMY_NAMES,
   aboutCollection,
@@ -276,6 +278,30 @@ export function verify(model, dbPath) {
         project.stats,
         stats,
         canonical(project.stats) === canonical(stats),
+      );
+      // ME-04: the stored select values must be inside their option lists, whatever the source says.
+      record(
+        project.slug,
+        "status_variant.option",
+        `one of ${STATUS_VARIANT_OPTIONS.join(", ")}`,
+        row.status_variant,
+        typeof row.status_variant === "string" &&
+          STATUS_VARIANT_OPTIONS.includes(row.status_variant),
+      );
+      const storedVariants = Array.isArray(stats)
+        ? stats.map((stat) => stat?.variant)
+        : stats;
+      record(
+        project.slug,
+        "stats.variant.option",
+        `every variant one of ${STAT_VARIANT_OPTIONS.join(", ")}`,
+        storedVariants,
+        Array.isArray(storedVariants) &&
+          storedVariants.every(
+            (variant) =>
+              typeof variant === "string" &&
+              STAT_VARIANT_OPTIONS.includes(variant),
+          ),
       );
       record(project.slug, "body", project.body, bodyToMarkdown(row.body));
       record(

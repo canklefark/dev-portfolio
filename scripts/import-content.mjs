@@ -24,6 +24,8 @@ import {
   CATEGORY_OPTIONS,
   NAV_MENU,
   SITE_SETTINGS,
+  STAT_VARIANT_OPTIONS,
+  STATUS_VARIANT_OPTIONS,
   aboutCollection,
   dateToDatetime,
   projectsCollection,
@@ -61,6 +63,19 @@ export function buildSeed(model) {
         `${project.slug}: category ${JSON.stringify(project.category)} is not in the category terms`,
       );
     }
+    // A select value outside its option list would reach the admin and the front end unchecked (ME-04).
+    if (!STATUS_VARIANT_OPTIONS.includes(project.statusVariant)) {
+      throw new Error(
+        `${project.slug}.md: statusVariant ${JSON.stringify(project.statusVariant)} is not one of ${STATUS_VARIANT_OPTIONS.join(", ")}`,
+      );
+    }
+    project.stats.forEach((stat, i) => {
+      if (!STAT_VARIANT_OPTIONS.includes(stat.variant)) {
+        throw new Error(
+          `${project.slug}.md: stats[${i}].variant ${JSON.stringify(stat.variant)} is not one of ${STAT_VARIANT_OPTIONS.join(", ")}`,
+        );
+      }
+    });
     for (const tag of project.tags) {
       if (!allowedTags.has(tag)) {
         throw new Error(

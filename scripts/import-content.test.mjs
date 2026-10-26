@@ -36,6 +36,8 @@ import {
   PROJECT_FIELD_SLUGS,
   SITE_SETTINGS,
   STACK_LEVEL_OPTIONS,
+  STAT_VARIANT_OPTIONS,
+  STATUS_VARIANT_OPTIONS,
   TABLES,
   aboutCollection,
   dateToDatetime,
@@ -1162,6 +1164,100 @@ describe("--schema-check never overwrites a content seed (ME-03)", () => {
       );
       assert.equal(run.status, 2);
       assert.equal(existsSync(join(root, "data")), false);
+    });
+  });
+});
+
+describe("status and stat variants are validated against their option lists (ME-04)", () => {
+  const real = loadSourceModel(REPO_ROOT);
+
+  it("rejects a bogus status variant and names the file and value", () => {
+    const project = { ...fixture("empty-lists.md"), statusVariant: "bogus" };
+    assert.throws(
+      () => buildSeed({ ...real, projects: [project] }),
+      /empty-lists\.md.*statusVariant.*"bogus"/,
+    );
+  });
+
+  it("rejects a stat variant of purple and names the file, the row and the value", () => {
+    const project = {
+      ...fixture("draft-project.md"),
+      stats: [{ label: "Rows", value: "1", variant: "purple" }],
+    };
+    assert.throws(
+      () => buildSeed({ ...real, projects: [project] }),
+      /draft-project\.md.*stats\[0\]\.variant.*"purple"/,
+    );
+  });
+
+  it("accepts every option in both lists", () => {
+    const project = {
+      ...fixture("draft-project.md"),
+      statusVariant: STATUS_VARIANT_OPTIONS[0],
+      stats: STAT_VARIANT_OPTIONS.map((variant) => ({
+        label: "L",
+        value: "V",
+        variant,
+      })),
+    };
+    buildSeed({ ...real, projects: [project] });
+  });
+
+  it("the verifier fails on a stored status variant outside the list", () => {
+    const slug = real.projects[0].slug;
+    withRoot((root) => {
+      const dbPath = applyModel(real, root);
+      const db = new DatabaseSync(dbPath);
+      db.prepare(
+        `UPDATE ${TABLES.projects} SET status_variant = ? WHERE slug = ?`,
+      ).run("purple", slug);
+      db.close();
+      // The source carries the same bogus value, so only the option check can see it.
+      const model = structuredClone(real);
+      model.projects[0].statusVariant = "purple";
+      const report = verify(model, dbPath);
+      assert.deepEqual(report.differences.map(label), [
+        `projects ${slug} status_variant.option`,
+      ]);
+    });
+  });
+
+  it("the verifier fails on a stored stat variant outside the list and exits 1 from the CLI", () => {
+    const index = real.projects.findIndex((p) => p.stats.length > 0);
+    const { slug } = real.projects[index];
+    withRoot((root) => {
+      const dbPath = applyModel(real, root);
+      const db = new DatabaseSync(dbPath);
+      const row = db
+        .prepare(`SELECT stats FROM ${TABLES.projects} WHERE slug = ?`)
+        .get(slug);
+      assert.ok(row);
+      const stats = JSON.parse(String(row.stats));
+      stats[0].variant = "purple";
+      db.prepare(`UPDATE ${TABLES.projects} SET stats = ? WHERE slug = ?`).run(
+        JSON.stringify(stats),
+        slug,
+      );
+      db.close();
+      const model = structuredClone(real);
+      model.projects[index].stats[0].variant = "purple";
+      const report = verify(model, dbPath);
+      assert.deepEqual(report.differences.map(label), [
+        `projects ${slug} stats.variant.option`,
+      ]);
+      const run = spawnSync(
+        process.execPath,
+        [
+          "scripts/verify-import.mjs",
+          "--root",
+          root,
+          "--report",
+          join(root, "report.json"),
+        ],
+        { cwd: REPO_ROOT, encoding: "utf8" },
+      );
+      assert.equal(run.status, 1, run.stderr);
+      assert.match(run.stdout, /stats\.variant\.option/);
     });
   });
 });
