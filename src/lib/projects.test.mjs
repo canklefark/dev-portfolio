@@ -3,10 +3,8 @@
 // run: node --test src/lib/projects.test.mjs  (name the file; Node 24 treats a directory argument as a file)
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import * as format from "./format.ts";
-
-/** Loaded inside each test so a module that cannot load fails that test, not the whole file. */
-const loadProjects = () => import("./projects.ts");
+import { formatProjectDate } from "./format.ts";
+import { toProject } from "./projects.ts";
 
 /** @typedef {import("emdash").ContentEntry<import("../../emdash-env").Project>} ProjectContentEntry */
 
@@ -51,8 +49,7 @@ function fixtureEntry(overrides = {}) {
 }
 
 describe("toProject", () => {
-  it("maps a full entry to the card shape with EmDash term order kept", async () => {
-    const { toProject } = await loadProjects();
+  it("maps a full entry to the card shape with EmDash term order kept", () => {
     const project = toProject(fixtureEntry());
     assert.equal(project.id, "catalog-cms");
     assert.equal(project.data.title, "Catalog CMS");
@@ -74,8 +71,7 @@ describe("toProject", () => {
     assert.equal(project.body.length, 1);
   });
 
-  it("maps an entry with no terms, stats or body to empty values", async () => {
-    const { toProject } = await loadProjects();
+  it("maps an entry with no terms, stats or body to empty values", () => {
     const project = toProject(
       fixtureEntry({ terms: undefined, stats: undefined, body: undefined }),
     );
@@ -85,8 +81,7 @@ describe("toProject", () => {
     assert.deepEqual(project.body, []);
   });
 
-  it("turns the ISO date into the same instant", async () => {
-    const { toProject } = await loadProjects();
+  it("turns the ISO date into the same instant", () => {
     const project = toProject(fixtureEntry());
     assert.equal(project.data.date.toISOString(), "2026-08-27T00:00:00.000Z");
   });
@@ -98,11 +93,11 @@ describe("formatProjectDate", () => {
     process.env.TZ = "Pacific/Honolulu";
     try {
       assert.equal(
-        format.formatProjectDate("2026-08-27T00:00:00.000Z"),
+        formatProjectDate("2026-08-27T00:00:00.000Z"),
         "2026-08-27",
       );
       assert.equal(
-        format.formatProjectDate(new Date("2026-08-27T00:00:00.000Z")),
+        formatProjectDate(new Date("2026-08-27T00:00:00.000Z")),
         "2026-08-27",
       );
     } finally {
