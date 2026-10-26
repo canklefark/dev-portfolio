@@ -5,16 +5,16 @@ milestone_name: EmDash Migration
 current_phase: 03
 current_phase_name: Read Path Rewire and Parity
 status: executing
-stopped_at: Completed 03-02-PLAN.md
-last_updated: "2026-10-26T15:59:37.353Z"
+stopped_at: Completed 03-03-PLAN.md
+last_updated: "2026-10-26T16:07:08.147Z"
 last_activity: 2026-10-26
 last_activity_desc: Phase 02 complete, transitioned to Phase 3
-state_head: 7b8e9132dd343c5afcb37394011d292441c3cce8
+state_head: a969d63333c6137b7b85f5786af88227d7104694
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 15
-  completed_plans: 11
+  completed_plans: 12
 ---
 
 # Project State
@@ -71,6 +71,7 @@ _Updated after each plan completion_
 | Phase 02 P04 | 2 min | 2 tasks | 1 files |
 | Phase 03 P01 | 4 min | 2 tasks | 30 files |
 | Phase 03 P02 | 4 min | 2 tasks | 9 files |
+| Phase 03 P03 | 9 min | 3 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -105,6 +106,7 @@ Recent decisions affecting current work:
 - [Phase 03]: 03-01: getProject returns null unless entry.id equals the slug (database ids never serve a project); D-03 met through entry.data.terms hydrated by the batched term loader
 - [Phase 03]: 03-01: guard check-public-js seeds a mkdtemp database and serves dist/server/entry.mjs on 127.0.0.1; repo data/ never touched; D-08 deletions landed with the list flip in 79f619c
 - [Phase 03]: 03-02: heading ids slugged from raw span text with one GithubSlugger per body; smart punctuation per span via retext-smartypants on non-code spans; og:url from Astro.site with canonicalPath /404/ pinned
+- [Phase 03]: 03-03: parity canonicalizer fixed to five rules (CSS counts reported, scripts strict); guard crawls /projects/ with a /projects/* allowlist wildcard and asserts five 404 cases, the admin hop and no /_emdash/ on public pages; CI job verify pinned to actions v7, first GitHub run pending push approval
 
 ### Pending Todos
 
@@ -132,6 +134,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-26T15:59:37.227Z
-Stopped at: Completed 03-02-PLAN.md
+Last session: 2026-10-26T16:07:08.019Z
+Stopped at: Completed 03-03-PLAN.md
 Resume file: None

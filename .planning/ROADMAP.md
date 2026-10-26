@@ -107,7 +107,7 @@ Plans:
 4. The admin loads at `/_emdash/admin`, and none of its JavaScript reaches a public route
 5. A CI check fails when any public route gains a script, `modulepreload` or module tag beyond the recorded baseline, shown by a deliberate failing case
 
-**Plans**: 2/6 plans executed
+**Plans**: 3/6 plans executed
 **UI hint**: yes
 
 Plans:
@@ -121,7 +121,7 @@ Plans:
 
 **Wave 3** _(blocked on Wave 2 completion)_
 
-- [ ] 03-03-PLAN.md: Canonicalizing parity command (17 of 17), guard coverage (crawl, draft and id-form 404s, admin route), committed failing case, npm scripts and the GitHub Actions workflow
+- [x] 03-03-PLAN.md: Canonicalizing parity command (17 of 17), guard coverage (crawl, draft and id-form 404s, admin route), committed failing case, npm scripts and the GitHub Actions workflow
 
 **Wave 4** _(blocked on Wave 3 completion)_
 
@@ -187,7 +187,7 @@ Phases execute in numeric order: 1, 2, 3, 4, 5, 6
 | -------------------------------- | -------------- | ----------- | ---------- |
 | 1. Spike, Baseline and Decisions | 5/5            | Complete    | 2026-10-23 |
 | 2. Content Model and Import      | 4/4            | Complete    | 2026-10-26 |
-| 3. Read Path Rewire and Parity   | 2/6 | In Progress | -          |
+| 3. Read Path Rewire and Parity   | 3/6 | In Progress | -          |
 | 4. Agent Access                  | 0/TBD          | Not started | -          |
 | 5. Dokploy Deploy and Cutover    | 0/TBD          | Not started | -          |
 | 6. Live Editing and Docs         | 0/TBD          | Not started | -          |

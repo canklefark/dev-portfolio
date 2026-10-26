@@ -32,7 +32,7 @@ Milestone v1.0: EmDash Migration. Each maps to roadmap phases.
 ### Rendering
 
 - [x] **REND-01**: Projects index and detail pages read from EmDash through `src/lib/projects.ts` and keep their current props and order (newest first)
-- [ ] **REND-02**: A missing project returns a real 404 status
+- [x] **REND-02**: A missing project returns a real 404 status
 - [ ] **REND-03**: The About page, nav and head metadata read from EmDash
 - [ ] **REND-04**: Rendered pages match the baseline in copy and layout in light and dark, including long-form body styling
 - [ ] **REND-05**: Markdown sources, `src/data/about.*` and the file collection are removed in the same change that flips the read path
@@ -62,7 +62,7 @@ Milestone v1.0: EmDash Migration. Each maps to roadmap phases.
 
 ### Guards
 
-- [ ] **GUARD-01**: CI fails if any public route gains a script, `modulepreload` or module tag beyond the recorded baseline
+- [x] **GUARD-01**: CI fails if any public route gains a script, `modulepreload` or module tag beyond the recorded baseline
 - [ ] **GUARD-02**: CI fails on pending migrations (`emdash migrate --check`)
 - [ ] **GUARD-03**: A post-deploy smoke test checks `/` and one project page return 200
 
@@ -122,12 +122,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MIGR-03     | Phase 2 | Complete |
 | MIGR-04     | Phase 2 | Complete |
 | REND-01     | Phase 3 | Complete |
-| REND-02     | Phase 3 | Pending |
+| REND-02     | Phase 3 | Complete |
 | REND-03     | Phase 3 | Pending |
 | REND-04     | Phase 3 | Pending |
 | REND-05     | Phase 3 | Pending |
 | ADMIN-01    | Phase 3 | Pending |
-| GUARD-01    | Phase 3 | Pending |
+| GUARD-01    | Phase 3 | Complete |
 | AGENT-01    | Phase 4 | Pending |
 | AGENT-02    | Phase 4 | Pending |
 | AGENT-03    | Phase 4 | Pending |
