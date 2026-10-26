@@ -31,7 +31,7 @@ Milestone v1.0: EmDash Migration. Each maps to roadmap phases.
 
 ### Rendering
 
-- [ ] **REND-01**: Projects index and detail pages read from EmDash through `src/lib/projects.ts` and keep their current props and order (newest first)
+- [x] **REND-01**: Projects index and detail pages read from EmDash through `src/lib/projects.ts` and keep their current props and order (newest first)
 - [ ] **REND-02**: A missing project returns a real 404 status
 - [ ] **REND-03**: The About page, nav and head metadata read from EmDash
 - [ ] **REND-04**: Rendered pages match the baseline in copy and layout in light and dark, including long-form body styling
@@ -121,7 +121,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MIGR-02     | Phase 2 | Complete |
 | MIGR-03     | Phase 2 | Complete |
 | MIGR-04     | Phase 2 | Complete |
-| REND-01     | Phase 3 | Pending |
+| REND-01     | Phase 3 | Complete |
 | REND-02     | Phase 3 | Pending |
 | REND-03     | Phase 3 | Pending |
 | REND-04     | Phase 3 | Pending |

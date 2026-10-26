@@ -5,16 +5,16 @@ milestone_name: EmDash Migration
 current_phase: 03
 current_phase_name: Read Path Rewire and Parity
 status: executing
-stopped_at: Phase 3 UI-SPEC approved
-last_updated: "2026-10-26T15:48:12.132Z"
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-10-26T15:55:08.161Z"
 last_activity: 2026-10-26
 last_activity_desc: Phase 02 complete, transitioned to Phase 3
-state_head: d4cefd9792516121e28456f0488dae7ad9a2f2f4
+state_head: a6aa47f1bf15fcb2e71b6501e5eb8bab4a2ff99d
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 15
-  completed_plans: 9
+  completed_plans: 10
 ---
 
 # Project State
@@ -69,6 +69,7 @@ _Updated after each plan completion_
 | Phase 02 P02 | 7 min | 2 tasks | 8 files |
 | Phase 02 P03 | 45 min | 3 tasks | 14 files |
 | Phase 02 P04 | 2 min | 2 tasks | 1 files |
+| Phase 03 P01 | 4 min | 2 tasks | 30 files |
 
 ## Accumulated Context
 
@@ -100,6 +101,8 @@ Recent decisions affecting current work:
 - [Phase 02]: D-05 and D-09 amended: category and tags are EmDash taxonomies (category hierarchical 9 terms, tag flat 45 terms) attached to projects; supersedes Q1 = 1a
 - [Phase 02]: EmDash lists terms in term order, so tag order per project is not preserved; accepted as a Phase 3 decision
 - [Phase 02]: 02-04: the seed was exported from a database rebuilt from the sources and verified at zero differences, then proven by a fresh rebuild (232/232 checks, 0 differences); the committed seed carries title, tagline and social settings only
+- [Phase 03]: 03-01: getProject returns null unless entry.id equals the slug (database ids never serve a project); D-03 met through entry.data.terms hydrated by the batched term loader
+- [Phase 03]: 03-01: guard check-public-js seeds a mkdtemp database and serves dist/server/entry.mjs on 127.0.0.1; repo data/ never touched; D-08 deletions landed with the list flip in 79f619c
 
 ### Pending Todos
 
@@ -127,6 +130,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-26T15:04:09.684Z
-Stopped at: Phase 3 UI-SPEC approved
-Resume file: .planning/phases/03-read-path-rewire-and-parity/03-UI-SPEC.md
+Last session: 2026-10-26T15:55:08.031Z
+Stopped at: Completed 03-01-PLAN.md
+Resume file: None
