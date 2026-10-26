@@ -22,7 +22,7 @@ const SETTINGS_PATH = join(ROOT, ".claude", "settings.json");
 
 const MCP_URL = "${EMDASH_MCP_URL:-http://localhost:4321/_emdash/api/mcp}";
 const MCP_AUTH = "Bearer ${EMDASH_TOKEN}";
-const PREFIX = "mcp__emdash__";
+const PREFIX = "mcp__emdash-agent__";
 const GUARDED_TOOLS = [
   "content_publish",
   "content_unpublish",
@@ -121,10 +121,10 @@ describe("client config", () => {
   it("defines one emdash HTTP server with env references and no token", () => {
     const raw = readFileSync(join(ROOT, ".mcp.json"), "utf8");
     const servers = JSON.parse(raw).mcpServers;
-    assert.deepEqual(Object.keys(servers), ["emdash"]);
-    assert.equal(servers.emdash.type, "http");
-    assert.equal(servers.emdash.url, MCP_URL);
-    assert.equal(servers.emdash.headers.Authorization, MCP_AUTH);
+    assert.deepEqual(Object.keys(servers), ["emdash-agent"]);
+    assert.equal(servers["emdash-agent"].type, "http");
+    assert.equal(servers["emdash-agent"].url, MCP_URL);
+    assert.equal(servers["emdash-agent"].headers.Authorization, MCP_AUTH);
     assert.ok(!raw.includes("ec_pat_"), "no token value in .mcp.json");
   });
 
@@ -132,7 +132,7 @@ describe("client config", () => {
     const entry = registeredEntries().find((e) =>
       new RegExp(e.matcher).test(`${PREFIX}content_update`),
     );
-    assert.ok(entry, "a PreToolUse entry matches mcp__emdash__content_update");
+    assert.ok(entry, "a PreToolUse entry matches mcp__emdash-agent__content_update");
   });
 
   it("registers the hook for the Bash tool", () => {

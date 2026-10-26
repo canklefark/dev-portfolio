@@ -76,12 +76,14 @@ export EMDASH_MCP_URL='http://localhost:4321/_emdash/api/mcp'
 
 Run these steps from the repository root, in a shell where the variables are exported.
 
-1. Run `claude mcp list` and expect `emdash` with the status Connected. A missing-variable warning means `EMDASH_TOKEN` is not exported, and Pending approval means `claude` has not been started in this repository yet.
-2. Start `claude` from the repository root, so the project settings and the guard hook load, and approve the project-scoped `emdash` server when it asks. The command `claude mcp reset-project-choices` undoes a wrong choice.
+1. Run `claude mcp list` and expect `emdash-agent` with the status Connected. A missing-variable warning means `EMDASH_TOKEN` is not exported, and Pending approval means `claude` has not been started in this repository yet.
+2. Start `claude` from the repository root, so the project settings and the guard hook load, and approve the project-scoped `emdash-agent` server when it asks. The command `claude mcp reset-project-choices` undoes a wrong choice.
 3. Run `/mcp` to confirm the server is connected.
 4. Ask Claude to run `content_list` on the `projects` collection. A list of projects is the proof that the token works.
 
 A wrong or expired token shows as Failed to connect, because the Authorization header is configured in `.mcp.json`. If Claude Code ever offers an OAuth sign-in for `emdash`, decline it, because OAuth gives the session the user's full admin rights. Fix or rotate the token instead.
+
+The server is registered as `emdash-agent` on purpose. Claude Code keys saved OAuth sign-ins by server name and prefers a saved sign-in over the `Authorization` header, so a server that was ever signed in through OAuth (for example the Phase 2 admin session under the name `emdash`) never sends the token, shows Needs authentication, and runs with the full admin rights of that OAuth client. A server name that has never been signed in uses the token. Check that the token is really in use: the admin token list shows a last used time that moves when the session connects. Revoke any old OAuth client for the endpoint in the admin, and never choose authenticate or sign in for this server.
 
 ### What the agent can and cannot do
 
