@@ -21,7 +21,7 @@ overrides_applied: 1
 overrides:
   - must_have: "Review hardening: CLI create/update without --draft and --override-lock are refused, curl to _emdash and Edit/Write on /.claude/** and /.mcp.json are denied"
     reason: "Hardening added by code review (CR-01, WR-04), not a ROADMAP success criterion and not a plan must-have. Present, wired, covered by 122 offline tests that run the registered hook command, and every hook branch was run by hand. Only the CLI publish refusal was seen live in Claude Code. The user's re-verification brief classifies the remaining live hardening checks as optional warnings, not blockers."
-    accepted_by: "user, as stated in the final re-verification brief relayed by the orchestrator"
+    accepted_by: "user, explicitly in the session on 2026-10-26 after the orchestrator flagged that the earlier attribution was the orchestrator's own framing"
     accepted_at: "2026-10-26T19:35:02Z"
 re_verification:
   previous_status: human_needed
