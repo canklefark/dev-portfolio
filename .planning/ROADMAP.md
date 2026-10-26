@@ -75,7 +75,7 @@ Plans:
 4. A field-by-field equality report shows zero differences in copy, dates, order, tags, stats and status against the source markdown
 5. Generated types are committed, and the committed seed file rebuilds the same schema and content in a fresh local database
 
-**Plans**: 3/4 plans executed
+**Plans**: 4/4 plans executed
 
 Plans:
 **Wave 1**
@@ -92,7 +92,7 @@ Plans:
 
 **Wave 4** _(blocked on Wave 3 completion)_
 
-- [ ] 02-04-PLAN.md: Clean import twice with a zero-difference report, the committed seed with a fresh-rebuild proof, and public-site parity
+- [x] 02-04-PLAN.md: Clean import twice with a zero-difference report, the committed seed with a fresh-rebuild proof, and public-site parity
 
 ### Phase 3: Read Path Rewire and Parity
 
@@ -161,7 +161,7 @@ Phases execute in numeric order: 1, 2, 3, 4, 5, 6
 | Phase                            | Plans Complete | Status      | Completed  |
 | -------------------------------- | -------------- | ----------- | ---------- |
 | 1. Spike, Baseline and Decisions | 5/5            | Complete    | 2026-10-23 |
-| 2. Content Model and Import      | 3/4 | In Progress | -          |
+| 2. Content Model and Import      | 4/4 | In Progress | -          |
 | 3. Read Path Rewire and Parity   | 0/TBD          | Not started | -          |
 | 4. Agent Access                  | 0/TBD          | Not started | -          |
 | 5. Dokploy Deploy and Cutover    | 0/TBD          | Not started | -          |

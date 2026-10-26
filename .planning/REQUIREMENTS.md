@@ -20,14 +20,14 @@ Milestone v1.0: EmDash Migration. Each maps to roadmap phases.
 - [x] **SCHEMA-02**: Per-project `stats` are an editable repeater (label, value, variant) and `tags` are editable as EmDash taxonomy terms (D-09 amended by the user on 2026-10-26: a new tag is a term, not a schema edit)
 - [x] **SCHEMA-03**: An `about` entry holds the About page copy and its stat cells as editable fields
 - [x] **SCHEMA-04**: A primary navigation menu and fixed site settings (General, Social, SEO) are editable in the admin
-- [ ] **SCHEMA-05**: Types are generated from the schema and committed
+- [x] **SCHEMA-05**: Types are generated from the schema and committed
 
 ### Migration
 
-- [ ] **MIGR-01**: An idempotent import script loads all 13 projects with slugs equal to current file names, explicit dates, and drafts created as drafts
-- [ ] **MIGR-02**: The About page content is imported with no copy changes
-- [ ] **MIGR-03**: A field-by-field equality report shows zero differences in copy, dates, order, tags, stats and status against the source markdown
-- [ ] **MIGR-04**: A seed file exported from the final schema and content is committed so the setup can be reproduced
+- [x] **MIGR-01**: An idempotent import script loads all 13 projects with slugs equal to current file names, explicit dates, and drafts created as drafts
+- [x] **MIGR-02**: The About page content is imported with no copy changes
+- [x] **MIGR-03**: A field-by-field equality report shows zero differences in copy, dates, order, tags, stats and status against the source markdown
+- [x] **MIGR-04**: A seed file exported from the final schema and content is committed so the setup can be reproduced
 
 ### Rendering
 
@@ -116,11 +116,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SCHEMA-02   | Phase 2 | Complete |
 | SCHEMA-03   | Phase 2 | Complete |
 | SCHEMA-04   | Phase 2 | Complete |
-| SCHEMA-05   | Phase 2 | Pending |
-| MIGR-01     | Phase 2 | Pending |
-| MIGR-02     | Phase 2 | Pending |
-| MIGR-03     | Phase 2 | Pending |
-| MIGR-04     | Phase 2 | Pending |
+| SCHEMA-05   | Phase 2 | Complete |
+| MIGR-01     | Phase 2 | Complete |
+| MIGR-02     | Phase 2 | Complete |
+| MIGR-03     | Phase 2 | Complete |
+| MIGR-04     | Phase 2 | Complete |
 | REND-01     | Phase 3 | Pending |
 | REND-02     | Phase 3 | Pending |
 | REND-03     | Phase 3 | Pending |
