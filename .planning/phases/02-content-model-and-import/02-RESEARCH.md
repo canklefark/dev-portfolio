@@ -487,22 +487,26 @@ node_modules/.bin/emdash seed "$PWD/.emdash/seed.json" -d ./data/emdash.db --cwd
 | A7  | `node:test` and unflagged `.ts` import work on the exact 22.22.2 floor. Verified on 24.17.0 and 22.23.0 only.                                                                                                  | Standard Stack              | Scripts need `--experimental-strip-types` on the floor; low impact because `.nvmrc` is 24.                   |
 | A8  | Committing `emdash-env.d.ts` and `.emdash/schema.json` alongside `.emdash/types.ts` is wanted. CONTEXT names only `types.ts`.                                                                                  | Pitfall 10, Open Question 3 | Phase 3 lacks typed queries, or the repo gains a generated file the user did not expect.                     |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Tags editor (BLOCKS the schema lock).**
    - What we know: D-09 says `multiSelect` with no options. The 1.3.1 admin only renders checkboxes from configured options, so tags would have no editor. API and agent writes accept any string when no options exist.
    - What's unclear: whether the user accepts "new tag means a schema edit".
    - Recommendation: `multiSelect` with options seeded from the 45 distinct existing tags (type stays `string[]`). Alternatives: a `repeater` of `{ tag }` rows (free-form in admin and for agents, but a card per tag and a different stored shape), or a comma-separated `string` (simplest to edit, adapter must split). Ask the user at plan time; planner should add a `checkpoint:decision`.
+   - RESOLVED: Q1 = 1a (see 02-01-SUMMARY.md, Decisions Q1-Q4)
 
 2. **Seeded General, Social, SEO values (D-14).**
    - What we know: Page templates build titles as the page title, a spaced U+2014 separator, then "Zeik Cookson" and a default description "DevOps and platform engineering portfolio. Infrastructure work from the homelab and beyond."; the favicon and fonts are static files.
    - Recommendation: `title: "Zeik Cookson"`, `tagline` = the Layout default description, `social.github` and `social.linkedin` from the contacts, `seo.titleSeparator` = `" — "` written as a JSON escape (parity, deferred copy decision). Do not seed `url` (not exported, and Phase 5 sets it from `EMDASH_SITE_URL`). Confirm A3 to A5 with the user.
+   - RESOLVED: Q2 = 2a (see 02-01-SUMMARY.md, Decisions Q1-Q4)
 
 3. **Which generated files to commit (SCHEMA-05).**
    - Recommendation: `.emdash/types.ts`, `.emdash/schema.json` and `emdash-env.d.ts`, since Phase 3 needs the augmentation.
+   - RESOLVED: Q3 = 3a (see 02-01-SUMMARY.md, Decisions Q1-Q4)
 
 4. **How to run the criterion 1 long-body test.**
    - Claude's discretion. Recommended: seed one draft entry `schema-check-longest-body` carrying the catalog-cms body, five stats rows and several tags into a scratch-purpose database, have the user edit and save it in the admin (including add-a-stats-row), then delete `data/` entirely and rebuild from the seed so no test residue or trash rows remain. The database is disposable and fully reproducible from scripts.
+   - RESOLVED: Q4 = 4a (see 02-01-SUMMARY.md, Decisions Q1-Q4)
 
 ## Environment Availability
 
