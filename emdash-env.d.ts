@@ -16,6 +16,28 @@ export interface About {
   cells?: { "label": string; "value": string; "variant": "default" | "accent" | "green" }[];
   stack?: { "name": string; "level": "DAILY" | "PROFICIENT" | "FAMILIAR" | "LEARNING" | "NEXT" }[];
   contacts?: { "icon": "email" | "github" | "linkedin"; "label": string; "href": string }[];
+  heading_line_1?: string;
+  heading_line_2?: string;
+  heading_accent?: string;
+  excerpt?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  byline?: BylineSummary | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
+export interface Home {
+  id: string;
+  slug: string | null;
+  status: string;
+  title: string;
+  hero_first?: string;
+  hero_last?: string;
+  stage_label?: string;
+  stage_location?: string;
+  bio?: string;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
@@ -47,9 +69,25 @@ export interface Project {
   terms?: Record<string, TaxonomyTerm[]>;
 }
 
+export interface ProjectsIndex {
+  id: string;
+  slug: string | null;
+  status: string;
+  title: string;
+  excerpt?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  byline?: BylineSummary | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
 declare module "emdash" {
   interface EmDashCollections {
     about: About;
+    home: Home;
     projects: Project;
+    projects_index: ProjectsIndex;
   }
 }

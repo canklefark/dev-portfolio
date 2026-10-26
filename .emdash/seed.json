@@ -6,6 +6,9 @@
 		"description": "Exported from existing EmDash database"
 	},
 	"settings": {
+		"seo": {
+			"titleSeparator": " — "
+		},
 		"social": {
 			"github": "https://github.com/canklefark",
 			"linkedin": "https://linkedin.com/in/zeikcookson"
@@ -22,7 +25,8 @@
 			"supports": [
 				"drafts",
 				"revisions",
-				"preview"
+				"preview",
+				"seo"
 			],
 			"urlPattern": "/about",
 			"fields": [
@@ -141,6 +145,71 @@
 							}
 						]
 					}
+				},
+				{
+					"slug": "heading_line_1",
+					"label": "Heading line 1",
+					"type": "string"
+				},
+				{
+					"slug": "heading_line_2",
+					"label": "Heading line 2",
+					"type": "string"
+				},
+				{
+					"slug": "heading_accent",
+					"label": "Heading accent",
+					"type": "string"
+				},
+				{
+					"slug": "excerpt",
+					"label": "Meta description",
+					"type": "text"
+				}
+			]
+		},
+		{
+			"slug": "home",
+			"label": "Home",
+			"labelSingular": "Home",
+			"supports": [
+				"drafts",
+				"revisions",
+				"preview",
+				"seo"
+			],
+			"urlPattern": "/",
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Page title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "hero_first",
+					"label": "Hero first name",
+					"type": "string"
+				},
+				{
+					"slug": "hero_last",
+					"label": "Hero last name",
+					"type": "string"
+				},
+				{
+					"slug": "stage_label",
+					"label": "Stage label",
+					"type": "string"
+				},
+				{
+					"slug": "stage_location",
+					"label": "Stage location",
+					"type": "string"
+				},
+				{
+					"slug": "bio",
+					"label": "Bio",
+					"type": "text"
 				}
 			]
 		},
@@ -151,7 +220,8 @@
 			"supports": [
 				"drafts",
 				"revisions",
-				"preview"
+				"preview",
+				"seo"
 			],
 			"urlPattern": "/projects/{slug}",
 			"fields": [
@@ -256,6 +326,31 @@
 					"label": "Body",
 					"type": "portableText",
 					"searchable": true
+				}
+			]
+		},
+		{
+			"slug": "projects_index",
+			"label": "Projects Index",
+			"labelSingular": "Projects Index",
+			"supports": [
+				"drafts",
+				"revisions",
+				"preview",
+				"seo"
+			],
+			"urlPattern": "/projects",
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Page title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "excerpt",
+					"label": "Meta description",
+					"type": "text"
 				}
 			]
 		}
@@ -744,968 +839,71 @@
 							"label": "linkedin.com/in/zeikcookson",
 							"href": "https://linkedin.com/in/zeikcookson"
 						}
-					]
+					],
+					"heading_line_1": "Designer who ended up",
+					"heading_line_2": "in the",
+					"heading_accent": "engine bay.",
+					"excerpt": "About Zeik Cookson, designer turned platform engineer in Knoxville, TN. Tools, stack, and contact."
+				}
+			}
+		],
+		"home": [
+			{
+				"id": "home:home",
+				"slug": "home",
+				"status": "published",
+				"data": {
+					"title": "Zeik Cookson — DevOps Engineer",
+					"hero_first": "Zeik",
+					"hero_last": "Cookson",
+					"stage_label": "Devops Engineer",
+					"stage_location": "Knoxville, TN",
+					"bio": "I build and run infrastructure at a digital agency. The role started in WordPress; it shifted toward platform work over the last year, and I built a homelab to go further than client projects allow."
 				}
 			}
 		],
 		"projects": [
 			{
-				"id": "projects:throughline-pricing",
-				"slug": "throughline-pricing",
+				"id": "projects:agency-ops-hub",
+				"slug": "agency-ops-hub",
 				"status": "published",
 				"data": {
-					"title": "Throughline Pricing",
-					"date": "2026-08-05T00:00:00.000Z",
+					"title": "Primary",
+					"date": "2026-08-20T00:00:00.000Z",
 					"project_status": "LIVE",
 					"status_variant": "green",
-					"surface": "POSTGRES / MCP",
-					"time_label": "ACTIVE",
-					"period": "Q3 2026",
-					"summary": "A pricing and invoicing app with an MCP interface so Claude can read and write pricing data directly during pricing conversations. Every total is server-computed, never hand-typed.",
-					"sub": "A 24-tool MCP surface covering rate cards, tickets, bundling, and flags, backed by an append-only price-history log and ending in a frozen, client-ready invoice PDF.",
-					"stats": [
-						{
-							"label": "MCP tools",
-							"value": "24",
-							"variant": "green"
-						},
-						{
-							"label": "Commits",
-							"value": "673",
-							"variant": "default"
-						},
-						{
-							"label": "Audit findings closed",
-							"value": "17/17",
-							"variant": "green"
-						}
-					],
-					"body": [
-						{
-							"_type": "block",
-							"_key": "kdk",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kdj",
-									"text": "The Problem",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kdm",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kdl",
-									"text": "Pricing conversations at the agency happened in my head and across scattered docs: tier decisions, bundling, flat-quote reasoning, all judgment calls that ended in a number someone typed into an invoice by hand. Nothing forced the invoice to match the reasoning that produced it, and there was no single place holding the authoritative total.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kdo",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kdn",
-									"text": "Approach",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kdq",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kdp",
-									"text": "I built a Postgres-backed app that owns every number a pricing conversation produces, with a 24-tool MCP interface so Claude can read and write pricing data directly while we're actually having the conversation. Claude does the judgment work (tier, bundling, value-based scoping) and the app owns every number that results, through to a frozen invoice PDF. No MCP tool accepts a raw total; everything is server-computed from tickets and line items. Rate cards are versioned and never edited in place. Tickets carry a lifecycle: standalone, bundled, or superseded, mutually exclusive by a guard the schema enforces. Flags block a batch from going out while anything's unresolved. Operators sign in with Google Workspace SSO restricted to the agency's own domain.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kds",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kdr",
-									"text": "Current State",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kdu",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kdt",
-									"text": "v1.0 through v1.2 have all shipped. v1.1 rebuilt navigation and cross-linking between clients, batches, tickets, and invoices so nothing requires a remembered URL. v1.2 added OS-aware dark mode, fully responsive data tables, and closed a 17-finding UI/UX audit with zero P0/P1 remaining.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kdw",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kdv",
-									"text": "What's Next",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kdy",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kdx",
-									"text": "Building v2.0, a client-agnostic initiatives tracker for pre-sales and delivery opportunities that currently live in an ad-hoc shared doc. Claude reads a meeting transcript, proposes a change to an initiative's status, and I confirm before it writes, with a manual UI path for corrections. An initiative can later graduate into a real billable project.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "ke0",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kdz",
-									"text": "Stack",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kea",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "ke1",
-									"text": "SvelteKit",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "ke2",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "ke3",
-									"text": "PostgreSQL",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "ke4",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "ke5",
-									"text": "MCP",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "ke6",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "ke7",
-									"text": "Puppeteer",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "ke8",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "ke9",
-									"text": "Google Workspace SSO",
-									"marks": [
-										"code"
-									]
-								}
-							]
-						}
-					]
-				},
-				"taxonomies": {
-					"category": [
-						"agency-tooling"
-					],
-					"tag": [
-						"google-workspace-sso",
-						"mcp",
-						"puppeteer",
-						"postgresql",
-						"sveltekit"
-					]
-				}
-			},
-			{
-				"id": "projects:self-hosted-services",
-				"slug": "self-hosted-services",
-				"status": "published",
-				"data": {
-					"title": "Self-Hosted Services",
-					"date": "2024-07-01T00:00:00.000Z",
-					"project_status": "RUNNING",
-					"status_variant": "green",
-					"surface": "BARE METAL",
-					"time_label": "ONGOING",
-					"period": "Q3 2024",
-					"summary": "A Beelink mini PC running Docker Compose: Immich, Mealie, Ollama, Paperless-ngx, Glance, Dockhand.",
-					"sub": "A Beelink mini PC running Docker Compose. Photos, recipes, local LLMs, and document management. All running on hardware I own.",
-					"stats": [
-						{
-							"label": "Host",
-							"value": "Beelink",
-							"variant": "default"
-						},
-						{
-							"label": "Runtime",
-							"value": "Docker Compose",
-							"variant": "default"
-						},
-						{
-							"label": "Services",
-							"value": "6 running",
-							"variant": "green"
-						},
-						{
-							"label": "Storage",
-							"value": "Local",
-							"variant": "default"
-						}
-					],
-					"body": [
-						{
-							"_type": "block",
-							"_key": "kce",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kcd",
-									"text": "What's Running",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kcr",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kcf",
-									"text": "Immich",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kcg",
-									"text": " for photo management and backup. It's the main reason this machine exists. ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kch",
-									"text": "Mealie",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kci",
-									"text": " for recipe organization. ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kcj",
-									"text": "Ollama",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kck",
-									"text": " for running local LLMs without API costs. ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kcl",
-									"text": "Paperless-ngx",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kcm",
-									"text": " for document management with OCR. ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kcn",
-									"text": "Glance",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kco",
-									"text": " as a homelab dashboard. ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kcp",
-									"text": "Dockhand",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kcq",
-									"text": " for automated container updates.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kct",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kcs",
-									"text": "Why Self-Host",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kcv",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kcu",
-									"text": "Mostly because I can. Google Photos has storage limits and recipe apps tend to disappear when the company folds. Running services myself is how I learn the stack.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kcx",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kcw",
-									"text": "What's Next",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kd2",
-							"style": "normal",
-							"markDefs": [
-								{
-									"_key": "kcz",
-									"_type": "link",
-									"href": "/projects/homelab-k8s"
-								}
-							],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kcy",
-									"text": "The original plan was for these to migrate onto a k3s cluster once its GitOps setup stabilized. See ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kd0",
-									"text": "Homelab Kubernetes Cluster",
-									"marks": [
-										"kcz"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kd1",
-									"text": ". The cluster's nodes died before that happened, so the migration ran in reverse: this Docker host is now the permanent, consolidated home for these services, not a fallback.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kd4",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kd3",
-									"text": "Stack",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kdi",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kd5",
-									"text": "Docker Compose",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kd6",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kd7",
-									"text": "Immich",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kd8",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kd9",
-									"text": "Mealie",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kda",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kdb",
-									"text": "Ollama",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kdc",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kdd",
-									"text": "Paperless-ngx",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kde",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kdf",
-									"text": "Glance",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kdg",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kdh",
-									"text": "Dockhand",
-									"marks": [
-										"code"
-									]
-								}
-							]
-						}
-					]
-				},
-				"taxonomies": {
-					"category": [
-						"self-hosted-services"
-					],
-					"tag": [
-						"docker-compose",
-						"immich",
-						"mealie",
-						"ollama",
-						"paperless-ngx"
-					]
-				}
-			},
-			{
-				"id": "projects:revlog",
-				"slug": "revlog",
-				"status": "published",
-				"data": {
-					"title": "Revlog",
-					"date": "2026-04-27T00:00:00.000Z",
-					"project_status": "IN PROGRESS",
-					"status_variant": "accent",
-					"surface": "VPS / DOCKER",
-					"time_label": "ACTIVE",
-					"period": "Q2 2026",
-					"summary": "A motorsport logbook for tracking car builds, maintenance schedules, events, and performance data, built for time attack and track day drivers.",
-					"sub": "Full-stack SvelteKit app with Drizzle + PostgreSQL, Better Auth sessions, and telemetry import from VBO, RaceChrono, and generic CSV files. Ten phases shipped; human verification walkthrough surfaced 12 issues queued for Phase 11.",
-					"stats": [
-						{
-							"label": "Commits",
-							"value": "352",
-							"variant": "default"
-						},
-						{
-							"label": "Phases",
-							"value": "9 of 12",
-							"variant": "default"
-						},
-						{
-							"label": "E2E tests",
-							"value": "40+ passing",
-							"variant": "default"
-						},
-						{
-							"label": "Issues found",
-							"value": "12 in walkthrough",
-							"variant": "default"
-						}
-					],
-					"body": [
-						{
-							"_type": "block",
-							"_key": "kbc",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kbb",
-									"text": "The Problem",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kbe",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kbd",
-									"text": "Track day drivers keep their maintenance logs in Notes, their event results in spreadsheets, their tire wear photos in Camera Roll, and their telemetry files in a folder no one can find. There's no app that connects a car's history to its race results to its pre-event checklist to its lap data. If you want to know whether your brake pads had enough life before the last event, you're digging through text messages.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kbg",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kbf",
-									"text": "Approach",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kbi",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kbh",
-									"text": "A SvelteKit app with a Drizzle + PostgreSQL backend, deployed via Docker to a VPS. Better Auth handles email/password sessions with a Google OAuth path. The data model links cars to maintenance entries, events, runs, checklists, and telemetry sessions. Telemetry files (VBO, RaceChrono CSV, generic CSV) are parsed in the browser with a column-mapping step before committing to the DB. Checklists are template-driven with a one-click AI generation option powered by the Claude API. The model generates a typed checklist from your car's spec.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kbk",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kbj",
-									"text": "The project uses GSD for planning: every phase has a research doc, validation strategy, and execution plan. Phases are verified against their requirements before closing.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kbm",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kbl",
-									"text": "Current State",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kbo",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kbn",
-									"text": "v1.0 shipped in full: garage management, event and run tracking, maintenance log with soft-delete/trash, telemetry import with format parsers, pre-event readiness check, AI-generated checklists, and admin tooling (bug reports, user allowlist, CSV data export). Of v1.1's six verification phases, three are done: E2E coverage for garage/runs and events/auth/telemetry (40+ passing tests), and the Phase 10 human walkthrough, which surfaced 12 issues: 3 P1 (a Delete Forever 500 error, event import blocked by a missing carId assignment UI, missing penalty input labels), 4 P2, 4 P3, 1 Polish. None of those are fixed yet. Work has been paused at the verification checkpoint since.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kbq",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kbp",
-									"text": "What's Next",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kbs",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kbr",
-									"text": "Phase 9 still needs E2E coverage for checklists, settings, and admin actions. Then Phase 11 triages and fixes the 12 issues from the walkthrough, P1s first, and Phase 12 is the launch gate: CI green, zero P0/P1, domain flipped to production.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kbu",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kbt",
-									"text": "Stack",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kcc",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kbv",
-									"text": "SvelteKit",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kbw",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kbx",
-									"text": "TypeScript",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kby",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kbz",
-									"text": "PostgreSQL",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kc0",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kc1",
-									"text": "Drizzle",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kc2",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kc3",
-									"text": "Better Auth",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kc4",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kc5",
-									"text": "Vitest",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kc6",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kc7",
-									"text": "Playwright",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kc8",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kc9",
-									"text": "Docker",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kca",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kcb",
-									"text": "Tailwind",
-									"marks": [
-										"code"
-									]
-								}
-							]
-						}
-					]
-				},
-				"taxonomies": {
-					"category": [
-						"personal-projects"
-					],
-					"tag": [
-						"better-auth",
-						"docker",
-						"drizzle",
-						"playwright",
-						"postgresql",
-						"tailwind",
-						"sveltekit",
-						"typescript"
-					]
-				}
-			},
-			{
-				"id": "projects:platform-hub",
-				"slug": "platform-hub",
-				"status": "published",
-				"data": {
-					"title": "Hub",
-					"date": "2026-08-27T00:00:00.000Z",
-					"project_status": "IN PROGRESS",
-					"status_variant": "accent",
 					"surface": "DOKPLOY / SELF-HOSTED POSTGRES",
 					"time_label": "ACTIVE",
 					"period": "Q3 2026",
-					"summary": "A monorepo platform that gives every new internal tool a cheap, predetermined home instead of its own throwaway repo: one app, one Postgres, shared auth, and a written contract a module must satisfy to join.",
-					"sub": "Built to stop internal tools from sprawling into a pile of one-off repos, each hand-rolling the same auth, cron, and integration plumbing. First absorption in progress now, proving the contract end to end.",
+					"summary": "Internal ops hub for the agency I work at: huddle board, task intake from Slack/Gmail/Granola, meeting-transcript extraction, and client/project dashboards. Replatformed off a Next.js/Vercel/Supabase app the team was outgrowing.",
+					"sub": "A full re-architecture onto SvelteKit and self-hosted Postgres on Dokploy, with 1,891 tests built alongside the code instead of deferred.",
 					"stats": [
 						{
+							"label": "Tests",
+							"value": "~3,100",
+							"variant": "green"
+						},
+						{
 							"label": "Commits",
-							"value": "775",
+							"value": "1,356",
 							"variant": "default"
 						},
 						{
 							"label": "Milestones shipped",
-							"value": "v1.2 – v1.4",
+							"value": "v1 – v2.3",
 							"variant": "default"
-						},
-						{
-							"label": "Modules absorbed",
-							"value": "1 (proposals)",
-							"variant": "green"
 						}
 					],
 					"body": [
 						{
 							"_type": "block",
-							"_key": "kaa",
+							"_key": "k1",
 							"style": "h2",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "ka9",
+									"_key": "k0",
 									"text": "The Problem",
 									"marks": []
 								}
@@ -1713,27 +911,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "kac",
+							"_key": "k3",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "kab",
-									"text": "The agency had accumulated close to twenty separate internal repos, each one somebody's MVP that got handed off to be made production-worthy. Nearly every one of them hand-rolled the same Google SSO and session spine, the same OAuth setup for ad platforms, the same API-key plumbing, duplicated, drifting, and individually maintained. Rebuilding each one from scratch into something solid was a full manual effort every time.",
+									"_key": "k2",
+									"text": "The agency's internal ops (huddles, task intake, project and client dashboards) ran on a Next.js/Supabase/Vercel app someone else on the team had built. It worked, but it was hitting real limits: a Supabase connection pooler capped at one connection forcing every DB call to run sequentially, 1000+ line monolithic files like the registry editor, over a hundred unsafe type casts around Slack block construction, and near-zero test coverage on the services everything else depended on.",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "kae",
+							"_key": "k5",
 							"style": "h2",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "kad",
+									"_key": "k4",
 									"text": "Approach",
 									"marks": []
 								}
@@ -1741,41 +939,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "kai",
+							"_key": "k7",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "kaf",
-									"text": "Instead of rebuilding tools one at a time, I built a platform for absorbing them: one SvelteKit app, one canonical Postgres schema, shared packages for auth, UI, integrations, and storage, and a written module contract that any absorbed tool has to satisfy: schema-per-module, route-group registration, a nav/permission manifest entry, and clean deletability if the module is ever abandoned. Cron and background work run as independently deployable workers behind Ofelia, so a bad deploy in one worker can't take down the rest. The build order was deliberately cheapest-first: scaffold the target repo shape, harvest the abandoned-but-hardened ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kag",
-									"text": "eos",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kah",
-									"text": " codebase straight into the canonical database as an early, low-risk value capture, stand up the shared auth and UI shell every future module inherits, and harden the ops backbone before spending real effort on a first real absorption.",
+									"_key": "k6",
+									"text": "I re-architected it from scratch onto SvelteKit, self-hosted Postgres, and Dokploy: same feature set, materially better admin UX, and a real test suite from day one instead of backfilled later. v1 got it to feature parity and let the old stack get decommissioned. v2.0 layered in a consistent shadcn-svelte component system with dark mode, a people/clients data model, multi-source task intake (Slack, Gmail, Granola transcripts, in-app quick capture), a daily Slack check-in pipeline, and a rework of the huddle, person, project, and client dashboards. That was 33 plans, 409 files changed, roughly 86k lines added, shipped in five days.",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "kak",
+							"_key": "k9",
 							"style": "h2",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "kaj",
+									"_key": "k8",
 									"text": "Current State",
 									"marks": []
 								}
@@ -1783,55 +967,41 @@
 						},
 						{
 							"_type": "block",
-							"_key": "kaq",
+							"_key": "kb",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "kal",
-									"text": "The platform spine is done: the monorepo scaffold, the database foundation seeded from ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kam",
-									"text": "eos",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kan",
-									"text": ", the shared auth and UI shell, and the ops backbone with cron workers, rehearsed Postgres backups, and R2 object storage. The first real absorption, a client proposal tool pulled in as ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kao",
-									"text": "modules/proposals",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kap",
-									"text": ", is done too, and it went well past proving the module contract. Three milestones of follow-on work brought the module to full parity with the app it replaced, down to editorial typography and a signed PDF export that matches the original page for page.",
+									"_key": "ka",
+									"text": "v2.0 through v2.3 have all shipped. Every pre-replatform pain point I set out to fix (the pooler bottleneck, the monolithic registry editor, the unsafe Slack type casts, the untested services) is gone by construction, not patched over. v2.3 ran a 16-screen design critique and fixed the cross-cutting UI/UX problems it found: unbounded lists forcing scroll, flat visual hierarchy, a couple of functional bugs, a missing confirmation gap, and weak discoverability, plus gave Home an actual cockpit view instead of a bare status widget.",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "kas",
+							"_key": "kd",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kc",
+									"text": "Live human UAT on v2.3 then surfaced something bigger: the replatform had no in-app path to a project or client detail page at all, and a full content comparison against the original app it replaced showed the gap went well beyond navigation.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kf",
 							"style": "h2",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "kar",
+									"_key": "ke",
 									"text": "What's Next",
 									"marks": []
 								}
@@ -1839,27 +1009,55 @@
 						},
 						{
 							"_type": "block",
-							"_key": "kau",
+							"_key": "kl",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "kat",
-									"text": "Absorbing a second module: a client performance reporting system that currently exists as an abandoned standalone app and a much simpler static-page plugin in the agency's plugin marketplace. This absorption replaces both with one module built on the same authoring pattern proposals proved out, plus a monthly metrics history ledger and a Slack digest for notable changes.",
+									"_key": "kg",
+									"text": "v2.4 closes the structural and content gaps between this app and the original MVP it replaced: a real Home/Mission-Control landing page, proper ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kh",
+									"text": "/projects",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "ki",
+									"text": " and ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kj",
+									"text": "/clients",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kk",
+									"text": " list entry points, a \"flag for discussion\" step on the huddle board, and an operator-facing registry audit and job ledger. Verification for this milestone checks each screen directly against its counterpart in the original app, not just against a written spec.",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "kaw",
+							"_key": "kn",
 							"style": "h2",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "kav",
+									"_key": "km",
 									"text": "Stack",
 									"marks": []
 								}
@@ -1867,13 +1065,13 @@
 						},
 						{
 							"_type": "block",
-							"_key": "kba",
+							"_key": "k13",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "kax",
+									"_key": "ko",
 									"text": "SvelteKit",
 									"marks": [
 										"code"
@@ -1881,1206 +1079,13 @@
 								},
 								{
 									"_type": "span",
-									"_key": "kay",
+									"_key": "kp",
 									"text": " · ",
 									"marks": []
 								},
 								{
 									"_type": "span",
-									"_key": "kaz",
-									"text": "PostgreSQL",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kb0",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kb1",
-									"text": "Turborepo",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kb2",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kb3",
-									"text": "Better Auth",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kb4",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kb5",
-									"text": "Docker",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kb6",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kb7",
-									"text": "Ofelia",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kb8",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kb9",
-									"text": "Cloudflare R2",
-									"marks": [
-										"code"
-									]
-								}
-							]
-						}
-					]
-				},
-				"taxonomies": {
-					"category": [
-						"agency-tooling"
-					],
-					"tag": [
-						"better-auth",
-						"cron-workers",
-						"docker",
-						"postgresql",
-						"sveltekit",
-						"turborepo"
-					]
-				}
-			},
-			{
-				"id": "projects:observability-stack",
-				"slug": "observability-stack",
-				"status": "published",
-				"data": {
-					"title": "Observability Stack",
-					"date": "2024-10-01T00:00:00.000Z",
-					"project_status": "COMPLETE",
-					"status_variant": "green",
-					"surface": "BARE METAL",
-					"time_label": "19:22",
-					"period": "Q4 2024",
-					"summary": "Prometheus and Grafana monitoring the homelab's Docker host. Basic alerting configured; Loki is next.",
-					"sub": "Prometheus and Grafana watching the Docker host that now runs every self-hosted service. Originally covered a k3s cluster too, before those nodes died.",
-					"stats": [
-						{
-							"label": "Metrics",
-							"value": "Prometheus",
-							"variant": "default"
-						},
-						{
-							"label": "Dashboards",
-							"value": "Grafana",
-							"variant": "default"
-						},
-						{
-							"label": "Coverage",
-							"value": "Docker host",
-							"variant": "green"
-						},
-						{
-							"label": "Next",
-							"value": "Loki",
-							"variant": "accent"
-						}
-					],
-					"body": [
-						{
-							"_type": "block",
-							"_key": "k9k",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k9j",
-									"text": "Setup",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k9u",
-							"style": "normal",
-							"markDefs": [
-								{
-									"_key": "k9p",
-									"_type": "link",
-									"href": "/projects/homelab-k8s"
-								}
-							],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k9l",
-									"text": "Prometheus",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k9m",
-									"text": " scraping ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k9n",
-									"text": "node_exporter",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k9o",
-									"text": ". It originally covered three Lenovo k3s nodes plus the Beelink; the Lenovos are gone now (see ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k9q",
-									"text": "Homelab Kubernetes Cluster",
-									"marks": [
-										"k9p"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k9r",
-									"text": "), so it's just the Docker host. ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k9s",
-									"text": "Grafana",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k9t",
-									"text": " for visualization. Basic alerting for uptime and disk.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k9w",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k9v",
-									"text": "What's Missing",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "ka0",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k9x",
-									"text": "Log aggregation. ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k9y",
-									"text": "Loki",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k9z",
-									"text": " is the obvious next step, but log retention at homelab scale needs a real storage plan first. Alertmanager is also on the list. Right now alerts exist in Grafana but nothing acts on them.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "ka2",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "ka1",
-									"text": "Stack",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "ka8",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "ka3",
-									"text": "Prometheus",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "ka4",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "ka5",
-									"text": "Grafana",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "ka6",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "ka7",
-									"text": "node_exporter",
-									"marks": [
-										"code"
-									]
-								}
-							]
-						}
-					]
-				},
-				"taxonomies": {
-					"category": [
-						"observability"
-					],
-					"tag": [
-						"grafana",
-						"prometheus",
-						"node-exporter"
-					]
-				}
-			},
-			{
-				"id": "projects:k-one",
-				"slug": "k-one",
-				"status": "published",
-				"data": {
-					"title": "K-One",
-					"date": "2025-03-01T00:00:00.000Z",
-					"project_status": "LIVE",
-					"status_variant": "green",
-					"surface": "ON-PREM / IIS + NODE",
-					"time_label": "ACTIVE",
-					"period": "Q1 2025 – present",
-					"summary": "Revenue intelligence and workflow platform for a ~$200M wholesale distributor: rebate detection, margin alerts, a sales performance playbook, and write workflows for invoice management, all from read-only SQL views.",
-					"sub": "Grew from a read-only reporting app into a full internal platform across Sales, Contracts, Operations, and Leadership, with admin-managed goal tracking and role-based write workflows.",
-					"stats": [
-						{
-							"label": "Tests",
-							"value": "137",
-							"variant": "green"
-						},
-						{
-							"label": "Commits",
-							"value": "1,900+",
-							"variant": "default"
-						},
-						{
-							"label": "Auth",
-							"value": "Entra OIDC",
-							"variant": "default"
-						},
-						{
-							"label": "Infra",
-							"value": "On-prem only",
-							"variant": "default"
-						}
-					],
-					"body": [
-						{
-							"_type": "block",
-							"_key": "k85",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k84",
-									"text": "The Problem",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k87",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k86",
-									"text": "The client had an ERP and a pile of Excel reports. Margin erosion, missed rebate opportunities, and expiring contracts all lived in queries someone had to remember to run. Sales reps couldn't see how their pricing compared to peers without asking. Operations found out about cost changes after they'd already shipped at the old margin. The data existed; nothing surfaced it.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k89",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k88",
-									"text": "Approach",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k8b",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k8a",
-									"text": "I built K-One as a read-only SvelteKit app sitting on top of a separate SQL reporting database (a read-only copy maintained by their IT team, never touching the live ERP). SvelteKit because the app needed SSR for auth-gated pages plus static rendering for dashboards, and I wanted one Node process doing both. Tailwind because their design needs were specific and I didn't want to fight a component library. Chart.js because it renders fine in Svelte without dragging in a framework.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k8d",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k8c",
-									"text": "Key Decisions",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k8g",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k8e",
-									"text": "Read-only by contract.",
-									"marks": [
-										"strong"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k8f",
-									"text": " No writes anywhere. The SQL service account only has SELECT on the reporting views. Removes a whole class of risk and made IT comfortable signing off.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k8j",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k8h",
-									"text": "Entra OIDC, not IIS Windows Auth.",
-									"marks": [
-										"strong"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k8i",
-									"text": " IIS is a dumb reverse proxy. All auth runs in Node via openid-client v6 with PKCE. AES-256-GCM encrypted session cookies, 8h sliding TTL. Group GUIDs from the ID token map to roles in a config file.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k8m",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k8k",
-									"text": "Row-level security in the query layer.",
-									"marks": [
-										"strong"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k8l",
-									"text": " Sales reps get filtered automatically based on their identity, resolved at query time. No filtering in the UI: that's a footgun.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k8p",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k8n",
-									"text": "Parameterized queries only.",
-									"marks": [
-										"strong"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k8o",
-									"text": " All view names are imported from one config file so they can't be hardcoded or interpolated elsewhere. The code is structured to make breaking this harder than following it.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k8s",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k8q",
-									"text": "CI/CD to a self-hosted agent.",
-									"marks": [
-										"strong"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k8r",
-									"text": " Push to main triggers a build on a cloud agent, then deploys to the test box via NSSM service stop/start. The prod stage is wired but disabled until the prod box is provisioned.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k8u",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k8t",
-									"text": "Current State",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k8w",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k8v",
-									"text": "In production and still growing. What started as a read-only reporting dashboard is now a platform spanning Business Services, a Service Department module (extracted from Business Services as a shared, parameterized abstraction rather than duplicated), and a Sales Playbook with admin-managed quarterly goal bands, grade-ladder performance metrics, and a live-editable rep roster across four districts, all built on top of the original read-only, row-level-secured data layer. 136 tests, Entra auth fully live, write workflows for Low Lines invoice management shipped and in daily use.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k8y",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k8x",
-									"text": "What's Next",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k90",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k8z",
-									"text": "Between shipped milestones there's no fixed backlog. The next piece of scope gets defined against whatever the business needs next, the same way the Sales Playbook and Service Department both started as single-milestone additions. Current work is a hardening pass: clearing lint and dead code across the shared table engine and department widgets, tightening a route guard, and fixing small UI rough edges surfaced along the way.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k92",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k91",
-									"text": "Stack",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k9i",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k93",
-									"text": "SvelteKit",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k94",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k95",
-									"text": "SQL Server",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k96",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k97",
-									"text": "Entra ID",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k98",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k99",
-									"text": "IIS",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k9a",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k9b",
-									"text": "NSSM",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k9c",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k9d",
-									"text": "Azure Pipelines",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k9e",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k9f",
-									"text": "Chart.js",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k9g",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k9h",
-									"text": "Tailwind",
-									"marks": [
-										"code"
-									]
-								}
-							]
-						}
-					]
-				},
-				"taxonomies": {
-					"category": [
-						"revenue-intelligence"
-					],
-					"tag": [
-						"azure-pipelines",
-						"entra-id",
-						"iis",
-						"sql-server",
-						"sveltekit"
-					]
-				}
-			},
-			{
-				"id": "projects:homelab-k8s",
-				"slug": "homelab-k8s",
-				"status": "published",
-				"data": {
-					"title": "Homelab Kubernetes Cluster",
-					"date": "2025-01-15T00:00:00.000Z",
-					"project_status": "RETIRED",
-					"status_variant": "default",
-					"surface": "BARE METAL",
-					"time_label": "RETIRED",
-					"period": "Q1 2025",
-					"summary": "Three Lenovo mini PCs running k3s. Retired after the nodes died; workloads consolidated back onto a single Docker host.",
-					"sub": "Ansible handled node provisioning and Flux GitOps was partway to landing when the nodes died. Everything it was meant to run lives on the Docker host now.",
-					"stats": [
-						{
-							"label": "Nodes",
-							"value": "3 (retired)",
-							"variant": "default"
-						},
-						{
-							"label": "Runtime",
-							"value": "k3s",
-							"variant": "default"
-						},
-						{
-							"label": "Provisioner",
-							"value": "Ansible",
-							"variant": "default"
-						},
-						{
-							"label": "GitOps",
-							"value": "Flux (never finished)",
-							"variant": "default"
-						}
-					],
-					"body": [
-						{
-							"_type": "block",
-							"_key": "k7a",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k79",
-									"text": "The Problem",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k7c",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k7b",
-									"text": "I started on a single Beelink running Docker Compose. It hit a ceiling when I wanted more services and a rollback path I trusted. Adding a second machine just doubled the coordination work.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k7e",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k7d",
-									"text": "Approach",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k7m",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k7f",
-									"text": "Three Lenovo mini PCs, each running as both control plane and worker. ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k7g",
-									"text": "k3s",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k7h",
-									"text": " for the cluster runtime; less overhead than upstream Kubernetes and the same APIs. ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k7i",
-									"text": "Ansible",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k7j",
-									"text": " handles initial node provisioning and configuration. ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k7k",
-									"text": "Flux",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k7l",
-									"text": " is being added so every workload change is a Git commit instead of a kubectl apply.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k7o",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k7n",
-									"text": "Current State",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k7t",
-							"style": "normal",
-							"markDefs": [
-								{
-									"_key": "k7q",
-									"_type": "link",
-									"href": "/projects/self-hosted-services"
-								}
-							],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k7p",
-									"text": "The Lenovo nodes died before Flux reconciliation was finished. Rather than replace them, I consolidated everything back onto the Docker host. See ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k7r",
-									"text": "Self-Hosted Services",
-									"marks": [
-										"k7q"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k7s",
-									"text": " for where those workloads live now. The cluster is fully decommissioned.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k7v",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k7u",
-									"text": "Stack",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k83",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k7w",
-									"text": "k3s",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k7x",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k7y",
-									"text": "Ansible",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k7z",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k80",
-									"text": "Flux",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k81",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k82",
-									"text": "kubectl",
-									"marks": [
-										"code"
-									]
-								}
-							]
-						}
-					]
-				},
-				"taxonomies": {
-					"category": [
-						"homelab-infrastructure"
-					],
-					"tag": [
-						"ansible",
-						"flux",
-						"kubernetes",
-						"k3s"
-					]
-				}
-			},
-			{
-				"id": "projects:disnes-optimizer",
-				"slug": "disnes-optimizer",
-				"status": "published",
-				"data": {
-					"title": "Disney Optimizer",
-					"date": "2026-03-01T00:00:00.000Z",
-					"project_status": "LIVE",
-					"status_variant": "green",
-					"surface": "CLOUDFLARE WORKERS",
-					"time_label": "SEASONAL",
-					"period": "Q1–Q2 2026",
-					"summary": "A PWA that builds and re-optimizes a Walt Disney World ride itinerary in real time, blending live wait times with hourly forecasts.",
-					"sub": "Built for one-handed, sunlit, phone-only use inside the parks. A greedy scoring optimizer reorders your day as wait times shift, weighted toward live data as a ride gets close.",
-					"stats": [
-						{
-							"label": "Rides tracked",
-							"value": "111",
-							"variant": "default"
-						},
-						{
-							"label": "Parks",
-							"value": "4",
-							"variant": "default"
-						},
-						{
-							"label": "Commits",
-							"value": "55",
-							"variant": "default"
-						}
-					],
-					"body": [
-						{
-							"_type": "block",
-							"_key": "k6g",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k6f",
-									"text": "The Problem",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k6i",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k6h",
-									"text": "Planning a Disney World day around wait times is a full-time job, and by 11am the plan is already wrong. A ride you skipped opens up short, a must-do spikes past an hour, and you're standing in a walkway trying to do the math yourself in the Florida heat. I wanted a plan that adjusted itself.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k6k",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k6j",
-									"text": "Approach",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k6m",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k6l",
-									"text": "It's a SvelteKit 5 PWA using Svelte 5 runes, installed to the home screen and built for one-handed use. The product spec is explicit about it: a 2-second glance, not a reading session. A greedy scoring algorithm ranks each remaining ride by priority over walk time, predicted wait, and ride duration, blending live wait times with ThemeParks.wiki's hourly forecast. The blend shifts toward live data as a ride gets closer, from 80% live inside 15 minutes down to pure forecast past an hour out. Ride and park data (111 rides across four parks, with coordinates for Haversine walk-time calculations) is static JSON checked into the repo. Wait times poll every 5 minutes, forecasts every 30, and polling pauses when the tab isn't visible.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k6o",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k6n",
-									"text": "Current State",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k6q",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k6p",
-									"text": "Deployed to Cloudflare Workers as an installable PWA. Plan building, the live-reroute dashboard, Lightning Lane return-window tracking, and the showtimes browser all work end to end. Lightning Lane availability state is fetched from the API but not yet wired into scheduling. Booked windows still have to be recorded manually.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k6s",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k6r",
-									"text": "What's Next",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k6u",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k6t",
-									"text": "Wiring Lightning Lane availability into the optimizer directly instead of relying on manually recorded return windows, and expanding past the four core parks if I need it for a different trip.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k6w",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k6v",
-									"text": "Stack",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k78",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k6x",
-									"text": "SvelteKit 5",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k6y",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k6z",
+									"_key": "kq",
 									"text": "Svelte 5",
 									"marks": [
 										"code"
@@ -3088,13 +1093,13 @@
 								},
 								{
 									"_type": "span",
-									"_key": "k70",
+									"_key": "kr",
 									"text": " · ",
 									"marks": []
 								},
 								{
 									"_type": "span",
-									"_key": "k71",
+									"_key": "ks",
 									"text": "TypeScript",
 									"marks": [
 										"code"
@@ -3102,42 +1107,70 @@
 								},
 								{
 									"_type": "span",
-									"_key": "k72",
+									"_key": "kt",
 									"text": " · ",
 									"marks": []
 								},
 								{
 									"_type": "span",
-									"_key": "k73",
-									"text": "Tailwind CSS v4",
+									"_key": "ku",
+									"text": "PostgreSQL",
 									"marks": [
 										"code"
 									]
 								},
 								{
 									"_type": "span",
-									"_key": "k74",
+									"_key": "kv",
 									"text": " · ",
 									"marks": []
 								},
 								{
 									"_type": "span",
-									"_key": "k75",
-									"text": "Cloudflare Workers",
+									"_key": "kw",
+									"text": "Drizzle",
 									"marks": [
 										"code"
 									]
 								},
 								{
 									"_type": "span",
-									"_key": "k76",
+									"_key": "kx",
 									"text": " · ",
 									"marks": []
 								},
 								{
 									"_type": "span",
-									"_key": "k77",
-									"text": "Vite PWA",
+									"_key": "ky",
+									"text": "Better Auth",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kz",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k10",
+									"text": "Dokploy",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k11",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k12",
+									"text": "shadcn-svelte",
 									"marks": [
 										"code"
 									]
@@ -3148,434 +1181,55 @@
 				},
 				"taxonomies": {
 					"category": [
-						"personal-projects"
+						"agency-tooling"
 					],
 					"tag": [
-						"cloudflare-workers",
-						"pwa",
-						"tailwind-css",
+						"better-auth",
+						"drizzle",
+						"dokploy",
+						"postgresql",
 						"sveltekit",
 						"svelte-5",
-						"typescript"
+						"shadcn-svelte"
 					]
 				}
 			},
 			{
-				"id": "projects:dev-portfolio",
-				"slug": "dev-portfolio",
+				"id": "projects:agent-tools",
+				"slug": "agent-tools",
 				"status": "published",
 				"data": {
-					"title": "Dev Portfolio",
-					"date": "2025-05-08T00:00:00.000Z",
+					"title": "Plugin Marketplace",
+					"date": "2026-06-12T00:00:00.000Z",
 					"project_status": "LIVE",
 					"status_variant": "green",
-					"surface": "CLOUDFLARE PAGES",
-					"time_label": "MAY 2025",
-					"period": "Q2 2025",
-					"summary": "This site. Astro content collections, Swiss grid, Satoshi and IBM Plex Mono. Deployed to Cloudflare Pages from GitHub with a single push.",
-					"sub": "This site. Built with Astro 6, TypeScript strict mode, and a design system built from scratch. Content is Markdown; adding a post is a git commit. Deployed to Cloudflare Pages from GitHub.",
-					"stats": [
-						{
-							"label": "Framework",
-							"value": "Astro 6",
-							"variant": "default"
-						},
-						{
-							"label": "Deploy",
-							"value": "Cloudflare Pages",
-							"variant": "green"
-						},
-						{
-							"label": "Content",
-							"value": "Git-native",
-							"variant": "default"
-						},
-						{
-							"label": "TTD",
-							"value": "~45s",
-							"variant": "accent"
-						}
-					],
-					"body": [
-						{
-							"_type": "block",
-							"_key": "k56",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k55",
-									"text": "The Problem",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k58",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k57",
-									"text": "Every portfolio template I found was either a generic dark-mode card grid or a marketing page with a hero section and a testimonials block. Neither of those reads as a DevOps engineer who cares about systems. I needed something that looked like it was built by the person using it.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k5a",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k59",
-									"text": "Design",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k5c",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k5b",
-									"text": "The system is Swiss: a single 800px column ruled by 1px borders, two typefaces with non-overlapping jobs (Satoshi for everything readable, IBM Plex Mono for instrument data), and a single chromatic accent used exactly once per context. The motorsport reference lives in naming texture: stage numbers, logbook format, status labels. It never becomes a visual theme.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k5e",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k5d",
-									"text": "I built the design system from tokens up: OKLCH color values, semantic CSS variables, zero border-radius throughout. Light and dark mode are both first-class; neither is a fallback.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k5g",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k5f",
-									"text": "Content Workflow",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k5k",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k5h",
-									"text": "Content lives in Astro content collections: Markdown files with typed frontmatter, validated against a Zod schema at build time. Adding a project is creating a ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k5i",
-									"text": ".md",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k5j",
-									"text": " file, committing it, and pushing. No CMS login, no deploy dashboard. The push triggers a Cloudflare Pages build; the post is live in under a minute.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k5m",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k5l",
-									"text": "This site is also the first project I'm using as a live case study while I build it.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k5o",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k5n",
-									"text": "Deployment",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k60",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k5p",
-									"text": "The repository is public at ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k5q",
-									"text": "canklefark/dev-portfolio",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k5r",
-									"text": " on GitHub. Cloudflare Pages connects directly to the repo and deploys on every push to ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k5s",
-									"text": "main",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k5t",
-									"text": ". Build command is ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k5u",
-									"text": "npm run build",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k5v",
-									"text": "; output is the ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k5w",
-									"text": "dist",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k5x",
-									"text": " directory. The custom domain is ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k5y",
-									"text": "dev.zeikcookson.com",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k5z",
-									"text": ". Cloudflare handles SSL and CDN automatically.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k62",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k61",
-									"text": "Stack",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "k6e",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "k63",
-									"text": "Astro 6",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k64",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k65",
-									"text": "TypeScript",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k66",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k67",
-									"text": "Cloudflare Pages",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k68",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k69",
-									"text": "GitHub",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k6a",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k6b",
-									"text": "Satoshi",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k6c",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k6d",
-									"text": "IBM Plex Mono",
-									"marks": [
-										"code"
-									]
-								}
-							]
-						}
-					]
-				},
-				"taxonomies": {
-					"category": [
-						"web-development"
-					],
-					"tag": [
-						"astro",
-						"cloudflare-pages",
-						"github",
-						"typescript"
-					]
-				}
-			},
-			{
-				"id": "projects:deploy-app",
-				"slug": "deploy-app",
-				"status": "published",
-				"data": {
-					"title": "Deploy App",
-					"date": "2026-06-25T00:00:00.000Z",
-					"project_status": "LIVE",
-					"status_variant": "green",
-					"surface": "CLAUDE CODE PLUGIN",
+					"surface": "CLAUDE CODE MARKETPLACE",
 					"time_label": "ACTIVE",
 					"period": "Q3 2026",
-					"summary": "A Claude Code plugin that detects a project's type and deploys it to the right host: Cloudflare Pages for static sites, Dokploy for everything dynamic. No flags needed for the common case.",
-					"sub": "Runs as a single bash skill with no build step: it reads a repo's own config files to decide static vs. dynamic, then talks to the Cloudflare or Dokploy API directly.",
+					"summary": "A Claude Code plugin marketplace for the agency I work at: one repo so the team installs internal tools from a shared source instead of copying files by hand.",
+					"sub": "Five vendored plugins covering project scaffolding, client site builds, branded reporting, local-business prospecting, and deployment, installable org-wide via managed settings.",
 					"stats": [
 						{
-							"label": "Version",
-							"value": "v1.5",
+							"label": "Plugins",
+							"value": "5",
 							"variant": "default"
-						},
-						{
-							"label": "Live-test scenarios",
-							"value": "3",
-							"variant": "green"
 						},
 						{
 							"label": "Commits",
-							"value": "47",
+							"value": "31",
 							"variant": "default"
 						}
 					],
 					"body": [
 						{
 							"_type": "block",
-							"_key": "k3v",
+							"_key": "k15",
 							"style": "h2",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k3u",
+									"_key": "k14",
 									"text": "The Problem",
 									"marks": []
 								}
@@ -3583,27 +1237,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "k3x",
+							"_key": "k17",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k3w",
-									"text": "Every new project at the agency ends the same way: figure out where it's supposed to live, then hand-run a slightly different deploy procedure depending on whether it's a static site or something with a server behind it. That's a repeatable decision, not a judgment call, and it kept costing a few minutes of manual API poking every time.",
+									"_key": "k16",
+									"text": "I kept building useful Claude Code skills for agency work: scaffolding, deploys, reporting. The only way teammates got them was copying files by hand or asking me directly. That doesn't scale past one person, and it means the tools drift out of sync the moment someone's copy falls behind.",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "k3z",
+							"_key": "k19",
 							"style": "h2",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k3y",
+									"_key": "k18",
 									"text": "Approach",
 									"marks": []
 								}
@@ -3611,105 +1265,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "k4c",
+							"_key": "k1b",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k40",
-									"text": "/deploy-app",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k41",
-									"text": " reads a project's own config to decide: an ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k42",
-									"text": "astro.config.*",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k43",
-									"text": " or ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k44",
-									"text": "adapter-static",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k45",
-									"text": " means static and goes to Cloudflare Pages, GitHub-backed with auto-deploy on push; a ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k46",
-									"text": "next.config.*",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k47",
-									"text": ", or a SvelteKit app without ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k48",
-									"text": "adapter-static",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k49",
-									"text": ", means dynamic and goes to Dokploy, CLI preferred with an API fallback. Secrets are redeemed at runtime from the agency's secrets manager, never stored in the plugin itself. It's idempotent: every create call checks for an existing resource first. A ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k4a",
-									"text": "--dry-run",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k4b",
-									"text": " flag previews exactly what it would do before it does anything.",
+									"_key": "k1a",
+									"text": "A single marketplace repo vendors five plugins: a project scaffolder that clones the agency's boilerplate repo for a new SvelteKit or Astro project, an 8-stage pipeline that builds and deploys client brochure sites to Cloudflare Pages, a reporting tool that pulls branded performance reports from Windsor.ai (GA4, Meta Ads, Google Ads) and publishes them to a reporting subdomain, a local-business prospecting pipeline that generates print-ready collateral, and the deploy tool itself. Teammates add the marketplace once and install what they need; admins can push it org-wide through Claude Code's managed settings so it's enabled for everyone automatically.",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "k4e",
+							"_key": "k1d",
 							"style": "h2",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k4d",
+									"_key": "k1c",
 									"text": "Current State",
 									"marks": []
 								}
@@ -3717,83 +1293,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "k4o",
+							"_key": "k1f",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k4f",
-									"text": "At v1.5, live-tested against three real scenarios: a fresh deploy, a deploy against a broken repo to confirm the error path, and a deploy with ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k4g",
-									"text": "--domain",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k4h",
-									"text": " to confirm custom-domain attachment. Two response-shape bugs found during that live test (a nested ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k4i",
-									"text": "project.create",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k4j",
-									"text": " response, an ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k4k",
-									"text": "items",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k4l",
-									"text": " key on ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k4m",
-									"text": "application.search",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k4n",
-									"text": ") are fixed and registered.",
+									"_key": "k1e",
+									"text": "All five plugins are vendored and marked stable. The skills follow the open Agent Skills standard, so nothing here is locked to Claude specifically if that ever matters.",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "k4q",
+							"_key": "k1h",
 							"style": "h2",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k4p",
+									"_key": "k1g",
 									"text": "What's Next",
 									"marks": []
 								}
@@ -3801,27 +1321,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "k4s",
+							"_key": "k1j",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k4r",
-									"text": "Closing the last audit items flagged by a codebase map review, then it's done. This isn't a project that needs to keep growing.",
+									"_key": "k1i",
+									"text": "Adding plugins as they prove out elsewhere first. This repo is meant to stay a thin distribution layer, not where new tools get built from scratch.",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "k4u",
+							"_key": "k1l",
 							"style": "h2",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k4t",
+									"_key": "k1k",
 									"text": "Stack",
 									"marks": []
 								}
@@ -3829,70 +1349,42 @@
 						},
 						{
 							"_type": "block",
-							"_key": "k54",
+							"_key": "k1r",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k4v",
+									"_key": "k1m",
+									"text": "Claude Code Plugins",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k1n",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k1o",
+									"text": "Agent Skills",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k1p",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k1q",
 									"text": "Bash",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k4w",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k4x",
-									"text": "Claude Code Plugin",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k4y",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k4z",
-									"text": "Cloudflare Pages API",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k50",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k51",
-									"text": "Dokploy API",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k52",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k53",
-									"text": "curl",
 									"marks": [
 										"code"
 									]
@@ -3906,10 +1398,9 @@
 						"developer-tools"
 					],
 					"tag": [
-						"bash",
-						"cloudflare-pages",
+						"agent-skills",
 						"claude-code-plugin",
-						"dokploy"
+						"marketplace"
 					]
 				}
 			},
@@ -4477,51 +1968,56 @@
 						"client-work"
 					],
 					"tag": [
-						"cloudflare-r2",
 						"docker",
+						"cloudflare-r2",
 						"drizzle",
-						"sqlite",
 						"sveltekit",
+						"sqlite",
 						"wordpress"
 					]
 				}
 			},
 			{
-				"id": "projects:agent-tools",
-				"slug": "agent-tools",
+				"id": "projects:deploy-app",
+				"slug": "deploy-app",
 				"status": "published",
 				"data": {
-					"title": "Plugin Marketplace",
-					"date": "2026-06-12T00:00:00.000Z",
+					"title": "Deploy App",
+					"date": "2026-06-25T00:00:00.000Z",
 					"project_status": "LIVE",
 					"status_variant": "green",
-					"surface": "CLAUDE CODE MARKETPLACE",
+					"surface": "CLAUDE CODE PLUGIN",
 					"time_label": "ACTIVE",
 					"period": "Q3 2026",
-					"summary": "A Claude Code plugin marketplace for the agency I work at: one repo so the team installs internal tools from a shared source instead of copying files by hand.",
-					"sub": "Five vendored plugins covering project scaffolding, client site builds, branded reporting, local-business prospecting, and deployment, installable org-wide via managed settings.",
+					"summary": "A Claude Code plugin that detects a project's type and deploys it to the right host: Cloudflare Pages for static sites, Dokploy for everything dynamic. No flags needed for the common case.",
+					"sub": "Runs as a single bash skill with no build step: it reads a repo's own config files to decide static vs. dynamic, then talks to the Cloudflare or Dokploy API directly.",
 					"stats": [
 						{
-							"label": "Plugins",
-							"value": "5",
+							"label": "Version",
+							"value": "v1.5",
 							"variant": "default"
 						},
 						{
+							"label": "Live-test scenarios",
+							"value": "3",
+							"variant": "green"
+						},
+						{
 							"label": "Commits",
-							"value": "31",
+							"value": "47",
 							"variant": "default"
 						}
 					],
 					"body": [
 						{
 							"_type": "block",
-							"_key": "k15",
+							"_key": "k3v",
 							"style": "h2",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k14",
+									"_key": "k3u",
 									"text": "The Problem",
 									"marks": []
 								}
@@ -4529,27 +2025,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "k17",
+							"_key": "k3x",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k16",
-									"text": "I kept building useful Claude Code skills for agency work: scaffolding, deploys, reporting. The only way teammates got them was copying files by hand or asking me directly. That doesn't scale past one person, and it means the tools drift out of sync the moment someone's copy falls behind.",
+									"_key": "k3w",
+									"text": "Every new project at the agency ends the same way: figure out where it's supposed to live, then hand-run a slightly different deploy procedure depending on whether it's a static site or something with a server behind it. That's a repeatable decision, not a judgment call, and it kept costing a few minutes of manual API poking every time.",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "k19",
+							"_key": "k3z",
 							"style": "h2",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k18",
+									"_key": "k3y",
 									"text": "Approach",
 									"marks": []
 								}
@@ -4557,27 +2053,105 @@
 						},
 						{
 							"_type": "block",
-							"_key": "k1b",
+							"_key": "k4c",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k1a",
-									"text": "A single marketplace repo vendors five plugins: a project scaffolder that clones the agency's boilerplate repo for a new SvelteKit or Astro project, an 8-stage pipeline that builds and deploys client brochure sites to Cloudflare Pages, a reporting tool that pulls branded performance reports from Windsor.ai (GA4, Meta Ads, Google Ads) and publishes them to a reporting subdomain, a local-business prospecting pipeline that generates print-ready collateral, and the deploy tool itself. Teammates add the marketplace once and install what they need; admins can push it org-wide through Claude Code's managed settings so it's enabled for everyone automatically.",
+									"_key": "k40",
+									"text": "/deploy-app",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k41",
+									"text": " reads a project's own config to decide: an ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k42",
+									"text": "astro.config.*",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k43",
+									"text": " or ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k44",
+									"text": "adapter-static",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k45",
+									"text": " means static and goes to Cloudflare Pages, GitHub-backed with auto-deploy on push; a ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k46",
+									"text": "next.config.*",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k47",
+									"text": ", or a SvelteKit app without ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k48",
+									"text": "adapter-static",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k49",
+									"text": ", means dynamic and goes to Dokploy, CLI preferred with an API fallback. Secrets are redeemed at runtime from the agency's secrets manager, never stored in the plugin itself. It's idempotent: every create call checks for an existing resource first. A ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k4a",
+									"text": "--dry-run",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k4b",
+									"text": " flag previews exactly what it would do before it does anything.",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "k1d",
+							"_key": "k4e",
 							"style": "h2",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k1c",
+									"_key": "k4d",
 									"text": "Current State",
 									"marks": []
 								}
@@ -4585,27 +2159,83 @@
 						},
 						{
 							"_type": "block",
-							"_key": "k1f",
+							"_key": "k4o",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k1e",
-									"text": "All five plugins are vendored and marked stable. The skills follow the open Agent Skills standard, so nothing here is locked to Claude specifically if that ever matters.",
+									"_key": "k4f",
+									"text": "At v1.5, live-tested against three real scenarios: a fresh deploy, a deploy against a broken repo to confirm the error path, and a deploy with ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k4g",
+									"text": "--domain",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k4h",
+									"text": " to confirm custom-domain attachment. Two response-shape bugs found during that live test (a nested ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k4i",
+									"text": "project.create",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k4j",
+									"text": " response, an ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k4k",
+									"text": "items",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k4l",
+									"text": " key on ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k4m",
+									"text": "application.search",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k4n",
+									"text": ") are fixed and registered.",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "k1h",
+							"_key": "k4q",
 							"style": "h2",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k1g",
+									"_key": "k4p",
 									"text": "What's Next",
 									"marks": []
 								}
@@ -4613,27 +2243,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "k1j",
+							"_key": "k4s",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k1i",
-									"text": "Adding plugins as they prove out elsewhere first. This repo is meant to stay a thin distribution layer, not where new tools get built from scratch.",
+									"_key": "k4r",
+									"text": "Closing the last audit items flagged by a codebase map review, then it's done. This isn't a project that needs to keep growing.",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "k1l",
+							"_key": "k4u",
 							"style": "h2",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k1k",
+									"_key": "k4t",
 									"text": "Stack",
 									"marks": []
 								}
@@ -4641,42 +2271,70 @@
 						},
 						{
 							"_type": "block",
-							"_key": "k1r",
+							"_key": "k54",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k1m",
-									"text": "Claude Code Plugins",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k1n",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k1o",
-									"text": "Agent Skills",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "k1p",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "k1q",
+									"_key": "k4v",
 									"text": "Bash",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k4w",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k4x",
+									"text": "Claude Code Plugin",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k4y",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k4z",
+									"text": "Cloudflare Pages API",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k50",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k51",
+									"text": "Dokploy API",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k52",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k53",
+									"text": "curl",
 									"marks": [
 										"code"
 									]
@@ -4690,53 +2348,59 @@
 						"developer-tools"
 					],
 					"tag": [
-						"agent-skills",
+						"bash",
 						"claude-code-plugin",
-						"marketplace"
+						"cloudflare-pages",
+						"dokploy"
 					]
 				}
 			},
 			{
-				"id": "projects:agency-ops-hub",
-				"slug": "agency-ops-hub",
+				"id": "projects:dev-portfolio",
+				"slug": "dev-portfolio",
 				"status": "published",
 				"data": {
-					"title": "Primary",
-					"date": "2026-08-20T00:00:00.000Z",
+					"title": "Dev Portfolio",
+					"date": "2025-05-08T00:00:00.000Z",
 					"project_status": "LIVE",
 					"status_variant": "green",
-					"surface": "DOKPLOY / SELF-HOSTED POSTGRES",
-					"time_label": "ACTIVE",
-					"period": "Q3 2026",
-					"summary": "Internal ops hub for the agency I work at: huddle board, task intake from Slack/Gmail/Granola, meeting-transcript extraction, and client/project dashboards. Replatformed off a Next.js/Vercel/Supabase app the team was outgrowing.",
-					"sub": "A full re-architecture onto SvelteKit and self-hosted Postgres on Dokploy, with 1,891 tests built alongside the code instead of deferred.",
+					"surface": "CLOUDFLARE PAGES",
+					"time_label": "MAY 2025",
+					"period": "Q2 2025",
+					"summary": "This site. Astro content collections, Swiss grid, Satoshi and IBM Plex Mono. Deployed to Cloudflare Pages from GitHub with a single push.",
+					"sub": "This site. Built with Astro 6, TypeScript strict mode, and a design system built from scratch. Content is Markdown; adding a post is a git commit. Deployed to Cloudflare Pages from GitHub.",
 					"stats": [
 						{
-							"label": "Tests",
-							"value": "~3,100",
+							"label": "Framework",
+							"value": "Astro 6",
+							"variant": "default"
+						},
+						{
+							"label": "Deploy",
+							"value": "Cloudflare Pages",
 							"variant": "green"
 						},
 						{
-							"label": "Commits",
-							"value": "1,356",
+							"label": "Content",
+							"value": "Git-native",
 							"variant": "default"
 						},
 						{
-							"label": "Milestones shipped",
-							"value": "v1 – v2.3",
-							"variant": "default"
+							"label": "TTD",
+							"value": "~45s",
+							"variant": "accent"
 						}
 					],
 					"body": [
 						{
 							"_type": "block",
-							"_key": "k1",
+							"_key": "k56",
 							"style": "h2",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k0",
+									"_key": "k55",
 									"text": "The Problem",
 									"marks": []
 								}
@@ -4744,153 +2408,223 @@
 						},
 						{
 							"_type": "block",
-							"_key": "k3",
+							"_key": "k58",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k2",
-									"text": "The agency's internal ops (huddles, task intake, project and client dashboards) ran on a Next.js/Supabase/Vercel app someone else on the team had built. It worked, but it was hitting real limits: a Supabase connection pooler capped at one connection forcing every DB call to run sequentially, 1000+ line monolithic files like the registry editor, over a hundred unsafe type casts around Slack block construction, and near-zero test coverage on the services everything else depended on.",
+									"_key": "k57",
+									"text": "Every portfolio template I found was either a generic dark-mode card grid or a marketing page with a hero section and a testimonials block. Neither of those reads as a DevOps engineer who cares about systems. I needed something that looked like it was built by the person using it.",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "k5",
+							"_key": "k5a",
 							"style": "h2",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k4",
-									"text": "Approach",
+									"_key": "k59",
+									"text": "Design",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "k7",
+							"_key": "k5c",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k6",
-									"text": "I re-architected it from scratch onto SvelteKit, self-hosted Postgres, and Dokploy: same feature set, materially better admin UX, and a real test suite from day one instead of backfilled later. v1 got it to feature parity and let the old stack get decommissioned. v2.0 layered in a consistent shadcn-svelte component system with dark mode, a people/clients data model, multi-source task intake (Slack, Gmail, Granola transcripts, in-app quick capture), a daily Slack check-in pipeline, and a rework of the huddle, person, project, and client dashboards. That was 33 plans, 409 files changed, roughly 86k lines added, shipped in five days.",
+									"_key": "k5b",
+									"text": "The system is Swiss: a single 800px column ruled by 1px borders, two typefaces with non-overlapping jobs (Satoshi for everything readable, IBM Plex Mono for instrument data), and a single chromatic accent used exactly once per context. The motorsport reference lives in naming texture: stage numbers, logbook format, status labels. It never becomes a visual theme.",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "k9",
+							"_key": "k5e",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k5d",
+									"text": "I built the design system from tokens up: OKLCH color values, semantic CSS variables, zero border-radius throughout. Light and dark mode are both first-class; neither is a fallback.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k5g",
 							"style": "h2",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "k8",
-									"text": "Current State",
+									"_key": "k5f",
+									"text": "Content Workflow",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "kb",
+							"_key": "k5k",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "ka",
-									"text": "v2.0 through v2.3 have all shipped. Every pre-replatform pain point I set out to fix (the pooler bottleneck, the monolithic registry editor, the unsafe Slack type casts, the untested services) is gone by construction, not patched over. v2.3 ran a 16-screen design critique and fixed the cross-cutting UI/UX problems it found: unbounded lists forcing scroll, flat visual hierarchy, a couple of functional bugs, a missing confirmation gap, and weak discoverability, plus gave Home an actual cockpit view instead of a bare status widget.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kd",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kc",
-									"text": "Live human UAT on v2.3 then surfaced something bigger: the replatform had no in-app path to a project or client detail page at all, and a full content comparison against the original app it replaced showed the gap went well beyond navigation.",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kf",
-							"style": "h2",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "ke",
-									"text": "What's Next",
-									"marks": []
-								}
-							]
-						},
-						{
-							"_type": "block",
-							"_key": "kl",
-							"style": "normal",
-							"markDefs": [],
-							"children": [
-								{
-									"_type": "span",
-									"_key": "kg",
-									"text": "v2.4 closes the structural and content gaps between this app and the original MVP it replaced: a real Home/Mission-Control landing page, proper ",
+									"_key": "k5h",
+									"text": "Content lives in Astro content collections: Markdown files with typed frontmatter, validated against a Zod schema at build time. Adding a project is creating a ",
 									"marks": []
 								},
 								{
 									"_type": "span",
-									"_key": "kh",
-									"text": "/projects",
+									"_key": "k5i",
+									"text": ".md",
 									"marks": [
 										"code"
 									]
 								},
 								{
 									"_type": "span",
-									"_key": "ki",
-									"text": " and ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "kj",
-									"text": "/clients",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kk",
-									"text": " list entry points, a \"flag for discussion\" step on the huddle board, and an operator-facing registry audit and job ledger. Verification for this milestone checks each screen directly against its counterpart in the original app, not just against a written spec.",
+									"_key": "k5j",
+									"text": " file, committing it, and pushing. No CMS login, no deploy dashboard. The push triggers a Cloudflare Pages build; the post is live in under a minute.",
 									"marks": []
 								}
 							]
 						},
 						{
 							"_type": "block",
-							"_key": "kn",
+							"_key": "k5m",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k5l",
+									"text": "This site is also the first project I'm using as a live case study while I build it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k5o",
 							"style": "h2",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "km",
+									"_key": "k5n",
+									"text": "Deployment",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k60",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k5p",
+									"text": "The repository is public at ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k5q",
+									"text": "canklefark/dev-portfolio",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k5r",
+									"text": " on GitHub. Cloudflare Pages connects directly to the repo and deploys on every push to ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k5s",
+									"text": "main",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k5t",
+									"text": ". Build command is ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k5u",
+									"text": "npm run build",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k5v",
+									"text": "; output is the ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k5w",
+									"text": "dist",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k5x",
+									"text": " directory. The custom domain is ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k5y",
+									"text": "dev.zeikcookson.com",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k5z",
+									"text": ". Cloudflare handles SSL and CDN automatically.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k62",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k61",
 									"text": "Stack",
 									"marks": []
 								}
@@ -4898,41 +2632,27 @@
 						},
 						{
 							"_type": "block",
-							"_key": "k13",
+							"_key": "k6e",
 							"style": "normal",
 							"markDefs": [],
 							"children": [
 								{
 									"_type": "span",
-									"_key": "ko",
-									"text": "SvelteKit",
+									"_key": "k63",
+									"text": "Astro 6",
 									"marks": [
 										"code"
 									]
 								},
 								{
 									"_type": "span",
-									"_key": "kp",
+									"_key": "k64",
 									"text": " · ",
 									"marks": []
 								},
 								{
 									"_type": "span",
-									"_key": "kq",
-									"text": "Svelte 5",
-									"marks": [
-										"code"
-									]
-								},
-								{
-									"_type": "span",
-									"_key": "kr",
-									"text": " · ",
-									"marks": []
-								},
-								{
-									"_type": "span",
-									"_key": "ks",
+									"_key": "k65",
 									"text": "TypeScript",
 									"marks": [
 										"code"
@@ -4940,13 +2660,1478 @@
 								},
 								{
 									"_type": "span",
-									"_key": "kt",
+									"_key": "k66",
 									"text": " · ",
 									"marks": []
 								},
 								{
 									"_type": "span",
-									"_key": "ku",
+									"_key": "k67",
+									"text": "Cloudflare Pages",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k68",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k69",
+									"text": "GitHub",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k6a",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k6b",
+									"text": "Satoshi",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k6c",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k6d",
+									"text": "IBM Plex Mono",
+									"marks": [
+										"code"
+									]
+								}
+							]
+						}
+					]
+				},
+				"taxonomies": {
+					"category": [
+						"web-development"
+					],
+					"tag": [
+						"astro",
+						"cloudflare-pages",
+						"github",
+						"typescript"
+					]
+				}
+			},
+			{
+				"id": "projects:disnes-optimizer",
+				"slug": "disnes-optimizer",
+				"status": "published",
+				"data": {
+					"title": "Disney Optimizer",
+					"date": "2026-03-01T00:00:00.000Z",
+					"project_status": "LIVE",
+					"status_variant": "green",
+					"surface": "CLOUDFLARE WORKERS",
+					"time_label": "SEASONAL",
+					"period": "Q1–Q2 2026",
+					"summary": "A PWA that builds and re-optimizes a Walt Disney World ride itinerary in real time, blending live wait times with hourly forecasts.",
+					"sub": "Built for one-handed, sunlit, phone-only use inside the parks. A greedy scoring optimizer reorders your day as wait times shift, weighted toward live data as a ride gets close.",
+					"stats": [
+						{
+							"label": "Rides tracked",
+							"value": "111",
+							"variant": "default"
+						},
+						{
+							"label": "Parks",
+							"value": "4",
+							"variant": "default"
+						},
+						{
+							"label": "Commits",
+							"value": "55",
+							"variant": "default"
+						}
+					],
+					"body": [
+						{
+							"_type": "block",
+							"_key": "k6g",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k6f",
+									"text": "The Problem",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k6i",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k6h",
+									"text": "Planning a Disney World day around wait times is a full-time job, and by 11am the plan is already wrong. A ride you skipped opens up short, a must-do spikes past an hour, and you're standing in a walkway trying to do the math yourself in the Florida heat. I wanted a plan that adjusted itself.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k6k",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k6j",
+									"text": "Approach",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k6m",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k6l",
+									"text": "It's a SvelteKit 5 PWA using Svelte 5 runes, installed to the home screen and built for one-handed use. The product spec is explicit about it: a 2-second glance, not a reading session. A greedy scoring algorithm ranks each remaining ride by priority over walk time, predicted wait, and ride duration, blending live wait times with ThemeParks.wiki's hourly forecast. The blend shifts toward live data as a ride gets closer, from 80% live inside 15 minutes down to pure forecast past an hour out. Ride and park data (111 rides across four parks, with coordinates for Haversine walk-time calculations) is static JSON checked into the repo. Wait times poll every 5 minutes, forecasts every 30, and polling pauses when the tab isn't visible.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k6o",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k6n",
+									"text": "Current State",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k6q",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k6p",
+									"text": "Deployed to Cloudflare Workers as an installable PWA. Plan building, the live-reroute dashboard, Lightning Lane return-window tracking, and the showtimes browser all work end to end. Lightning Lane availability state is fetched from the API but not yet wired into scheduling. Booked windows still have to be recorded manually.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k6s",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k6r",
+									"text": "What's Next",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k6u",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k6t",
+									"text": "Wiring Lightning Lane availability into the optimizer directly instead of relying on manually recorded return windows, and expanding past the four core parks if I need it for a different trip.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k6w",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k6v",
+									"text": "Stack",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k78",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k6x",
+									"text": "SvelteKit 5",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k6y",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k6z",
+									"text": "Svelte 5",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k70",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k71",
+									"text": "TypeScript",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k72",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k73",
+									"text": "Tailwind CSS v4",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k74",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k75",
+									"text": "Cloudflare Workers",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k76",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k77",
+									"text": "Vite PWA",
+									"marks": [
+										"code"
+									]
+								}
+							]
+						}
+					]
+				},
+				"taxonomies": {
+					"category": [
+						"personal-projects"
+					],
+					"tag": [
+						"cloudflare-workers",
+						"pwa",
+						"sveltekit",
+						"svelte-5",
+						"typescript",
+						"tailwind-css"
+					]
+				}
+			},
+			{
+				"id": "projects:homelab-k8s",
+				"slug": "homelab-k8s",
+				"status": "published",
+				"data": {
+					"title": "Homelab Kubernetes Cluster",
+					"date": "2025-01-15T00:00:00.000Z",
+					"project_status": "RETIRED",
+					"status_variant": "default",
+					"surface": "BARE METAL",
+					"time_label": "RETIRED",
+					"period": "Q1 2025",
+					"summary": "Three Lenovo mini PCs running k3s. Retired after the nodes died; workloads consolidated back onto a single Docker host.",
+					"sub": "Ansible handled node provisioning and Flux GitOps was partway to landing when the nodes died. Everything it was meant to run lives on the Docker host now.",
+					"stats": [
+						{
+							"label": "Nodes",
+							"value": "3 (retired)",
+							"variant": "default"
+						},
+						{
+							"label": "Runtime",
+							"value": "k3s",
+							"variant": "default"
+						},
+						{
+							"label": "Provisioner",
+							"value": "Ansible",
+							"variant": "default"
+						},
+						{
+							"label": "GitOps",
+							"value": "Flux (never finished)",
+							"variant": "default"
+						}
+					],
+					"body": [
+						{
+							"_type": "block",
+							"_key": "k7a",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k79",
+									"text": "The Problem",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k7c",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k7b",
+									"text": "I started on a single Beelink running Docker Compose. It hit a ceiling when I wanted more services and a rollback path I trusted. Adding a second machine just doubled the coordination work.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k7e",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k7d",
+									"text": "Approach",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k7m",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k7f",
+									"text": "Three Lenovo mini PCs, each running as both control plane and worker. ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k7g",
+									"text": "k3s",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k7h",
+									"text": " for the cluster runtime; less overhead than upstream Kubernetes and the same APIs. ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k7i",
+									"text": "Ansible",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k7j",
+									"text": " handles initial node provisioning and configuration. ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k7k",
+									"text": "Flux",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k7l",
+									"text": " is being added so every workload change is a Git commit instead of a kubectl apply.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k7o",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k7n",
+									"text": "Current State",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k7t",
+							"style": "normal",
+							"markDefs": [
+								{
+									"_key": "k7q",
+									"_type": "link",
+									"href": "/projects/self-hosted-services"
+								}
+							],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k7p",
+									"text": "The Lenovo nodes died before Flux reconciliation was finished. Rather than replace them, I consolidated everything back onto the Docker host. See ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k7r",
+									"text": "Self-Hosted Services",
+									"marks": [
+										"k7q"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k7s",
+									"text": " for where those workloads live now. The cluster is fully decommissioned.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k7v",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k7u",
+									"text": "Stack",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k83",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k7w",
+									"text": "k3s",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k7x",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k7y",
+									"text": "Ansible",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k7z",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k80",
+									"text": "Flux",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k81",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k82",
+									"text": "kubectl",
+									"marks": [
+										"code"
+									]
+								}
+							]
+						}
+					]
+				},
+				"taxonomies": {
+					"category": [
+						"homelab-infrastructure"
+					],
+					"tag": [
+						"ansible",
+						"flux",
+						"kubernetes",
+						"k3s"
+					]
+				}
+			},
+			{
+				"id": "projects:k-one",
+				"slug": "k-one",
+				"status": "published",
+				"data": {
+					"title": "K-One",
+					"date": "2025-03-01T00:00:00.000Z",
+					"project_status": "LIVE",
+					"status_variant": "green",
+					"surface": "ON-PREM / IIS + NODE",
+					"time_label": "ACTIVE",
+					"period": "Q1 2025 – present",
+					"summary": "Revenue intelligence and workflow platform for a ~$200M wholesale distributor: rebate detection, margin alerts, a sales performance playbook, and write workflows for invoice management, all from read-only SQL views.",
+					"sub": "Grew from a read-only reporting app into a full internal platform across Sales, Contracts, Operations, and Leadership, with admin-managed goal tracking and role-based write workflows.",
+					"stats": [
+						{
+							"label": "Tests",
+							"value": "137",
+							"variant": "green"
+						},
+						{
+							"label": "Commits",
+							"value": "1,900+",
+							"variant": "default"
+						},
+						{
+							"label": "Auth",
+							"value": "Entra OIDC",
+							"variant": "default"
+						},
+						{
+							"label": "Infra",
+							"value": "On-prem only",
+							"variant": "default"
+						}
+					],
+					"body": [
+						{
+							"_type": "block",
+							"_key": "k85",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k84",
+									"text": "The Problem",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k87",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k86",
+									"text": "The client had an ERP and a pile of Excel reports. Margin erosion, missed rebate opportunities, and expiring contracts all lived in queries someone had to remember to run. Sales reps couldn't see how their pricing compared to peers without asking. Operations found out about cost changes after they'd already shipped at the old margin. The data existed; nothing surfaced it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k89",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k88",
+									"text": "Approach",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k8b",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k8a",
+									"text": "I built K-One as a read-only SvelteKit app sitting on top of a separate SQL reporting database (a read-only copy maintained by their IT team, never touching the live ERP). SvelteKit because the app needed SSR for auth-gated pages plus static rendering for dashboards, and I wanted one Node process doing both. Tailwind because their design needs were specific and I didn't want to fight a component library. Chart.js because it renders fine in Svelte without dragging in a framework.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k8d",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k8c",
+									"text": "Key Decisions",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k8g",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k8e",
+									"text": "Read-only by contract.",
+									"marks": [
+										"strong"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k8f",
+									"text": " No writes anywhere. The SQL service account only has SELECT on the reporting views. Removes a whole class of risk and made IT comfortable signing off.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k8j",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k8h",
+									"text": "Entra OIDC, not IIS Windows Auth.",
+									"marks": [
+										"strong"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k8i",
+									"text": " IIS is a dumb reverse proxy. All auth runs in Node via openid-client v6 with PKCE. AES-256-GCM encrypted session cookies, 8h sliding TTL. Group GUIDs from the ID token map to roles in a config file.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k8m",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k8k",
+									"text": "Row-level security in the query layer.",
+									"marks": [
+										"strong"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k8l",
+									"text": " Sales reps get filtered automatically based on their identity, resolved at query time. No filtering in the UI: that's a footgun.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k8p",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k8n",
+									"text": "Parameterized queries only.",
+									"marks": [
+										"strong"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k8o",
+									"text": " All view names are imported from one config file so they can't be hardcoded or interpolated elsewhere. The code is structured to make breaking this harder than following it.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k8s",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k8q",
+									"text": "CI/CD to a self-hosted agent.",
+									"marks": [
+										"strong"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k8r",
+									"text": " Push to main triggers a build on a cloud agent, then deploys to the test box via NSSM service stop/start. The prod stage is wired but disabled until the prod box is provisioned.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k8u",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k8t",
+									"text": "Current State",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k8w",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k8v",
+									"text": "In production and still growing. What started as a read-only reporting dashboard is now a platform spanning Business Services, a Service Department module (extracted from Business Services as a shared, parameterized abstraction rather than duplicated), and a Sales Playbook with admin-managed quarterly goal bands, grade-ladder performance metrics, and a live-editable rep roster across four districts, all built on top of the original read-only, row-level-secured data layer. 136 tests, Entra auth fully live, write workflows for Low Lines invoice management shipped and in daily use.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k8y",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k8x",
+									"text": "What's Next",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k90",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k8z",
+									"text": "Between shipped milestones there's no fixed backlog. The next piece of scope gets defined against whatever the business needs next, the same way the Sales Playbook and Service Department both started as single-milestone additions. Current work is a hardening pass: clearing lint and dead code across the shared table engine and department widgets, tightening a route guard, and fixing small UI rough edges surfaced along the way.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k92",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k91",
+									"text": "Stack",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k9i",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k93",
+									"text": "SvelteKit",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k94",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k95",
+									"text": "SQL Server",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k96",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k97",
+									"text": "Entra ID",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k98",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k99",
+									"text": "IIS",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k9a",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k9b",
+									"text": "NSSM",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k9c",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k9d",
+									"text": "Azure Pipelines",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k9e",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k9f",
+									"text": "Chart.js",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k9g",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k9h",
+									"text": "Tailwind",
+									"marks": [
+										"code"
+									]
+								}
+							]
+						}
+					]
+				},
+				"taxonomies": {
+					"category": [
+						"revenue-intelligence"
+					],
+					"tag": [
+						"azure-pipelines",
+						"entra-id",
+						"iis",
+						"sql-server",
+						"sveltekit"
+					]
+				}
+			},
+			{
+				"id": "projects:observability-stack",
+				"slug": "observability-stack",
+				"status": "published",
+				"data": {
+					"title": "Observability Stack",
+					"date": "2024-10-01T00:00:00.000Z",
+					"project_status": "COMPLETE",
+					"status_variant": "green",
+					"surface": "BARE METAL",
+					"time_label": "19:22",
+					"period": "Q4 2024",
+					"summary": "Prometheus and Grafana monitoring the homelab's Docker host. Basic alerting configured; Loki is next.",
+					"sub": "Prometheus and Grafana watching the Docker host that now runs every self-hosted service. Originally covered a k3s cluster too, before those nodes died.",
+					"stats": [
+						{
+							"label": "Metrics",
+							"value": "Prometheus",
+							"variant": "default"
+						},
+						{
+							"label": "Dashboards",
+							"value": "Grafana",
+							"variant": "default"
+						},
+						{
+							"label": "Coverage",
+							"value": "Docker host",
+							"variant": "green"
+						},
+						{
+							"label": "Next",
+							"value": "Loki",
+							"variant": "accent"
+						}
+					],
+					"body": [
+						{
+							"_type": "block",
+							"_key": "k9k",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k9j",
+									"text": "Setup",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k9u",
+							"style": "normal",
+							"markDefs": [
+								{
+									"_key": "k9p",
+									"_type": "link",
+									"href": "/projects/homelab-k8s"
+								}
+							],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k9l",
+									"text": "Prometheus",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k9m",
+									"text": " scraping ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k9n",
+									"text": "node_exporter",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k9o",
+									"text": ". It originally covered three Lenovo k3s nodes plus the Beelink; the Lenovos are gone now (see ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k9q",
+									"text": "Homelab Kubernetes Cluster",
+									"marks": [
+										"k9p"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k9r",
+									"text": "), so it's just the Docker host. ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k9s",
+									"text": "Grafana",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k9t",
+									"text": " for visualization. Basic alerting for uptime and disk.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "k9w",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k9v",
+									"text": "What's Missing",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "ka0",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "k9x",
+									"text": "Log aggregation. ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "k9y",
+									"text": "Loki",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "k9z",
+									"text": " is the obvious next step, but log retention at homelab scale needs a real storage plan first. Alertmanager is also on the list. Right now alerts exist in Grafana but nothing acts on them.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "ka2",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "ka1",
+									"text": "Stack",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "ka8",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "ka3",
+									"text": "Prometheus",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "ka4",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "ka5",
+									"text": "Grafana",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "ka6",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "ka7",
+									"text": "node_exporter",
+									"marks": [
+										"code"
+									]
+								}
+							]
+						}
+					]
+				},
+				"taxonomies": {
+					"category": [
+						"observability"
+					],
+					"tag": [
+						"grafana",
+						"prometheus",
+						"node-exporter"
+					]
+				}
+			},
+			{
+				"id": "projects:platform-hub",
+				"slug": "platform-hub",
+				"status": "published",
+				"data": {
+					"title": "Hub",
+					"date": "2026-08-27T00:00:00.000Z",
+					"project_status": "IN PROGRESS",
+					"status_variant": "accent",
+					"surface": "DOKPLOY / SELF-HOSTED POSTGRES",
+					"time_label": "ACTIVE",
+					"period": "Q3 2026",
+					"summary": "A monorepo platform that gives every new internal tool a cheap, predetermined home instead of its own throwaway repo: one app, one Postgres, shared auth, and a written contract a module must satisfy to join.",
+					"sub": "Built to stop internal tools from sprawling into a pile of one-off repos, each hand-rolling the same auth, cron, and integration plumbing. First absorption in progress now, proving the contract end to end.",
+					"stats": [
+						{
+							"label": "Commits",
+							"value": "775",
+							"variant": "default"
+						},
+						{
+							"label": "Milestones shipped",
+							"value": "v1.2 – v1.4",
+							"variant": "default"
+						},
+						{
+							"label": "Modules absorbed",
+							"value": "1 (proposals)",
+							"variant": "green"
+						}
+					],
+					"body": [
+						{
+							"_type": "block",
+							"_key": "kaa",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "ka9",
+									"text": "The Problem",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kac",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kab",
+									"text": "The agency had accumulated close to twenty separate internal repos, each one somebody's MVP that got handed off to be made production-worthy. Nearly every one of them hand-rolled the same Google SSO and session spine, the same OAuth setup for ad platforms, the same API-key plumbing, duplicated, drifting, and individually maintained. Rebuilding each one from scratch into something solid was a full manual effort every time.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kae",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kad",
+									"text": "Approach",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kai",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kaf",
+									"text": "Instead of rebuilding tools one at a time, I built a platform for absorbing them: one SvelteKit app, one canonical Postgres schema, shared packages for auth, UI, integrations, and storage, and a written module contract that any absorbed tool has to satisfy: schema-per-module, route-group registration, a nav/permission manifest entry, and clean deletability if the module is ever abandoned. Cron and background work run as independently deployable workers behind Ofelia, so a bad deploy in one worker can't take down the rest. The build order was deliberately cheapest-first: scaffold the target repo shape, harvest the abandoned-but-hardened ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kag",
+									"text": "eos",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kah",
+									"text": " codebase straight into the canonical database as an early, low-risk value capture, stand up the shared auth and UI shell every future module inherits, and harden the ops backbone before spending real effort on a first real absorption.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kak",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kaj",
+									"text": "Current State",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kaq",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kal",
+									"text": "The platform spine is done: the monorepo scaffold, the database foundation seeded from ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kam",
+									"text": "eos",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kan",
+									"text": ", the shared auth and UI shell, and the ops backbone with cron workers, rehearsed Postgres backups, and R2 object storage. The first real absorption, a client proposal tool pulled in as ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kao",
+									"text": "modules/proposals",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kap",
+									"text": ", is done too, and it went well past proving the module contract. Three milestones of follow-on work brought the module to full parity with the app it replaced, down to editorial typography and a signed PDF export that matches the original page for page.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kas",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kar",
+									"text": "What's Next",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kau",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kat",
+									"text": "Absorbing a second module: a client performance reporting system that currently exists as an abandoned standalone app and a much simpler static-page plugin in the agency's plugin marketplace. This absorption replaces both with one module built on the same authoring pattern proposals proved out, plus a monthly metrics history ledger and a Slack digest for notable changes.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kaw",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kav",
+									"text": "Stack",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kba",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kax",
+									"text": "SvelteKit",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kay",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kaz",
 									"text": "PostgreSQL",
 									"marks": [
 										"code"
@@ -4954,27 +4139,27 @@
 								},
 								{
 									"_type": "span",
-									"_key": "kv",
+									"_key": "kb0",
 									"text": " · ",
 									"marks": []
 								},
 								{
 									"_type": "span",
-									"_key": "kw",
-									"text": "Drizzle",
+									"_key": "kb1",
+									"text": "Turborepo",
 									"marks": [
 										"code"
 									]
 								},
 								{
 									"_type": "span",
-									"_key": "kx",
+									"_key": "kb2",
 									"text": " · ",
 									"marks": []
 								},
 								{
 									"_type": "span",
-									"_key": "ky",
+									"_key": "kb3",
 									"text": "Better Auth",
 									"marks": [
 										"code"
@@ -4982,28 +4167,42 @@
 								},
 								{
 									"_type": "span",
-									"_key": "kz",
+									"_key": "kb4",
 									"text": " · ",
 									"marks": []
 								},
 								{
 									"_type": "span",
-									"_key": "k10",
-									"text": "Dokploy",
+									"_key": "kb5",
+									"text": "Docker",
 									"marks": [
 										"code"
 									]
 								},
 								{
 									"_type": "span",
-									"_key": "k11",
+									"_key": "kb6",
 									"text": " · ",
 									"marks": []
 								},
 								{
 									"_type": "span",
-									"_key": "k12",
-									"text": "shadcn-svelte",
+									"_key": "kb7",
+									"text": "Ofelia",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kb8",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kb9",
+									"text": "Cloudflare R2",
 									"marks": [
 										"code"
 									]
@@ -5018,13 +4217,939 @@
 					],
 					"tag": [
 						"better-auth",
-						"drizzle",
-						"dokploy",
+						"docker",
+						"cron-workers",
 						"postgresql",
 						"sveltekit",
-						"svelte-5",
-						"shadcn-svelte"
+						"turborepo"
 					]
+				}
+			},
+			{
+				"id": "projects:revlog",
+				"slug": "revlog",
+				"status": "published",
+				"data": {
+					"title": "Revlog",
+					"date": "2026-04-27T00:00:00.000Z",
+					"project_status": "IN PROGRESS",
+					"status_variant": "accent",
+					"surface": "VPS / DOCKER",
+					"time_label": "ACTIVE",
+					"period": "Q2 2026",
+					"summary": "A motorsport logbook for tracking car builds, maintenance schedules, events, and performance data, built for time attack and track day drivers.",
+					"sub": "Full-stack SvelteKit app with Drizzle + PostgreSQL, Better Auth sessions, and telemetry import from VBO, RaceChrono, and generic CSV files. Ten phases shipped; human verification walkthrough surfaced 12 issues queued for Phase 11.",
+					"stats": [
+						{
+							"label": "Commits",
+							"value": "352",
+							"variant": "default"
+						},
+						{
+							"label": "Phases",
+							"value": "9 of 12",
+							"variant": "default"
+						},
+						{
+							"label": "E2E tests",
+							"value": "40+ passing",
+							"variant": "default"
+						},
+						{
+							"label": "Issues found",
+							"value": "12 in walkthrough",
+							"variant": "default"
+						}
+					],
+					"body": [
+						{
+							"_type": "block",
+							"_key": "kbc",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kbb",
+									"text": "The Problem",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kbe",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kbd",
+									"text": "Track day drivers keep their maintenance logs in Notes, their event results in spreadsheets, their tire wear photos in Camera Roll, and their telemetry files in a folder no one can find. There's no app that connects a car's history to its race results to its pre-event checklist to its lap data. If you want to know whether your brake pads had enough life before the last event, you're digging through text messages.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kbg",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kbf",
+									"text": "Approach",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kbi",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kbh",
+									"text": "A SvelteKit app with a Drizzle + PostgreSQL backend, deployed via Docker to a VPS. Better Auth handles email/password sessions with a Google OAuth path. The data model links cars to maintenance entries, events, runs, checklists, and telemetry sessions. Telemetry files (VBO, RaceChrono CSV, generic CSV) are parsed in the browser with a column-mapping step before committing to the DB. Checklists are template-driven with a one-click AI generation option powered by the Claude API. The model generates a typed checklist from your car's spec.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kbk",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kbj",
+									"text": "The project uses GSD for planning: every phase has a research doc, validation strategy, and execution plan. Phases are verified against their requirements before closing.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kbm",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kbl",
+									"text": "Current State",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kbo",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kbn",
+									"text": "v1.0 shipped in full: garage management, event and run tracking, maintenance log with soft-delete/trash, telemetry import with format parsers, pre-event readiness check, AI-generated checklists, and admin tooling (bug reports, user allowlist, CSV data export). Of v1.1's six verification phases, three are done: E2E coverage for garage/runs and events/auth/telemetry (40+ passing tests), and the Phase 10 human walkthrough, which surfaced 12 issues: 3 P1 (a Delete Forever 500 error, event import blocked by a missing carId assignment UI, missing penalty input labels), 4 P2, 4 P3, 1 Polish. None of those are fixed yet. Work has been paused at the verification checkpoint since.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kbq",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kbp",
+									"text": "What's Next",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kbs",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kbr",
+									"text": "Phase 9 still needs E2E coverage for checklists, settings, and admin actions. Then Phase 11 triages and fixes the 12 issues from the walkthrough, P1s first, and Phase 12 is the launch gate: CI green, zero P0/P1, domain flipped to production.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kbu",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kbt",
+									"text": "Stack",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kcc",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kbv",
+									"text": "SvelteKit",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kbw",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kbx",
+									"text": "TypeScript",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kby",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kbz",
+									"text": "PostgreSQL",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kc0",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kc1",
+									"text": "Drizzle",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kc2",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kc3",
+									"text": "Better Auth",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kc4",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kc5",
+									"text": "Vitest",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kc6",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kc7",
+									"text": "Playwright",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kc8",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kc9",
+									"text": "Docker",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kca",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kcb",
+									"text": "Tailwind",
+									"marks": [
+										"code"
+									]
+								}
+							]
+						}
+					]
+				},
+				"taxonomies": {
+					"category": [
+						"personal-projects"
+					],
+					"tag": [
+						"better-auth",
+						"docker",
+						"drizzle",
+						"postgresql",
+						"playwright",
+						"sveltekit",
+						"tailwind",
+						"typescript"
+					]
+				}
+			},
+			{
+				"id": "projects:self-hosted-services",
+				"slug": "self-hosted-services",
+				"status": "published",
+				"data": {
+					"title": "Self-Hosted Services",
+					"date": "2024-07-01T00:00:00.000Z",
+					"project_status": "RUNNING",
+					"status_variant": "green",
+					"surface": "BARE METAL",
+					"time_label": "ONGOING",
+					"period": "Q3 2024",
+					"summary": "A Beelink mini PC running Docker Compose: Immich, Mealie, Ollama, Paperless-ngx, Glance, Dockhand.",
+					"sub": "A Beelink mini PC running Docker Compose. Photos, recipes, local LLMs, and document management. All running on hardware I own.",
+					"stats": [
+						{
+							"label": "Host",
+							"value": "Beelink",
+							"variant": "default"
+						},
+						{
+							"label": "Runtime",
+							"value": "Docker Compose",
+							"variant": "default"
+						},
+						{
+							"label": "Services",
+							"value": "6 running",
+							"variant": "green"
+						},
+						{
+							"label": "Storage",
+							"value": "Local",
+							"variant": "default"
+						}
+					],
+					"body": [
+						{
+							"_type": "block",
+							"_key": "kce",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kcd",
+									"text": "What's Running",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kcr",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kcf",
+									"text": "Immich",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kcg",
+									"text": " for photo management and backup. It's the main reason this machine exists. ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kch",
+									"text": "Mealie",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kci",
+									"text": " for recipe organization. ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kcj",
+									"text": "Ollama",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kck",
+									"text": " for running local LLMs without API costs. ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kcl",
+									"text": "Paperless-ngx",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kcm",
+									"text": " for document management with OCR. ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kcn",
+									"text": "Glance",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kco",
+									"text": " as a homelab dashboard. ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kcp",
+									"text": "Dockhand",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kcq",
+									"text": " for automated container updates.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kct",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kcs",
+									"text": "Why Self-Host",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kcv",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kcu",
+									"text": "Mostly because I can. Google Photos has storage limits and recipe apps tend to disappear when the company folds. Running services myself is how I learn the stack.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kcx",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kcw",
+									"text": "What's Next",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kd2",
+							"style": "normal",
+							"markDefs": [
+								{
+									"_key": "kcz",
+									"_type": "link",
+									"href": "/projects/homelab-k8s"
+								}
+							],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kcy",
+									"text": "The original plan was for these to migrate onto a k3s cluster once its GitOps setup stabilized. See ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kd0",
+									"text": "Homelab Kubernetes Cluster",
+									"marks": [
+										"kcz"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kd1",
+									"text": ". The cluster's nodes died before that happened, so the migration ran in reverse: this Docker host is now the permanent, consolidated home for these services, not a fallback.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kd4",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kd3",
+									"text": "Stack",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kdi",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kd5",
+									"text": "Docker Compose",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kd6",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kd7",
+									"text": "Immich",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kd8",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kd9",
+									"text": "Mealie",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kda",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kdb",
+									"text": "Ollama",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kdc",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kdd",
+									"text": "Paperless-ngx",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kde",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kdf",
+									"text": "Glance",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "kdg",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "kdh",
+									"text": "Dockhand",
+									"marks": [
+										"code"
+									]
+								}
+							]
+						}
+					]
+				},
+				"taxonomies": {
+					"category": [
+						"self-hosted-services"
+					],
+					"tag": [
+						"docker-compose",
+						"immich",
+						"ollama",
+						"mealie",
+						"paperless-ngx"
+					]
+				}
+			},
+			{
+				"id": "projects:throughline-pricing",
+				"slug": "throughline-pricing",
+				"status": "published",
+				"data": {
+					"title": "Throughline Pricing",
+					"date": "2026-08-05T00:00:00.000Z",
+					"project_status": "LIVE",
+					"status_variant": "green",
+					"surface": "POSTGRES / MCP",
+					"time_label": "ACTIVE",
+					"period": "Q3 2026",
+					"summary": "A pricing and invoicing app with an MCP interface so Claude can read and write pricing data directly during pricing conversations. Every total is server-computed, never hand-typed.",
+					"sub": "A 24-tool MCP surface covering rate cards, tickets, bundling, and flags, backed by an append-only price-history log and ending in a frozen, client-ready invoice PDF.",
+					"stats": [
+						{
+							"label": "MCP tools",
+							"value": "24",
+							"variant": "green"
+						},
+						{
+							"label": "Commits",
+							"value": "673",
+							"variant": "default"
+						},
+						{
+							"label": "Audit findings closed",
+							"value": "17/17",
+							"variant": "green"
+						}
+					],
+					"body": [
+						{
+							"_type": "block",
+							"_key": "kdk",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kdj",
+									"text": "The Problem",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kdm",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kdl",
+									"text": "Pricing conversations at the agency happened in my head and across scattered docs: tier decisions, bundling, flat-quote reasoning, all judgment calls that ended in a number someone typed into an invoice by hand. Nothing forced the invoice to match the reasoning that produced it, and there was no single place holding the authoritative total.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kdo",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kdn",
+									"text": "Approach",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kdq",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kdp",
+									"text": "I built a Postgres-backed app that owns every number a pricing conversation produces, with a 24-tool MCP interface so Claude can read and write pricing data directly while we're actually having the conversation. Claude does the judgment work (tier, bundling, value-based scoping) and the app owns every number that results, through to a frozen invoice PDF. No MCP tool accepts a raw total; everything is server-computed from tickets and line items. Rate cards are versioned and never edited in place. Tickets carry a lifecycle: standalone, bundled, or superseded, mutually exclusive by a guard the schema enforces. Flags block a batch from going out while anything's unresolved. Operators sign in with Google Workspace SSO restricted to the agency's own domain.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kds",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kdr",
+									"text": "Current State",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kdu",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kdt",
+									"text": "v1.0 through v1.2 have all shipped. v1.1 rebuilt navigation and cross-linking between clients, batches, tickets, and invoices so nothing requires a remembered URL. v1.2 added OS-aware dark mode, fully responsive data tables, and closed a 17-finding UI/UX audit with zero P0/P1 remaining.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kdw",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kdv",
+									"text": "What's Next",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kdy",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kdx",
+									"text": "Building v2.0, a client-agnostic initiatives tracker for pre-sales and delivery opportunities that currently live in an ad-hoc shared doc. Claude reads a meeting transcript, proposes a change to an initiative's status, and I confirm before it writes, with a manual UI path for corrections. An initiative can later graduate into a real billable project.",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "ke0",
+							"style": "h2",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "kdz",
+									"text": "Stack",
+									"marks": []
+								}
+							]
+						},
+						{
+							"_type": "block",
+							"_key": "kea",
+							"style": "normal",
+							"markDefs": [],
+							"children": [
+								{
+									"_type": "span",
+									"_key": "ke1",
+									"text": "SvelteKit",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "ke2",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "ke3",
+									"text": "PostgreSQL",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "ke4",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "ke5",
+									"text": "MCP",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "ke6",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "ke7",
+									"text": "Puppeteer",
+									"marks": [
+										"code"
+									]
+								},
+								{
+									"_type": "span",
+									"_key": "ke8",
+									"text": " · ",
+									"marks": []
+								},
+								{
+									"_type": "span",
+									"_key": "ke9",
+									"text": "Google Workspace SSO",
+									"marks": [
+										"code"
+									]
+								}
+							]
+						}
+					]
+				},
+				"taxonomies": {
+					"category": [
+						"agency-tooling"
+					],
+					"tag": [
+						"google-workspace-sso",
+						"mcp",
+						"postgresql",
+						"puppeteer",
+						"sveltekit"
+					]
+				}
+			}
+		],
+		"projects_index": [
+			{
+				"id": "projects_index:projects-index",
+				"slug": "projects-index",
+				"status": "published",
+				"data": {
+					"title": "Projects",
+					"excerpt": "Infrastructure projects — Kubernetes clusters, self-hosted services, observability, and more."
 				}
 			}
 		]
