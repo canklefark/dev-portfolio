@@ -44,7 +44,7 @@ Feel free to check [our documentation](https://docs.astro.build) or jump into ou
 
 ## Agent access
 
-Claude manages portfolio content through the EmDash MCP endpoint at `/_emdash/api/mcp`, authenticated with a scoped personal access token. The `emdash` CLI is the fallback for scripting, and it uses the same token. Every write the agent makes lands as a draft, and the user publishes in the admin. The token is the only credential the agent uses.
+Claude manages portfolio content through the EmDash MCP endpoint at `/_emdash/api/mcp`, authenticated with a scoped personal access token. The `emdash` CLI is the fallback for scripting, and it uses the same token. Content edits made through `content_create` and `content_update` (or the CLI with `--draft`) land as drafts, and the user publishes in the admin. Menu, taxonomy term, media and byline writes are live as soon as they are made, as the section on what the agent can and cannot do explains. The token is the only credential the agent uses.
 
 ### Environment variables
 
