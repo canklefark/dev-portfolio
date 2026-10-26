@@ -82,3 +82,37 @@ Run these steps from the repository root, in a shell where the variables are exp
 4. Ask Claude to run `content_list` on the `projects` collection. A list of projects is the proof that the token works.
 
 A wrong or expired token shows as Failed to connect, because the Authorization header is configured in `.mcp.json`. If Claude Code ever offers an OAuth sign-in for `emdash`, decline it, because OAuth gives the session the user's full admin rights. Fix or rotate the token instead.
+
+### What the agent can and cannot do
+
+- **Refused by EmDash for this token.** The schema tools return INSUFFICIENT_SCOPE, because they need `schema:write` or `schema:read`. The same holds for `settings_get` and `settings_update` (`settings:read`, `settings:manage`), the site export and import tools (transfer scopes), user management, and admin REST paths that no scope rule matches.
+- **Blocked by the Claude Code guard.** The guard is the committed `.claude/settings.json` deny rules plus the PreToolUse hook `.claude/hooks/emdash-guard.mjs`, and it runs inside Claude Code before a request leaves the session. It blocks nine tools: `content_publish`, `content_unpublish`, `content_schedule`, `content_unschedule`, `content_delete`, `content_permanent_delete`, `taxonomy_create`, `taxonomy_update` and `taxonomy_delete`. It blocks `content_update` with `status`, `publishedAt`, `seo`, `bylines` or `taxonomies`, and with any other key outside the draft-only set. It blocks `content_create` with a status other than draft or with `publishedAt`.
+- **Lands as a draft.** A `content_create` call without a status creates a draft. A `content_update` of data fields or the slug on a published card is staged as a pending draft revision, and the live page keeps the old copy until the user publishes in the admin. Review a change with `content_get`, where `data` is the draft, `liveData` is the published copy and `draftRevisionId` is the pending revision, or with `content_compare`. Drop a pending change with `content_discard_draft`. Claude always calls `content_get` first and passes its `_rev` to the update. The user closes the entry in the admin first, because an entry open in the editor holds a lock that refuses agent writes.
+- **Live as soon as it is written, and accepted.** This covers the menu tools, taxonomy term create, update and delete (renaming or deleting a tag changes every card that uses it), the media tools and the byline tools, although this site does not render bylines. Category, tags, SEO and publish dates on an existing card are changed in the admin. A brand-new draft can be tagged in its `content_create` call.
+
+### CLI fallback
+
+Every CLI call runs with `EMDASH_URL` (the origin) and `EMDASH_TOKEN` exported. Without `EMDASH_TOKEN` the CLI falls back to credentials saved by an earlier CLI login, which carry full admin rights, or on localhost to a dev bypass that runs as the full admin dev user. A call can therefore succeed for the wrong reason. Saved credentials can be removed with `npx emdash logout --url http://localhost:4321`.
+
+```bash
+export EMDASH_URL='http://localhost:4321'
+# Authentication proof: this returns the project list when the token works.
+npx emdash content list projects --json
+# Note the _rev value in the output.
+npx emdash content get projects SLUG --json
+npx emdash content update projects SLUG --draft --rev REV --data '{"sub":"New subtitle"}'
+# The live copy is unchanged.
+npx emdash content get projects SLUG --published --json
+```
+
+SLUG is the project slug and REV is the `_rev` value from `content get`. The commands `emdash content create` and `emdash content update` publish automatically unless `--draft` is passed, so every CLI write carries `--draft`. The command `emdash whoami` is expected to fail for this token, because its route needs the admin scope, so the list call is the proof. The CLI publish, unpublish, schedule and delete commands and the CLI login are not part of the agent workflow.
+
+### Rotation and recovery
+
+The token expires after 90 days. Create a replacement with the same six scopes and a 90-day expiry, export the new value as `EMDASH_TOKEN`, restart `claude`, and then revoke the old token on the same admin page.
+
+Tokens are deleted together with the user that owns them, so both the recovery procedure that deletes users and the Phase 5 database move remove this token. After Phase 5, create a new token in the deployed admin and set `EMDASH_MCP_URL` and `EMDASH_URL` to the deployed values. Never reuse the local token against the deployed site.
+
+### Residual risk
+
+The publish block is enforced by Claude Code, not by EmDash. EmDash 1.3.1 has no publish scope, and a token carries its owner's admin role narrowed only by its scopes, so this token can itself publish, unpublish and delete. The token sits in the environment of every shell Claude runs, so a `curl` call, a CLI write without `--draft`, or a session whose settings disable hooks would bypass the guard. The mitigations in place are the minimal scopes, the 90-day expiry, the guard, and the user reviewing every draft before publishing.
