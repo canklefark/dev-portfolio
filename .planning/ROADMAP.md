@@ -137,7 +137,7 @@ Plans:
 
 ### Phase 4: Agent Access
 
-**Goal**: Claude can manage portfolio content through EmDash's MCP server or CLI, using a token that writes drafts and publishes on request but cannot change the schema
+**Goal**: Claude can manage portfolio content through EmDash's MCP server or CLI, using a token that writes drafts for the user to publish and cannot change the schema
 **Depends on**: Phase 3
 **Requirements**: AGENT-01, AGENT-02, AGENT-03, AGENT-04
 **Success Criteria** (what must be TRUE):
