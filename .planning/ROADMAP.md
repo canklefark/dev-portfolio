@@ -147,7 +147,7 @@ Plans:
 3. A schema-changing call made with the agent token is refused
 4. Following the documented Claude Code MCP setup from a clean session produces a working connection, with the endpoint URL set per environment
 
-**Plans**: 2/3 plans executed
+**Plans**: 3/3 plans executed
 
 Plans:
 **Wave 1**
@@ -160,7 +160,7 @@ Plans:
 
 **Wave 3** _(blocked on Wave 2 completion)_
 
-- [ ] 04-03-PLAN.md: Live evidence pass on the user's dev server: negative control, clean-session connection from the README, draft then publish on a throwaway card, schema and publish refusals, independent token and cleanup checks
+- [x] 04-03-PLAN.md: Live evidence pass on the user's dev server: negative control, clean-session connection from the README, draft then publish on a throwaway card, schema and publish refusals, independent token and cleanup checks
 
 ### Phase 5: Dokploy Deploy and Cutover
 
@@ -201,6 +201,6 @@ Phases execute in numeric order: 1, 2, 3, 4, 5, 6
 | 1. Spike, Baseline and Decisions | 5/5            | Complete    | 2026-10-23 |
 | 2. Content Model and Import      | 4/4            | Complete    | 2026-10-26 |
 | 3. Read Path Rewire and Parity   | 6/6            | Complete    | 2026-10-26 |
-| 4. Agent Access                  | 2/3 | In Progress | -          |
+| 4. Agent Access                  | 3/3 | In Progress | -          |
 | 5. Dokploy Deploy and Cutover    | 0/TBD          | Not started | -          |
 | 6. Live Editing and Docs         | 0/TBD          | Not started | -          |

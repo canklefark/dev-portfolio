@@ -5,17 +5,17 @@ milestone_name: EmDash Migration
 current_phase: 04
 current_phase_name: Agent Access
 current_plan: 3
-status: executing
-stopped_at: Completed 04-02-PLAN.md
-last_updated: "2026-10-26T18:25:58.010Z"
+status: verifying
+stopped_at: "Completed 04-03-PLAN.md (partial: E6 and E7 outstanding)"
+last_updated: "2026-10-26T18:42:04.880Z"
 last_activity: 2026-10-26
 last_activity_desc: Phase 04 execution started
-state_head: 33c80c796ec26404dd3a1cd7987c3ebc2306232c
+state_head: 067013b7c7fe6ff0fafa6fe2f48be475d9e5a9f7
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 18
-  completed_plans: 17
+  completed_plans: 18
 ---
 
 # Project State
@@ -32,7 +32,7 @@ See: .planning/PROJECT.md (updated 2026-10-26)
 Phase: 04 (Agent Access) — EXECUTING
 Current Plan: 3
 Total Plans in Phase: 3
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-10-26 — Phase 04 execution started
 
 Progress: [█████░░░░░] 50%
@@ -80,6 +80,7 @@ _Updated after each plan completion_
 | Phase 03 P06 | about 1 session | 2 tasks | 5 files |
 | Phase 04 P01 | 5 min | 2 tasks | 4 files |
 | Phase 04 P02 | 6 min | 2 tasks | 2 files |
+| Phase 04 P03 | 15 min | 3 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -120,6 +121,7 @@ Recent decisions affecting current work:
 - [Phase 03]: AboutPage keeps the raw about entry as source so an editor's SEO panel value reaches pageMeta, matching ProjectDetail
 - [Phase 04]: 04-01: nine emdash tools guarded by bare-name deny rules plus hook BLOCKED_TOOLS; content_update uses a draft-only key allowlist, content_create allows status draft only; schema and settings tools deferred to the server (AGENT-03)
 - [Phase 04]: 04-02: README Agent access section documents the setup and states the residual risk (publish block is a Claude Code guard, token can itself publish); AGENT-01 and AGENT-02 amended, traceability rows stay Pending until 04-03
+- [Phase 04]: 04-03: live pass shows E1, E3, E4, E5 and the E2 negative control; E6 (guard live) and E7 (fresh README session) NOT VERIFIED; token created with a 7 day expiry (deviation from D-07); AGENT-02 amendment (D-03) shown live
 
 ### Pending Todos
 
@@ -147,6 +149,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-26T18:25:57.868Z
-Stopped at: Completed 04-02-PLAN.md
+Last session: 2026-10-26T18:42:04.751Z
+Stopped at: Completed 04-03-PLAN.md (partial: E6 and E7 outstanding)
 Resume file: None
