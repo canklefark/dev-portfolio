@@ -4,29 +4,33 @@ import StageCard from "../components/StageCard.astro";
 import Stack from "../components/layout/Stack.astro";
 import Cluster from "../components/layout/Cluster.astro";
 import Chip from "../components/Chip.astro";
-import { showAvailability } from "../data/about";
 import { getSortedProjects } from "../lib/projects";
+import { getSiteContext, pageMeta } from "../lib/site";
+import { getAbout, getHome } from "../lib/singletons";
 
-const projects = (await getSortedProjects()).slice(0, 3);
+const [allProjects, home, about, site] = await Promise.all([getSortedProjects(), getHome(), getAbout(), getSiteContext()]);
+const projects = allProjects.slice(0, 3);
+const hero = home.data;
+const meta = pageMeta(home, site, { withSiteTitle: false, defaultDescription: site.tagline });
 ---
 
-<Layout title="Zeik Cookson — DevOps Engineer" description="DevOps and platform engineering portfolio. Infrastructure work from the homelab and beyond." activeNav="home">
+<Layout title={meta.title} description={meta.description} activeNav="home">
   <section class="section" id="home" data-page-entry>
     <div class="u-gutters">
       <div class="hero">
         <Stack space="s2">
           <div class="hero-head">
-            <div class="hero-stage-indicator">Devops Engineer <em>Knoxville, TN</em></div>
-            <h1 class="hero-name"><span class="hero-first">Zeik</span><br /><em>Cookson</em></h1>
+            <div class="hero-stage-indicator">{hero.stage_label} <em>{hero.stage_location}</em></div>
+            <h1 class="hero-name"><span class="hero-first">{hero.hero_first}</span><br /><em>{hero.hero_last}</em></h1>
           </div>
           <Stack space="s-2">
             <p class="hero-bio">
-              I build and run infrastructure at a digital agency. The role started in WordPress; it shifted toward platform work over the last year, and I built a homelab to go further than client projects allow.
+              {hero.bio}
             </p>
             <Cluster space="s-2">
               <Chip>SURFACE: BARE METAL + CLOUD</Chip>
               <Chip>REGION: SOUTHEAST</Chip>
-              {showAvailability && <Chip variant="accent">AVAIL: AVAILABLE</Chip>}
+              {about.showAvailability &&<Chip variant="accent">AVAIL: AVAILABLE</Chip>}
             </Cluster>
           </Stack>
           <Cluster space="s1">

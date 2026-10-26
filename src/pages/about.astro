@@ -1,21 +1,33 @@
 ---
+import { sanitizeHref } from "emdash";
+import { PortableText } from "emdash/ui";
 import Layout from "../layouts/Layout.astro";
 import Switcher from "../components/layout/Switcher.astro";
-import AboutContent from "../data/about.md";
-import { cells, stack, contacts, role } from "../data/about";
+import ProseBlock from "../components/prose/ProseBlock.astro";
+import ProseLink from "../components/prose/ProseLink.astro";
+import { prepareBody } from "../lib/prose";
+import { getSiteContext, pageMeta } from "../lib/site";
+import { getAbout } from "../lib/singletons";
+
+const [about, site] = await Promise.all([getAbout(), getSiteContext()]);
+const { cells, stack, contacts, role } = about;
+const meta = pageMeta(about.source, site, { withSiteTitle: true });
 ---
 
-<Layout title="About — Zeik Cookson" description="About Zeik Cookson, designer turned platform engineer in Knoxville, TN. Tools, stack, and contact." activeNav="about">
+<Layout title={meta.title} description={meta.description} activeNav="about">
   {/* no data-page-entry — about manages its own top spacing via .about-inner padding */}
   <section class="section">
     <div class="about-inner">
       <h1 class="about-h2">
-        Designer who ended up<br />in the <em>engine bay.</em>
+        {about.heading.line1}<br />{about.heading.line2} <em>{about.heading.accent}</em>
       </h1>
       <div class="about-role">{role}</div>
 
       <div class="about-body">
-        <AboutContent />
+        <PortableText
+          value={prepareBody(about.body)}
+          components={{ block: ProseBlock, mark: { link: ProseLink } }}
+        />
       </div>
 
       <Switcher class="about-grid-2" data-divider role="list">
@@ -40,7 +52,7 @@ import { cells, stack, contacts, role } from "../data/about";
           contacts.map((contact) => (
             <a
               class="contact-item"
-              href={contact.href}
+              href={sanitizeHref(contact.href)}
               target={contact.icon !== "email" ? "_blank" : undefined}
               rel={contact.icon !== "email" ? "noopener noreferrer" : undefined}
             >
