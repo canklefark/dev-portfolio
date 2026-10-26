@@ -1,9 +1,19 @@
 // @ts-check
 // Builds an EmDash seed from the project markdown sources and applies it with the emdash seed CLI.
-// usage: node scripts/import-content.mjs [--schema-check] [--root DIR]  (DIR defaults to the repo root; the database lands in DIR/data/emdash.db)
+// usage: node scripts/import-content.mjs [--schema-check [--force-structure-seed]] [--root DIR]  (DIR defaults to the repo root; the database lands in DIR/data/emdash.db)
 // --schema-check writes the structure seed to DIR/.emdash/seed.json and applies one draft project (the longest body) plus About, instead of the 13 projects.
+// ME-03: the repo's committed .emdash/seed.json is the exported content seed (13 projects, 1 about). --schema-check refuses to replace any seed that has a
+// content key, or that cannot be parsed, unless --force-structure-seed is given, and checks before it writes or applies anything. To rebuild the schema-check
+// database use a throwaway root (--root DIR with no .emdash/seed.json) or delete the seed first; never run it against the repo root without the flag.
 import { execFileSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -30,7 +40,7 @@ import { loadSourceModel } from "./lib/sources.mjs";
  */
 
 const USAGE =
-  "usage: node scripts/import-content.mjs [--schema-check] [--root DIR]";
+  "usage: node scripts/import-content.mjs [--schema-check [--force-structure-seed]] [--root DIR]";
 export const SCHEMA_CHECK_SLUG = "schema-check-longest-body";
 const SCHEMA_CHECK_TITLE = "Schema check: longest body";
 const REPO_ROOT = fileURLToPath(new URL("..", import.meta.url));
@@ -221,30 +231,69 @@ export function applySeedFile(seed, targetRoot, { quiet = false } = {}) {
 }
 
 /**
+ * Throws when writing a structure-only seed to seedPath would replace content: an existing seed with a content key,
+ * or one that cannot be read as JSON (it may hold content, so it is not overwritten unseen). A missing file is fine.
+ * @param {string} seedPath
+ * @returns {void}
+ */
+export function assertStructureSeedWritable(seedPath) {
+  if (!existsSync(seedPath)) return;
+  /** @type {unknown} */
+  let existing;
+  try {
+    existing = JSON.parse(readFileSync(seedPath, "utf8"));
+  } catch (error) {
+    throw new Error(
+      `${seedPath} exists but cannot be parsed (${error instanceof Error ? error.message : error}); refusing to overwrite it with a structure-only seed. Pass --force-structure-seed to replace it.`,
+    );
+  }
+  if (
+    existing !== null &&
+    typeof existing === "object" &&
+    "content" in existing
+  ) {
+    throw new Error(
+      `${seedPath} holds a content seed; --schema-check would replace it with a structure-only seed. Use a throwaway --root, or pass --force-structure-seed to replace it.`,
+    );
+  }
+}
+
+/**
  * @param {string[]} argv
  * @returns {number}
  */
 function main(argv) {
   let root = REPO_ROOT;
   let schemaCheck = false;
+  let forceStructureSeed = false;
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === "--root" && i + 1 < argv.length) {
       root = argv[++i];
     } else if (argv[i] === "--schema-check") {
       schemaCheck = true;
+    } else if (argv[i] === "--force-structure-seed") {
+      forceStructureSeed = true;
     } else {
       console.error(USAGE);
       return 2;
     }
+  }
+  if (forceStructureSeed && !schemaCheck) {
+    console.error(
+      `--force-structure-seed only applies with --schema-check\n${USAGE}`,
+    );
+    return 2;
   }
   const targetRoot = resolve(root);
   const model = loadSourceModel(REPO_ROOT);
   const dbPath = join(targetRoot, "data/emdash.db");
   if (schemaCheck) {
     // Written before any server starts: the setup flows apply .emdash/seed.json, or the built-in posts and pages without it.
+    const seedPath = join(targetRoot, ".emdash/seed.json");
+    if (!forceStructureSeed) assertStructureSeedWritable(seedPath);
     mkdirSync(join(targetRoot, ".emdash"), { recursive: true });
     writeFileSync(
-      join(targetRoot, ".emdash/seed.json"),
+      seedPath,
       `${JSON.stringify(structureSeed(buildSeed(model)), null, 2)}\n`,
     );
     applySeedFile(buildSchemaCheckSeed(model), targetRoot);

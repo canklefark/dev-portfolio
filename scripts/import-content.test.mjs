@@ -1077,3 +1077,91 @@ describe("the CLI entry guard compares realpaths (HI-01)", () => {
     }
   });
 });
+
+describe("--schema-check never overwrites a content seed (ME-03)", () => {
+  const real = loadSourceModel(REPO_ROOT);
+
+  /**
+   * @param {string} root
+   * @param {string[]} flags
+   */
+  function schemaCheck(root, flags = []) {
+    return spawnSync(
+      process.execPath,
+      [
+        "scripts/import-content.mjs",
+        "--schema-check",
+        ...flags,
+        "--root",
+        root,
+      ],
+      { cwd: REPO_ROOT, encoding: "utf8" },
+    );
+  }
+
+  it("the committed .emdash/seed.json is a content seed with 13 projects and 1 about", () => {
+    const committed = JSON.parse(
+      readFileSync(join(REPO_ROOT, ".emdash/seed.json"), "utf8"),
+    );
+    assert.ok(committed.content, "committed seed has no content key");
+    assert.equal(committed.content.projects.length, 13);
+    assert.equal(committed.content.about.length, 1);
+  });
+
+  it("refuses on a root whose seed holds content, exits non-zero and leaves it byte-identical", () => {
+    withRoot((root) => {
+      mkdirSync(join(root, ".emdash"));
+      const seedPath = join(root, ".emdash/seed.json");
+      const content = `${JSON.stringify(buildSeed(real), null, 2)}\n`;
+      writeFileSync(seedPath, content);
+      const run = schemaCheck(root);
+      assert.notEqual(run.status, 0);
+      assert.match(run.stderr, /content/);
+      assert.match(run.stderr, /--force-structure-seed/);
+      assert.equal(readFileSync(seedPath, "utf8"), content);
+      assert.equal(existsSync(join(root, "data")), false, "nothing is applied");
+    });
+  });
+
+  it("refuses when the existing seed cannot be parsed, since it may hold content", () => {
+    withRoot((root) => {
+      mkdirSync(join(root, ".emdash"));
+      const seedPath = join(root, ".emdash/seed.json");
+      writeFileSync(seedPath, "{ not json");
+      const run = schemaCheck(root);
+      assert.notEqual(run.status, 0);
+      assert.equal(readFileSync(seedPath, "utf8"), "{ not json");
+    });
+  });
+
+  it("overwrites a content seed only with --force-structure-seed", () => {
+    withRoot((root) => {
+      mkdirSync(join(root, ".emdash"));
+      const seedPath = join(root, ".emdash/seed.json");
+      writeFileSync(seedPath, `${JSON.stringify(buildSeed(real))}\n`);
+      const run = schemaCheck(root, ["--force-structure-seed"]);
+      assert.equal(run.status, 0, run.stderr);
+      assert.equal(
+        "content" in JSON.parse(readFileSync(seedPath, "utf8")),
+        false,
+      );
+    });
+  });
+
+  it("rejects --force-structure-seed without --schema-check", () => {
+    withRoot((root) => {
+      const run = spawnSync(
+        process.execPath,
+        [
+          "scripts/import-content.mjs",
+          "--force-structure-seed",
+          "--root",
+          root,
+        ],
+        { cwd: REPO_ROOT, encoding: "utf8" },
+      );
+      assert.equal(run.status, 2);
+      assert.equal(existsSync(join(root, "data")), false);
+    });
+  });
+});
