@@ -1,0 +1,13 @@
+---
+import { sanitizeHref } from "emdash";
+
+interface Props {
+  node: { markDef: { href?: string; blank?: boolean } };
+}
+
+const { markDef } = Astro.props.node;
+const href = sanitizeHref(markDef.href);
+const blank = Boolean(markDef.blank) && !href.startsWith("#");
+---
+
+<a href={href} target={blank ? "_blank" : undefined} rel={blank ? "noopener noreferrer" : undefined}><slot /></a>

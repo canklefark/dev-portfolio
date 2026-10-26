@@ -6,9 +6,13 @@ interface Props {
   title: string;
   description?: string;
   activeNav?: "home" | "projects" | "about";
+  canonicalPath?: string;
 }
 
-const { title, description, activeNav } = Astro.props;
+const { title, description, activeNav, canonicalPath } = Astro.props;
+if (!Astro.site) throw new Error("astro.config.mjs must set `site`; og:url is built from it");
+const ogPath = canonicalPath ?? Astro.url.pathname.replace(/\/?$/, "/");
+const ogUrl = new URL(ogPath, Astro.site).href;
 const desc = description ?? "DevOps and platform engineering portfolio. Infrastructure work from the homelab and beyond.";
 ---
 
@@ -21,7 +25,7 @@ const desc = description ?? "DevOps and platform engineering portfolio. Infrastr
     <meta property="og:title" content={title} />
     <meta property="og:description" content={desc} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:url" content={ogUrl} />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={desc} />
