@@ -4,18 +4,18 @@ milestone: v1.0
 milestone_name: EmDash Migration
 current_phase: 05
 current_phase_name: Dokploy Deploy and Cutover
-current_plan: 2
+current_plan: 3
 status: executing
-stopped_at: Completed 05-01-PLAN.md
-last_updated: "2026-10-27T11:54:52.350Z"
+stopped_at: Completed 05-02-PLAN.md
+last_updated: "2026-10-27T11:58:35.974Z"
 last_activity: 2026-10-27
 last_activity_desc: Phase 05 execution started
-state_head: 978b34ae5a90a304e6373b1cbeec88218945498a
+state_head: 80f39ded29b1bf9158ea55154bf7ede1b2a244f7
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 23
-  completed_plans: 19
+  completed_plans: 20
 ---
 
 # Project State
@@ -30,7 +30,7 @@ See: .planning/PROJECT.md (updated 2026-10-26)
 ## Current Position
 
 Phase: 05 (Dokploy Deploy and Cutover) — EXECUTING
-Current Plan: 2
+Current Plan: 3
 Total Plans in Phase: 5
 Status: Ready to execute
 Last activity: 2026-10-27 — Phase 05 execution started
@@ -83,6 +83,7 @@ _Updated after each plan completion_
 | Phase 04 P02 | 6 min | 2 tasks | 2 files |
 | Phase 04 P03 | 15 min | 3 tasks | 1 files |
 | Phase 05 P01 | 3 min | 2 tasks | 5 files |
+| Phase 05 P02 | 3 min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -126,6 +127,7 @@ Recent decisions affecting current work:
 - [Phase 04]: 04-03: live pass shows E1, E3, E4, E5 and the E2 negative control; E6 (guard live) and E7 (fresh README session) NOT VERIFIED; token created with a 7 day expiry (deviation from D-07); AGENT-02 amendment (D-03) shown live
 - [Phase 05]: 05-01: Dokploy trigger-and-wait lives in a tested Node script (scripts/dokploy-deploy.mjs), not inline curl and jq
 - [Phase 05]: 05-01: deploy.yml job runs only for a successful push-triggered ci run on main of this repository or a dispatch on main (T-05-01)
+- [Phase 05]: 05-02: manifest gate (git diff --exit-code on committed .emdash/migrations.json) carries the real migration-change signal; seeded migrate --check cannot show a pending migration on a fresh database
 
 ### Pending Todos
 
@@ -153,6 +155,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-27T11:54:52.193Z
-Stopped at: Completed 05-01-PLAN.md
+Last session: 2026-10-27T11:58:35.772Z
+Stopped at: Completed 05-02-PLAN.md
 Resume file: None

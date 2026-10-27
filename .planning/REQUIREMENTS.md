@@ -55,7 +55,7 @@ Milestone v1.0: EmDash Migration. Each maps to roadmap phases.
 ### Deployment
 
 - [ ] **DEPLOY-01**: The site deploys to Dokploy as a Node standalone container (Docker image) with SQLite on a persistent volume and a separate preview database
-- [ ] **DEPLOY-02**: EmDash applies its migrations on container boot, with no separate pre-deploy migration step (D-02 amended by the user on 2026-10-26), and CI fails when the committed migration manifest .emdash/migrations.json differs from the one the build generates, so a changed migration set is committed on purpose and a volume backup is taken before the deploy that applies it
+- [x] **DEPLOY-02**: EmDash applies its migrations on container boot, with no separate pre-deploy migration step (D-02 amended by the user on 2026-10-26), and CI fails when the committed migration manifest .emdash/migrations.json differs from the one the build generates, so a changed migration set is committed on purpose and a volume backup is taken before the deploy that applies it
 - [ ] **DEPLOY-03**: A preview deployment is compared against the baseline before the domain moves
 - [ ] **DEPLOY-04**: `dev.zeikcookson.com` serves the Dokploy app, with the Pages project kept until rollback is no longer needed
 - [ ] **DEPLOY-05**: A SQLite backup and restore is rehearsed once
@@ -63,7 +63,7 @@ Milestone v1.0: EmDash Migration. Each maps to roadmap phases.
 ### Guards
 
 - [x] **GUARD-01**: CI fails if any public route gains a script, `modulepreload` or module tag beyond the recorded baseline
-- [ ] **GUARD-02**: CI fails on pending migrations (`emdash migrate --check`)
+- [x] **GUARD-02**: CI fails on pending migrations (`emdash migrate --check`)
 - [ ] **GUARD-03**: A post-deploy smoke test checks `/` and one project page return 200
 
 ### Docs
@@ -133,13 +133,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AGENT-03    | Phase 4 | Complete |
 | AGENT-04    | Phase 4 | Complete |
 | DEPLOY-01   | Phase 5 | Pending |
-| DEPLOY-02   | Phase 5 | Pending |
+| DEPLOY-02   | Phase 5 | Complete |
 | DEPLOY-03   | Phase 5 | Pending |
 | DEPLOY-04   | Phase 5 | Pending |
 | DEPLOY-05   | Phase 5 | Pending |
 | ADMIN-02    | Phase 5 | Pending |
 | ADMIN-03    | Phase 5 | Pending |
-| GUARD-02    | Phase 5 | Pending |
+| GUARD-02    | Phase 5 | Complete |
 | GUARD-03    | Phase 5 | Pending |
 | ADMIN-04    | Phase 6 | Pending |
 | ADMIN-05    | Phase 6 | Pending |
