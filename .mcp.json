@@ -1,11 +1,8 @@
 {
   "mcpServers": {
-    "emdash-agent": {
+    "emdash": {
       "type": "http",
-      "url": "${EMDASH_MCP_URL:-http://localhost:4321/_emdash/api/mcp}",
-      "headers": {
-        "Authorization": "Bearer ${EMDASH_TOKEN}"
-      }
+      "url": "https://dev.zeikcookson.com/_emdash/api/mcp"
     }
   }
 }
