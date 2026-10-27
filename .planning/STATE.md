@@ -6,7 +6,7 @@ current_phase: 05
 current_phase_name: Dokploy Deploy and Cutover
 current_plan: 3
 status: executing
-stopped_at: Completed 05-02-PLAN.md
+stopped_at: Phase 5 replanned (fourth revision, manual deploys); next is 05-03 Task 2
 last_updated: "2026-10-27T11:58:35.974Z"
 last_activity: 2026-10-27
 last_activity_desc: Phase 05 execution started
@@ -14,7 +14,7 @@ state_head: 80f39ded29b1bf9158ea55154bf7ede1b2a244f7
 progress:
   total_phases: 6
   completed_phases: 4
-  total_plans: 24
+  total_plans: 23
   completed_plans: 20
 ---
 
@@ -31,7 +31,7 @@ See: .planning/PROJECT.md (updated 2026-10-26)
 
 Phase: 05 (Dokploy Deploy and Cutover) — EXECUTING
 Current Plan: 3
-Total Plans in Phase: 6
+Total Plans in Phase: 5
 Status: Ready to execute
 Last activity: 2026-10-27 — Phase 05 execution started
 
@@ -126,8 +126,10 @@ Recent decisions affecting current work:
 - [Phase 04]: 04-02: README Agent access section documents the setup and states the residual risk (publish block is a Claude Code guard, token can itself publish); AGENT-01 and AGENT-02 amended, traceability rows stay Pending until 04-03
 - [Phase 04]: 04-03: live pass shows E1, E3, E4, E5 and the E2 negative control; E6 (guard live) and E7 (fresh README session) NOT VERIFIED; token created with a 7 day expiry (deviation from D-07); AGENT-02 amendment (D-03) shown live
 - [Phase 05]: 05-01: Dokploy trigger-and-wait lives in a tested Node script (scripts/dokploy-deploy.mjs), not inline curl and jq
-- [Phase 05]: 05-01: deploy.yml job runs only for a successful push-triggered ci run on main of this repository or a dispatch on main (T-05-01). Superseded 2026-10-27 by tag deploys (D-15): deploy.yml starts from a pushed `v*` tag behind a gate in plan 05-04
-- [Phase 05]: 2026-10-27 second plan revision: tag deploys with a CI gate (D-15), Cloudflare proxy on after the first deploy with SSL/TLS Full (strict) (D-16), backups to Cloudflare R2 (D-17); the phase now has 6 plans (05-05 proxy and agent token, 05-06 backup and restore)
+- [Phase 05]: 05-01: deploy.yml job runs only for a successful push-triggered ci run on main of this repository or a dispatch on main (T-05-01). Superseded 2026-10-27: deploys are manual (D-15 superseded), so deploy.yml, scripts/dokploy-deploy.mjs and its test are removed in plan 05-04 before main is pushed
+- [Phase 05]: 2026-10-27 second plan revision: tag deploys with a CI gate (D-15), Cloudflare proxy on after the first deploy with SSL/TLS Full (strict) (D-16), backups to Cloudflare R2 (D-17). Tag deploys and the agent token were superseded by the fourth revision below; the proxy and R2 backups stay
+- [Phase 05]: 2026-10-27 fourth plan revision (simplification, user: "I just want this done"): manual deploys, the owner clicks Deploy in Dokploy with Auto Deploy off and runs scripts/smoke-test.mjs by hand; no pipeline, no Dokploy API key, no GitHub secrets, no tag probe, no paths-ignore; one passkey is enough (D-09 amended, lockout risk recorded); agent access is OAuth to .mcp.json with no Phase 5 work (D-12 superseded); the phase has 5 plans: 05-03 finishes the evidence, 05-04 removes the dead pipeline code then merges and pushes main (user), repoints the app and turns the proxy on, 05-05 sets up R2 backups and the restore drill
+- [Phase 05]: 2026-10-27: the live origin already sends x-content-type-options, referrer-policy, x-frame-options and a permissions-policy (EmDash), so the Cloudflare Transform Rule of the second revision is dropped (D-11)
 - [Phase 05]: 05-02: manifest gate (git diff --exit-code on committed .emdash/migrations.json) carries the real migration-change signal; seeded migrate --check cannot show a pending migration on a fresh database
 
 ### Pending Todos
@@ -136,14 +138,16 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Roadmap]: Cloudflare Pages is dropped (2026-10-27), so `main` no longer auto-deploys anywhere. A push to `main` runs CI only; production deploys when a `v*` tag is pushed after CI succeeded for the tagged commit (Phase 5, D-15). Never push, merge or tag without the user's go-ahead.
-- [Roadmap]: CI exists (`.github/workflows/ci.yml`: GUARD-01 from Phase 3, GUARD-02 and the manifest gate from plan 05-02). Phase 5 adds `deploy.yml` (tag-triggered, CI-gated, with the smoke test, GUARD-03) and `paths-ignore` so documentation pushes run nothing.
+- [Roadmap]: Cloudflare Pages is dropped (2026-10-27), so `main` no longer auto-deploys anywhere. A push to `main` runs CI only; the owner deploys by clicking Deploy in Dokploy (D-15 superseded). Never push or merge without the user's go-ahead.
+- [Roadmap]: CI exists (`.github/workflows/ci.yml`: GUARD-01 from Phase 3, GUARD-02 and the manifest gate from plan 05-02). The deploy workflow committed in plan 05-01 is removed in plan 05-04 before `main` is pushed, because a deploy workflow on the default branch would start after every CI run. The smoke test (GUARD-03) is run by hand after each deploy.
+- [Phase 05]: One passkey is enrolled (user decision 2026-10-27), so a lost device is a lockout until the SQLite recovery procedure in PROJECT.md is run; that procedure was rehearsed locally in Phase 1 and is not rehearsed in the production container.
+- [Phase 05]: The first Let's Encrypt renewal behind the Cloudflare proxy (around 2026-12-26) is not exercised in the phase; the fallback is to set the record DNS only, let Traefik renew and proxy it again.
 - [Roadmap]: The FOUND-02 baseline lives outside the repo, but the GUARD-01 check runs in CI. Commit a derived allowlist of public scripts, not the baseline HTML.
 - [Roadmap]: The home page reads `showAvailability` from `src/data/about`. The Phase 2 `about` entry must hold the availability flag, role, stack and contacts as well as copy and cells, or REND-05 breaks the home page.
 - [Roadmap]: Page titles in five templates use an em dash separator. Parity (REND-04) keeps them; the no-em-dash copy rule says otherwise. Changing them is a separate copy decision.
 - [Roadmap]: Local admin and MCP checks in Phases 2 to 4 need a running local server. Ask the user before starting `astro dev` or `astro preview`.
 - [Roadmap]: Markdown edits made before Phase 3 need a re-run of the idempotent import before the read path flips. After Phase 3, `/portfolio-update` writes files that no longer drive the site (DOCS-03 fixes or flags it).
-- [Roadmap]: The old Cloudflare Pages project is not kept as a rollback target (2026-10-27); dev.zeikcookson.com is removed from its custom domains in plan 05-03, and deleting the project itself is optional housekeeping, not a requirement.
+- [Roadmap]: The old Cloudflare Pages project is not kept as a rollback target (2026-10-27) and no longer exists, so no stale custom domain can remain on it.
 - [Research]: Plan Phases 1, 2 (import), 4 and 5 with deeper research. Phases 3 and 6 follow standard patterns.
 
 ## Deferred Items
@@ -157,5 +161,5 @@ Items acknowledged and deferred at milestone close, most recent first:
 ## Session Continuity
 
 Last session: 2026-10-27T11:58:35.772Z
-Stopped at: Completed 05-02-PLAN.md
-Resume file: None
+Stopped at: Phase 5 replanned (fourth revision, manual deploys); plan 05-03 Task 1 is done (6c4c3f2), Task 2 is next
+Resume file: .planning/phases/05-dokploy-deploy-and-cutover/05-03-PLAN.md

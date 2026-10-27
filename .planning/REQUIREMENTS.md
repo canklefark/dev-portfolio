@@ -41,7 +41,7 @@ Milestone v1.0: EmDash Migration. Each maps to roadmap phases.
 
 - [x] **ADMIN-01**: Admin runs under `/_emdash/admin` and loads no admin JS on public routes
 - [ ] **ADMIN-02**: The setup wizard is completed at first deploy, before the URL is shared, and the login page (not setup) is what a visitor sees afterward
-- [ ] **ADMIN-03**: Two passkeys are enrolled on `dev.zeikcookson.com`, with a tested recovery path
+- [ ] **ADMIN-03**: One passkey is enrolled on `dev.zeikcookson.com` and signs in. Dropped by user decision 2026-10-27: the second passkey and a recovery drill in the production container. A lost device means the SQLite recovery procedure in PROJECT.md, rehearsed locally in Phase 1 (lockout risk accepted)
 - [ ] **ADMIN-04**: Draft, preview and publish are exercised end to end on one real project, including restoring a revision
 - [ ] **ADMIN-05**: A shareable preview link works for a draft entry
 
@@ -52,24 +52,26 @@ Milestone v1.0: EmDash Migration. Each maps to roadmap phases.
 - [x] **AGENT-03**: Schema-changing calls are refused for the agent token
 - [x] **AGENT-04**: The working Claude Code MCP setup is documented
 
+_Amended 2026-10-27 (user, outside Phase 5): agent access is OAuth to the committed `.mcp.json` (server `emdash`, URL only) with the owner's admin rights. The scoped token, the Claude Code guard hook and the README agent section were removed, so AGENT-01 to AGENT-04 describe the Phase 4 design and no longer the running setup. They stay marked complete as Phase 4 history, and Phase 5 carries no agent-token work._
+
 ### Deployment
 
-- [ ] **DEPLOY-01**: The site deploys to Dokploy as a Node standalone container (Docker image) with SQLite and uploads on a persistent volume, straight to the production app with no separate preview database (user decision 2026-10-27)
+- [ ] **DEPLOY-01**: The site deploys to Dokploy as a Node standalone container (Docker image) with SQLite and uploads on a persistent volume, straight to the production app with no separate preview database (user decision 2026-10-27); the app builds `main` and the owner deploys by clicking Deploy in Dokploy (user decision 2026-10-27)
 - [x] **DEPLOY-02**: EmDash applies its pending migrations itself on the first request after a container starts (default auto mode), with no separate pre-deploy migration step (D-02 amended by the user on 2026-10-26), and CI fails when the committed migration manifest .emdash/migrations.json differs from the one the build generates, so a changed migration set is committed on purpose and a volume backup is taken before the deploy that applies it
 - [ ] **DEPLOY-03**: The deployed site is compared against the baseline (17 of 17 pages identical, public-JS allowlist passing) on its real hostname, with the record DNS only and again behind the Cloudflare proxy
-- [ ] **DEPLOY-04**: `dev.zeikcookson.com` serves the Dokploy app, the old site is torn down with no rollback target and removed from the old project's custom domains, and once the Let's Encrypt certificate exists Cloudflare proxies the hostname with SSL/TLS Full (strict) while the Dokploy app is still shown to be the one answering (user decisions 2026-10-27)
-- [ ] **DEPLOY-05**: A SQLite backup in the Cloudflare R2 bucket (user decision 2026-10-27) and its restore is rehearsed once
+- [ ] **DEPLOY-04**: `dev.zeikcookson.com` serves the Dokploy app, the old site is torn down with no rollback target (the Cloudflare Pages project no longer exists), and once the Let's Encrypt certificate exists Cloudflare proxies the hostname with SSL/TLS Full (strict) and Always Use HTTPS off while the Dokploy app is still shown to be the one answering through the EmDash health route (user decisions 2026-10-27)
+- [ ] **DEPLOY-05**: A nightly Dokploy volume backup of `/app/data` goes to a private Cloudflare R2 bucket (user decision 2026-10-27), and one backup is restored into a new volume and booted in a scratch app whose pages match production
 
 ### Guards
 
 - [x] **GUARD-01**: CI fails if any public route gains a script, `modulepreload` or module tag beyond the recorded baseline
 - [x] **GUARD-02**: CI fails on pending migrations (`emdash migrate --check`)
-- [ ] **GUARD-03**: Production deploys when a `v*` tag is pushed, and only after a gate confirms that the tagged commit is on `main` and that CI succeeded for it; the deploy sets the Dokploy application's source ref to that tag, so Dokploy builds the tag and the tag names exactly the code that goes live (a push to `main` runs CI only and documentation-only pushes run no CI; user decisions 2026-10-27); a post-deploy smoke test then checks `/` and one project page return 200
+- [ ] **GUARD-03**: After each deploy the owner runs `node scripts/smoke-test.mjs https://dev.zeikcookson.com`, which checks `/`, `/projects/` and one project page return 200. Dropped by user decision 2026-10-27: the tag-triggered, CI-gated deploy workflow with a gate script and a Dokploy API call, the API key and GitHub secrets, and `paths-ignore` for documentation pushes. The owner clicks Deploy in Dokploy and a push to `main` runs CI only
 
 ### Docs
 
-- [ ] **DOCS-01**: CLAUDE.md is updated (Dokploy deploy by `v*` tag push, with Dokploy building the tag, Node version, admin-only client JS, "no new JS" rule, no-plugins rule, content now edited in EmDash)
-- [ ] **DOCS-02**: README is updated for the new local and deploy workflow, including the tag release procedure, what to do when a tagged commit has no CI run, and how to redeploy an earlier tag to undo a bad deploy
+- [ ] **DOCS-01**: CLAUDE.md is updated (Dokploy deploy by clicking Deploy, a push to `main` runs CI only, a smoke test after each deploy, Node version, admin-only client JS, "no new JS" rule, no-plugins rule, content now edited in EmDash); the Deployment paragraph already says the deploy part (2026-10-27)
+- [ ] **DOCS-02**: README is updated for the new local and deploy workflow, including the manual deploy steps (merge to `main`, click Deploy, run the smoke test) and the rollback rule (revert and redeploy; restore a volume backup after a bad migration)
 - [ ] **DOCS-03**: The `portfolio-update` skill and any doc referencing the markdown workflow are flagged or updated
 
 ## v2 Requirements
@@ -156,4 +158,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 ---
 
 _Requirements defined: 2026-10-23_
-_Last updated: 2026-10-27 after Cloudflare Pages was dropped (DEPLOY-01, DEPLOY-03 and DEPLOY-04 reworded), then again for tag deploys, the Cloudflare proxy and R2 backups (DEPLOY-02 to DEPLOY-05, GUARD-03, DOCS-01 and DOCS-02 reworded), then a third time so that Dokploy builds the tag and not the tip of main (GUARD-03, DOCS-01 and DOCS-02 reworded)_
+_Last updated: 2026-10-27 after Cloudflare Pages was dropped (DEPLOY-01, DEPLOY-03 and DEPLOY-04 reworded), then for the Cloudflare proxy and R2 backups, then a fourth time for manual deploys with one passkey (DEPLOY-01, DEPLOY-04, DEPLOY-05, ADMIN-03, GUARD-03, DOCS-01 and DOCS-02 reworded, the dropped parts marked with the date)_

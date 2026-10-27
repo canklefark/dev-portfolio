@@ -25,4 +25,4 @@ Zero border-radius throughout. No card shadows at rest.
 
 ## Deployment
 
-Dokploy builds the `Dockerfile` (Node 24, output `dist/server/entry.mjs`). `engines` requires Node >=22.22.2. Production deploys when a `v*` tag is pushed, after CI passes for the tagged commit. A push to `main` runs CI only, and docs-only pushes skip CI. The tag pipeline is built in Phase 5 (`.planning/phases/05-dokploy-deploy-and-cutover/`).
+Dokploy builds the `Dockerfile` (Node 24, output `dist/server/entry.mjs`). `engines` requires Node >=22.22.2. The owner clicks Deploy in Dokploy; nothing deploys automatically. A push to `main` runs CI only. After each deploy run `node scripts/smoke-test.mjs https://dev.zeikcookson.com`.
