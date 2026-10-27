@@ -2,53 +2,20 @@
 
 ## Stack
 
-Astro 6, TypeScript strict mode, no UI framework. Content via Astro content collections. Deployed to Cloudflare Pages from `main`.
+Astro 6 with the `@astrojs/node` standalone adapter, TypeScript strict mode. Content lives in EmDash (SQLite on a persistent volume), not in the repo. React is present only for the EmDash admin. Self-hosted on Dokploy from the repo `Dockerfile`.
 
 ## Content
 
-### Adding a project
+Content is edited in the EmDash admin or by Claude through the EmDash MCP endpoint (`/_emdash/api/mcp`, scoped token). There are no markdown content files. `README.md` covers the MCP setup, environment variables, and what the agent can and cannot do.
 
-Create a file in `src/content/projects/` named `project-slug.md`:
-
-```md
----
-date: "2025-05-08"
-title: "Project Name"
-category: "Category"
-status: "IN PROGRESS"
-statusVariant: accent # accent (amber) | green | default
-surface: "WHERE IT RUNS"
-timeLabel: "ACTIVE"
-period: "Q2 2025"
-tags: ["Tag1", "Tag2"]
-summary: "One sentence for the project card."
-sub: "Two sentences for the detail page header."
-stats:
-  - { label: "Label", value: "Value", variant: "default" }
-draft: false
----
-
-## The Problem
-
-## Approach
-
-## Current State
-
-## What's Next
-
-## Stack
-
-`Tool` · `Tool` · `Tool`
-```
-
-Projects sort newest first by `date`. `statusVariant: accent` is amber (in progress), `green` is shipped/running, `default` is plain.
+Content edits made through `content_create` and `content_update` land as drafts. The user publishes in the admin.
 
 ## Code Rules
 
 - TypeScript strict — no `any`
-- No client-side JS unless there's no server-side alternative
+- No client-side JS unless there's no server-side alternative (`npm run check:public-js` guards this)
 - No inline styles except for CSS custom property overrides (`style="--var: value"`)
-- All SQL queries parameterized, view names imported from config — never interpolated
+- All SQL queries parameterized, never interpolated
 
 ## Design System
 
@@ -60,4 +27,4 @@ Zero border-radius throughout. No card shadows at rest.
 
 ## Deployment
 
-Push to `main` triggers a Cloudflare Pages build. Build command: `npm run build`. Output: `dist/`. Node version: 22.
+Dokploy builds the `Dockerfile` (Node 24, output `dist/server/entry.mjs`). `engines` requires Node >=22.22.2. Production deploys when a `v*` tag is pushed, after CI passes for the tagged commit. A push to `main` runs CI only, and docs-only pushes skip CI. The tag pipeline is built in Phase 5 (`.planning/phases/05-dokploy-deploy-and-cutover/`).
