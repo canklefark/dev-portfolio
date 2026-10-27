@@ -100,10 +100,75 @@ describe("smoke-test", () => {
     assert.equal(await check(base), null);
   });
 
+  it("names / when it answers 500", async () => {
+    const { base } = await startSite((path) =>
+      path === "/" ? { status: 500 } : healthy(path, 1),
+    );
+    assert.equal(await check(base), "/ answered 500");
+  });
+
+  it("fails when /projects/ links no project", async () => {
+    const { base } = await startSite((path) =>
+      path === "/projects/"
+        ? { status: 200, body: "<p>none yet</p>" }
+        : healthy(path, 1),
+    );
+    assert.equal(await check(base), "no project link on /projects/");
+  });
+
+  it("names the project page when it answers 500", async () => {
+    const { base } = await startSite((path) =>
+      path === "/projects/alpha/" ? { status: 500 } : healthy(path, 1),
+    );
+    assert.equal(await check(base), "/projects/alpha/ answered 500");
+  });
+
+  it("treats a redirect as a failure", async () => {
+    const { base } = await startSite((path) =>
+      path === "/"
+        ? { status: 301, location: "/elsewhere/" }
+        : healthy(path, 1),
+    );
+    assert.equal(await check(base), "/ answered 301");
+  });
+
   it("CLI prints smoke-test: PASS and exits 0 against a healthy site", async () => {
     const { base } = await startSite(healthy);
     const result = await runCli([base, "--attempts", "1"]);
     assert.equal(result.status, 0);
     assert.equal(result.stdout.trim().split("\n").at(-1), "smoke-test: PASS");
+  });
+
+  it("CLI retries and passes once the site recovers", async () => {
+    const { base } = await startSite((path, hit) =>
+      path === "/" && hit === 1 ? { status: 500 } : healthy(path, hit),
+    );
+    const result = await runCli([base, "--attempts", "3", "--delay-ms", "10"]);
+    assert.equal(result.status, 0);
+    assert.match(result.stdout, /attempt 1\/3 failed/);
+    assert.equal(result.stdout.trim().split("\n").at(-1), "smoke-test: PASS");
+  });
+
+  it("CLI exits 1 with the last reason when attempts run out", async () => {
+    const { base, server } = await startSite(healthy);
+    await closeServer(server);
+    const result = await runCli([base, "--attempts", "2", "--delay-ms", "10"]);
+    assert.equal(result.status, 1);
+    assert.match(
+      result.stdout.trim().split("\n").at(-1) ?? "",
+      /^smoke-test: FAIL \(\/ request failed/,
+    );
+  });
+
+  it("CLI exits 2 on bad arguments", async () => {
+    for (const args of [
+      [],
+      ["ftp://example.com"],
+      ["http://127.0.0.1:1", "--attempts", "0"],
+    ]) {
+      const result = await runCli(args);
+      assert.equal(result.status, 2, `args ${JSON.stringify(args)}`);
+      assert.match(result.stderr, /usage: node scripts\/smoke-test\.mjs/);
+    }
   });
 });

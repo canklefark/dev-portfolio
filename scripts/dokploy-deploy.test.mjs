@@ -3,10 +3,18 @@
 // panel is never contacted.
 // run: node --test scripts/dokploy-deploy.test.mjs
 import assert from "node:assert/strict";
+import { spawn } from "node:child_process";
 import { createServer } from "node:http";
+import { dirname, join } from "node:path";
 import { after, describe, it } from "node:test";
-import { deploy } from "./dokploy-deploy.mjs";
+import { fileURLToPath } from "node:url";
+import { deploy, latestDeployment } from "./dokploy-deploy.mjs";
 import { check } from "./smoke-test.mjs";
+
+const SCRIPT = join(
+  dirname(fileURLToPath(import.meta.url)),
+  "dokploy-deploy.mjs",
+);
 
 /**
  * @typedef {{ method: string, pathname: string, search: string, key: string | undefined, body: string }} Logged
@@ -58,7 +66,8 @@ function startServer(respond) {
       const reply = respond(logged, requests);
       response.writeHead(reply.status, { "content-type": "application/json" });
       response.end(
-        reply.text ?? (reply.json === undefined ? "" : JSON.stringify(reply.json)),
+        reply.text ??
+          (reply.json === undefined ? "" : JSON.stringify(reply.json)),
       );
     });
   });
@@ -77,23 +86,66 @@ function startServer(respond) {
 }
 
 /**
- * A fake Dokploy API whose deployment list changes with the number of GETs seen after the POST.
- * @param {unknown[][]} before lists answered before application.deploy was requested (the last repeats)
- * @param {unknown[][]} after lists answered after it (the last repeats)
+ * A fake Dokploy API whose deployment list changes with the number of GETs seen.
+ * @param {unknown[]} beforeLists lists answered before application.deploy was requested (the last repeats)
+ * @param {unknown[]} afterLists lists answered after it (the last repeats)
  * @returns {Responder}
  */
-function dokploy(before, after) {
+function dokploy(beforeLists, afterLists) {
   return (request, requests) => {
     if (request.method === "POST") return { status: 200, json: { ok: true } };
     const posted = requests.findIndex((r) => r.method === "POST");
     if (posted < 0) {
       const seen = requests.length - 1;
-      return { status: 200, json: before[Math.min(seen, before.length - 1)] };
+      return {
+        status: 200,
+        json: beforeLists[Math.min(seen, beforeLists.length - 1)],
+      };
     }
-    const seen = requests.slice(posted + 1).length - 1;
-    return { status: 200, json: after[Math.min(seen, after.length - 1)] };
+    const seen = requests.length - posted - 2;
+    return {
+      status: 200,
+      json: afterLists[Math.min(seen, afterLists.length - 1)],
+    };
   };
 }
+
+/**
+ * Run the CLI without blocking this process's event loop, which serves the fake API. The environment holds only
+ * PATH plus env, so a real DOKPLOY_* variable of the developer is never inherited.
+ * @param {string[]} args
+ * @param {Record<string, string>} env
+ * @returns {Promise<{ status: number | null, stdout: string, stderr: string }>}
+ */
+function runCli(args, env) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(process.execPath, [SCRIPT, ...args], {
+      env: { PATH: process.env.PATH ?? "", ...env },
+    });
+    let stdout = "";
+    let stderr = "";
+    child.stdout.on("data", (chunk) => (stdout += chunk));
+    child.stderr.on("data", (chunk) => (stderr += chunk));
+    child.on("error", reject);
+    child.on("close", (status) => resolve({ status, stdout, stderr }));
+  });
+}
+
+/**
+ * @param {string} url
+ * @returns {import("./dokploy-deploy.mjs").DeployOptions}
+ */
+function options(url) {
+  return {
+    url,
+    apiKey: "test-key",
+    appId: "app-test",
+    intervalMs: 10,
+    timeoutMs: 2000,
+  };
+}
+
+const D0 = { deploymentId: "d0", status: "done" };
 
 describe("dokploy-deploy", () => {
   it("triggers a deploy and waits for the newer deployment to finish", async () => {
@@ -150,5 +202,139 @@ describe("dokploy-deploy", () => {
       null,
     );
     assert.equal(await check(site.base), null);
+  });
+
+  it("fails when the newer deployment ends in error or cancelled", async () => {
+    for (const status of ["error", "cancelled"]) {
+      const { base } = await startServer(
+        dokploy([[D0]], [[{ deploymentId: "d1", status }, D0]]),
+      );
+      const reason = await deploy(options(base));
+      assert.ok(
+        reason?.includes(`ended with status ${status}`),
+        `reason for ${status}: ${reason}`,
+      );
+    }
+  });
+
+  it("fails when no newer deployment finishes before the timeout", async () => {
+    const { base } = await startServer(
+      dokploy([[D0]], [[{ deploymentId: "d1", status: "running" }, D0]]),
+    );
+    const reason = await deploy({ ...options(base), timeoutMs: 200 });
+    assert.ok(
+      reason?.startsWith("timed out after 200 ms"),
+      `reason: ${reason}`,
+    );
+    assert.ok(reason?.includes("d1 running"), `reason: ${reason}`);
+  });
+
+  it("fails on a refused API key without printing it", async () => {
+    const { base } = await startServer((request) =>
+      request.key === "test-key"
+        ? { status: 200, json: [D0] }
+        : { status: 401 },
+    );
+    const key = "secret-test-key-123";
+    const result = await runCli(
+      ["--interval-ms", "10", "--timeout-ms", "500"],
+      {
+        DOKPLOY_URL: base,
+        DOKPLOY_API_KEY: key,
+        DOKPLOY_APP_ID: "app-test",
+      },
+    );
+    assert.equal(result.status, 1);
+    assert.match(
+      result.stdout,
+      /(application\.deploy|deployment\.all) answered 401/,
+    );
+    assert.ok(!result.stdout.includes(key), "key printed on stdout");
+    assert.ok(!result.stderr.includes(key), "key printed on stderr");
+  });
+
+  it("does not trigger when the deployment list cannot be read", async () => {
+    const { base, requests } = await startServer(() => ({ status: 500 }));
+    const reason = await deploy(options(base));
+    assert.equal(reason, "deployment.all answered 500");
+    assert.equal(requests.filter((r) => r.method === "POST").length, 0);
+  });
+
+  it("waits for the first deployment of a new application", async () => {
+    const { base } = await startServer(
+      dokploy(
+        [[]],
+        [
+          [{ deploymentId: "d1", status: "running" }],
+          [{ deploymentId: "d1", status: "done" }],
+        ],
+      ),
+    );
+    assert.equal(await deploy(options(base)), null);
+  });
+
+  it("latestDeployment picks the newest item and reads both list shapes", () => {
+    const oldest = {
+      deploymentId: "a",
+      status: "done",
+      createdAt: "2026-01-01T00:00:00.000Z",
+    };
+    const newest = {
+      deploymentId: "b",
+      status: "running",
+      createdAt: "2026-02-01T00:00:00.000Z",
+    };
+    assert.deepEqual(latestDeployment([oldest, newest]), {
+      id: "b",
+      status: "running",
+    });
+    assert.deepEqual(latestDeployment({ data: [newest, oldest] }), {
+      id: "b",
+      status: "running",
+    });
+    assert.equal(latestDeployment([]), null);
+    assert.equal(latestDeployment({ data: [] }), null);
+    assert.equal(latestDeployment({ unrelated: true }), null);
+    assert.deepEqual(latestDeployment([{ id: "x", status: "done" }]), {
+      id: "x",
+      status: "done",
+    });
+    assert.equal(
+      latestDeployment([{ deploymentId: "y", status: "done" }])?.id,
+      "y",
+    );
+  });
+
+  it("CLI exits 2 on a missing variable or a plain http URL", async () => {
+    const api = await startServer(
+      dokploy([[D0]], [[{ deploymentId: "d1", status: "done" }]]),
+    );
+    const missing = await runCli([], {
+      DOKPLOY_URL: api.base,
+      DOKPLOY_API_KEY: "test-key",
+    });
+    assert.equal(missing.status, 2);
+    assert.match(missing.stderr, /DOKPLOY_APP_ID/);
+
+    const plain = await runCli([], {
+      DOKPLOY_URL: "http://example.com",
+      DOKPLOY_API_KEY: "test-key",
+      DOKPLOY_APP_ID: "app-test",
+    });
+    assert.equal(plain.status, 2);
+    assert.match(plain.stderr, /https/);
+    assert.equal(plain.stdout, "", "no request was made");
+    assert.equal(api.requests.length, 0);
+
+    const local = await runCli(
+      ["--interval-ms", "10", "--timeout-ms", "2000"],
+      {
+        DOKPLOY_URL: api.base,
+        DOKPLOY_API_KEY: "test-key",
+        DOKPLOY_APP_ID: "app-test",
+      },
+    );
+    assert.equal(local.status, 0);
+    assert.match(local.stdout, /dokploy-deploy: PASS/);
   });
 });
