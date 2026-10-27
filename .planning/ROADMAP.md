@@ -2,7 +2,7 @@
 
 ## Overview
 
-This milestone moves the portfolio's content out of hand-edited markdown in git and into EmDash on self-hosted Node with SQLite (Dokploy), so content is edited in a browser admin or by Claude. It starts with a spike that settles the open platform questions and captures a baseline of the current site. Then it builds the content model and imports everything with a verified match, rewires the public pages to read from EmDash with no visible change and no new JavaScript, and proves agent access locally. After that it moves hosting from Pages to a Dokploy Node container with a claimed, passkey-protected admin, and it finishes by proving the live editing loop and updating the docs. In every phase the public pages stay fast, readable and identical to today.
+This milestone moves the portfolio's content out of hand-edited markdown in git and into EmDash on self-hosted Node with SQLite (Dokploy), so content is edited in a browser admin or by Claude. It starts with a spike that settles the open platform questions and captures a baseline of the current site. Then it builds the content model and imports everything with a verified match, rewires the public pages to read from EmDash with no visible change and no new JavaScript, and proves agent access locally. After that it deploys the site to a Dokploy Node container with a claimed, passkey-protected admin, and it finishes by proving the live editing loop and updating the docs. In every phase the public pages stay fast, readable and identical to today.
 
 ## Milestones
 
@@ -21,7 +21,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Content Model and Import** - Build the EmDash schema and import all 13 projects, About, nav and settings with a zero-diff parity report (completed 2026-10-26)
 - [x] **Phase 3: Read Path Rewire and Parity** - Public pages read from EmDash, look identical, ship no new JavaScript, and the markdown sources are gone (completed 2026-10-26)
 - [x] **Phase 4: Agent Access** - Claude manages content through MCP or CLI with a draft-first token that cannot touch the schema (completed 2026-10-26)
-- [ ] **Phase 5: Dokploy Deploy and Cutover** - dev.zeikcookson.com moves to a Dokploy Node container with SQLite on a persistent volume, a claimed passkey admin, and migration-safe deploys
+- [ ] **Phase 5: Dokploy Deploy and Cutover** - dev.zeikcookson.com is served by a Dokploy Node container with SQLite on a persistent volume, a claimed passkey admin, and migration-safe deploys
 - [ ] **Phase 6: Live Editing and Docs** - The live site is edited from the admin end to end, and the repo docs describe the new workflow
 
 ## Phase Details
@@ -169,8 +169,8 @@ Plans:
 **Requirements**: DEPLOY-01, DEPLOY-02, DEPLOY-03, DEPLOY-04, DEPLOY-05, ADMIN-02, ADMIN-03, GUARD-02, GUARD-03
 **Success Criteria** (what must be TRUE):
 
-1. A preview deployment on Dokploy, using its own SQLite database and volume, matches the baseline before the domain moves
-2. `dev.zeikcookson.com` serves the Dokploy app with SQLite on a persistent volume and the media storage chosen in Phase 1, and the Pages project is still available for rollback
+1. The site built by Dokploy from the repo Dockerfile and served on `dev.zeikcookson.com` matches the baseline in content and scripts (17 of 17 pages identical, public-JS allowlist passing), checked on the live hostname
+2. `dev.zeikcookson.com` serves the Dokploy app with SQLite and uploads on a persistent volume (the media storage chosen in Phase 1), the old site is torn down, and content and passkeys survive a redeploy
 3. Visiting the admin on production shows the login page, not the setup wizard, and each of two passkeys enrolled on `dev.zeikcookson.com` can sign in, with the recovery path tested
 4. EmDash applies migrations on container boot, CI fails while a migration is pending or when the committed migration manifest differs from the build, and a post-deploy smoke test confirms `/` and one project page return 200
 5. A SQLite backup has been restored once into a non-production instance, and the restored content matches production
@@ -185,15 +185,15 @@ Plans:
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
-- [ ] 05-03-PLAN.md: Preview app on Dokploy with its own volume, smoke and first GitHub CI run, baseline parity 17/17, and the panel facts and deploy script checked against the real Dokploy API
+- [ ] 05-03-PLAN.md: First production deploy: the app on Dokploy from the pushed branch on its own volume, dev.zeikcookson.com pointed at it, the wizard claimed with Sample content and two passkeys, the deploy script run against the real panel, baseline parity 17/17
 
 **Wave 3** _(blocked on Wave 2 completion)_
 
-- [ ] 05-04-PLAN.md: Cutover sitting (user), then production verified: DNS on the Dokploy host, the merge push deployed and smoke-tested through the pipeline, wizard and two passkeys, parity, malformed Host check, rollback runbook, agent token on production
+- [ ] 05-04-PLAN.md: The merge push proves the CI-gated pipeline on main with the volume intact, malformed Host and response header checks, bad deploy recovery steps, agent token on production
 
 **Wave 4** _(blocked on Wave 3 completion)_
 
-- [ ] 05-05-PLAN.md: Nightly R2 volume backup, restore into a scratch instance matching production, recovery drill on the restored copy, scratch discarded, named gates closed
+- [ ] 05-05-PLAN.md: Nightly S3 volume backup, restore into a scratch instance matching production, recovery drill on the restored copy, scratch discarded, named gates closed
 
 ### Phase 6: Live Editing and Docs
 

@@ -1,6 +1,6 @@
 # Phase 5: Dokploy Deploy and Cutover - Research
 
-**Researched:** 2026-10-26
+**Researched:** 2026-10-26 (update 2026-10-27: the user dropped Cloudflare Pages, so the Pages branch control, the Pages custom domain steps in Pattern 5, the rollback runbook, Pitfalls 2, 3 and 7 and the preview app in Patterns 1 and 4 are superseded by CONTEXT D-05 to D-07 as amended; everything about EmDash, Dokploy volumes, backups, recovery and the guards still applies)
 **Domain:** Self-hosted Node container (Dokploy, Traefik, SQLite volume), EmDash 1.3.1 first-run and admin claim, CI guards, DNS cutover from Cloudflare Pages
 **Confidence:** MEDIUM (EmDash behavior is HIGH, read from installed source this session; Dokploy UI and API details are MEDIUM or LOW because the Dokploy host cannot be probed from here and several docs pages are thin)
 

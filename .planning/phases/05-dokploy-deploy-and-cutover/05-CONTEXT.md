@@ -10,6 +10,8 @@ dev.zeikcookson.com is served by a Dokploy Node container with SQLite and upload
 
 Guiding principle from the user: keep it simple. This is a personal site run on their own server. Downtime during cutover is acceptable. Do not build zero-downtime, staged-claim or multi-environment machinery.
 
+Amended 2026-10-27 (user): Cloudflare Pages is dropped entirely. The site is deployed straight to one Dokploy production app, guided by the EmDash Node and Docker deployment docs. The old site on dev.zeikcookson.com is torn down, no rollback target is kept, and Cloudflare stays DNS only for zeikcookson.com.
+
 </domain>
 
 <decisions>
@@ -26,16 +28,16 @@ Guiding principle from the user: keep it simple. This is a personal site run on 
 
 ### Branches and cutover
 
-- **D-05:** A Dokploy preview app deploys from `emdash-migration`. `main` stays on Cloudflare Pages until cutover. At cutover, merge `emdash-migration` into `main`, point the production Dokploy app at `main`, and disable the Pages build so Pages never builds the EmDash code. The Pages project stays in place, unbuilt, for a DNS rollback with no fixed retirement window. Merging and pushing still need the user's explicit go-ahead.
-- **D-06:** Preview is minimal: one preview app with its own volume and fresh seed import from the repo, on any hostname that is easy to set up. Run the existing Phase 1/3 parity compare against `~/portfolio-baseline/current` pointed at the preview URL, plus `check:public-js`. Record the result in a phase evidence file. No screenshots and no separate polished preview domain.
-- **D-07:** Cutover order is simple: downtime is fine. Point `dev.zeikcookson.com` at Dokploy, and as soon as it serves, complete the setup wizard and enroll two passkeys on that hostname in the same sitting (rpId follows `EMDASH_SITE_URL`, so the real hostname is required). No hosts-file override, no DNS-01 pre-claim, no IP allowlist. Rollback is pointing DNS back at Pages. — **Reversibility:** reversible, DNS flip back; but passkeys enrolled on the hostname stay bound to it.
+- **D-05 (amended 2026-10-27, user: Cloudflare Pages is dropped entirely):** There is one Dokploy app, production, deployed straight to `dev.zeikcookson.com`. There is no preview app, no branch-control setting anywhere else and no rollback target. The first deploy builds the pushed `emdash-migration` branch, so `main` receives `deploy.yml` only after the site is claimed and seeded; the app is then switched to `main`, and the merge push is the first run of the CI-gated pipeline (D-04). A bad deploy is recovered by reverting the commit through the pipeline, or by restoring a volume backup when a migration ran. Merging and pushing still need the user's explicit go-ahead.
+- **D-06 (amended 2026-10-27, user):** No preview app. The existing Phase 1/3 parity compare against `~/portfolio-baseline/current` and the public-JS allowlist check run against the production hostname right after the first deploy and again after the pipeline's redeploy. Record the result in a phase evidence file. No screenshots. The only second instance is a temporary scratch app for the restore rehearsal (D-14).
+- **D-07 (amended 2026-10-27, user: this does not need to be a clean cutover):** Downtime is fine. Tear down the old site on `dev.zeikcookson.com`, point it at the Dokploy host with a DNS-only A record, and as soon as it serves, complete the setup wizard and enroll two passkeys on that hostname in the same sitting (rpId follows `EMDASH_SITE_URL`, so the real hostname is required). No hosts-file override, no DNS-01 pre-claim, no IP allowlist. No rollback target is kept. **Reversibility:** one-way for the old site, which is torn down, and passkeys enrolled on the hostname stay bound to it; the Dokploy app itself is reversible.
 - **D-08:** `EMDASH_SITE_URL=https://dev.zeikcookson.com` is set at build and run time (Phase 1 gate h).
 
 ### Admin, recovery and exposure
 
 - **D-09:** Admin gate is EmDash passkeys only (Phase 1 D-08). Two passkeys on real devices, with the SQLite recovery procedure from `PROJECT.md` Spike Findings rehearsed once. The GitHub-login alternative (gate b) is not adopted.
 - **D-10:** Astro 6 residual advisories (gate a): stay on Astro 6 and accept the risk, no Astro 7 migration in this phase. Phase 5 only verifies the proxy rejects a malformed Host header (curl check, recorded). Record the acceptance in `PROJECT.md`.
-- **D-11:** Security headers (gate g) and the session store location (gate f): Claude's discretion, kept minimal. Add basic headers at Traefik or Cloudflare only if cheap; do not move the session store unless a redeploy logging the user out proves annoying.
+- **D-11:** Security headers (gate g) and the session store location (gate f): Claude's discretion, kept minimal. Add basic headers at Traefik only if cheap (Cloudflare is DNS only); do not move the session store unless a redeploy logging the user out proves annoying.
 - **D-12:** The agent token (Phase 4 D-08) is recreated after the production database exists, and `EMDASH_MCP_URL` is pointed at the production endpoint. One live content-list call proves it.
 
 ### Backup and restore
@@ -45,8 +47,8 @@ Guiding principle from the user: keep it simple. This is a personal site run on 
 
 ### Claude's Discretion
 
-- Exact hostname for the preview app.
-- Backup destination, schedule and retention.
+- Hostname for the temporary scratch instance used in the restore rehearsal (D-14).
+- Backup destination, schedule and retention. The destination is an S3-compatible bucket; Cloudflare is DNS only after the 2026-10-27 decision, so R2 is no longer the default and the user may pick any provider.
 - Security headers and session store handling (D-11).
 - Webhook versus poll for triggering the post-deploy smoke test.
 
@@ -71,6 +73,13 @@ Guiding principle from the user: keep it simple. This is a personal site run on 
 - `.planning/phases/04-agent-access/04-VERIFICATION.md` W7 (deployed endpoint untested until Phase 5)
 - `.planning/phases/03-read-path-rewire-and-parity/03-CONTEXT.md` D-10 (`check:public-js`)
 
+### EmDash deployment docs (the user's chosen guide for the deploy)
+
+- https://docs.emdashcms.com/deployment/nodejs/ (Node standalone, Docker, volume, `EMDASH_SITE_URL` at build and run time, migrations on first request, verification list)
+- https://docs.emdashcms.com/guides/backups/ (raw database copy with its -wal and -shm files, media directory, JSON backups cannot be restored)
+- https://docs.emdashcms.com/deployment/updating/ and https://docs.emdashcms.com/deployment/core-migrations/ (recovery point before a migration, a code rollback does not undo a migration)
+- https://docs.emdashcms.com/guides/authentication/ and https://docs.emdashcms.com/guides/change-domain/ (passkeys are bound to the hostname where they are created)
+
 ### Code and tooling
 
 - `Dockerfile` multi-stage Node 24 image, volume `/app/data`
@@ -78,7 +87,7 @@ Guiding principle from the user: keep it simple. This is a personal site run on 
 - `astro.config.mjs` EmDash integration and sqlite/local paths
 - `~/portfolio-baseline/current` baseline HTML and script inventory for parity
 
-No external specs. Researcher should confirm Dokploy pre-deploy, backup and domain features against current Dokploy docs.
+Beyond the EmDash docs above there are no external specs. Researcher should confirm Dokploy pre-deploy, backup and domain features against current Dokploy docs.
 
 </canonical_refs>
 
@@ -99,7 +108,7 @@ No external specs. Researcher should confirm Dokploy pre-deploy, backup and doma
 
 ### Integration Points
 
-- Cloudflare stays DNS (and optionally proxy) for dev.zeikcookson.com; Pages project is the rollback target.
+- Cloudflare stays DNS only (grey cloud) for zeikcookson.com; there is no rollback target.
 - Phase 6 consumes the live admin for editing and updates CLAUDE.md and README.
 
 </code_context>
@@ -109,6 +118,8 @@ No external specs. Researcher should confirm Dokploy pre-deploy, backup and doma
 
 "I just wanna run this on my server and use it. It doesn't need to be that deep. The site can come down for a while during the cutover."
 
+"we aren't doing cloudflare pages anymore, we're just deploying it to dokploy using the emdash docs to guide it" (2026-10-27). dev.zeikcookson.com can be torn down, downtime is fine, "this doesn't need to be a clean cutover".
+
 </specifics>
 
 <deferred>
@@ -117,7 +128,7 @@ No external specs. Researcher should confirm Dokploy pre-deploy, backup and doma
 - Offsite backup design, retention policy and monitoring beyond Dokploy defaults.
 - Zero-downtime cutover, staged admin claim, visual screenshot parity.
 - Astro 7 migration.
-- Retiring the Pages project (do it whenever the user is comfortable).
+- Offsite backup monitoring beyond what Dokploy shows (the design itself is already deferred above).
 
 </deferred>
 

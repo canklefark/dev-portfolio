@@ -54,10 +54,10 @@ Milestone v1.0: EmDash Migration. Each maps to roadmap phases.
 
 ### Deployment
 
-- [ ] **DEPLOY-01**: The site deploys to Dokploy as a Node standalone container (Docker image) with SQLite on a persistent volume and a separate preview database
+- [ ] **DEPLOY-01**: The site deploys to Dokploy as a Node standalone container (Docker image) with SQLite and uploads on a persistent volume, straight to the production app with no separate preview database (user decision 2026-10-27)
 - [x] **DEPLOY-02**: EmDash applies its migrations on container boot, with no separate pre-deploy migration step (D-02 amended by the user on 2026-10-26), and CI fails when the committed migration manifest .emdash/migrations.json differs from the one the build generates, so a changed migration set is committed on purpose and a volume backup is taken before the deploy that applies it
-- [ ] **DEPLOY-03**: A preview deployment is compared against the baseline before the domain moves
-- [ ] **DEPLOY-04**: `dev.zeikcookson.com` serves the Dokploy app, with the Pages project kept until rollback is no longer needed
+- [ ] **DEPLOY-03**: The deployed site is compared against the baseline (17 of 17 pages identical, public-JS allowlist passing) on its real hostname
+- [ ] **DEPLOY-04**: `dev.zeikcookson.com` serves the Dokploy app, the old site is torn down with no rollback target, and Cloudflare stays DNS only (user decision 2026-10-27)
 - [ ] **DEPLOY-05**: A SQLite backup and restore is rehearsed once
 
 ### Guards
@@ -156,4 +156,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 ---
 
 _Requirements defined: 2026-10-23_
-_Last updated: 2026-10-23 after roadmap creation_
+_Last updated: 2026-10-27 after Cloudflare Pages was dropped (DEPLOY-01, DEPLOY-03 and DEPLOY-04 reworded)_
