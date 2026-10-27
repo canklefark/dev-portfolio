@@ -6,9 +6,7 @@ Astro 6 with the `@astrojs/node` standalone adapter, TypeScript strict mode. Con
 
 ## Content
 
-Content is edited in the EmDash admin or by Claude through the EmDash MCP endpoint (`/_emdash/api/mcp`, scoped token). There are no markdown content files. `README.md` covers the MCP setup, environment variables, and what the agent can and cannot do.
-
-Content edits made through `content_create` and `content_update` land as drafts. The user publishes in the admin.
+Content is edited in the EmDash admin. There are no markdown content files.
 
 ## Code Rules
 
