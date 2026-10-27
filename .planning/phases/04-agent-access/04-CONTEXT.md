@@ -122,3 +122,7 @@ The user wants the guarantee enforced by token scope, not by convention: a token
 
 *Phase: 4-Agent Access*
 *Context gathered: 2026-10-26*
+
+## Amendment 2026-10-27
+
+D-05 is reversed by the user: the agent signs in through OAuth (full admin rights) instead of a scoped personal access token. The Claude Code guard hook stays in force. README "Agent access" is updated; `.mcp.json` drops the Authorization header.
