@@ -1,6 +1,6 @@
 # Phase 5: Dokploy Deploy and Cutover - Research
 
-**Researched:** 2026-10-26 (update 2026-10-27: the user dropped Cloudflare Pages, so the Pages branch control, the Pages custom domain steps in Pattern 5, the rollback runbook, Pitfalls 2, 3 and 7 and the preview app in Patterns 1 and 4 are superseded by CONTEXT D-05 to D-07 as amended; everything about EmDash, Dokploy volumes, backups, recovery and the guards still applies)
+**Researched:** 2026-10-26 (update 2026-10-27: the user dropped Cloudflare Pages, so the Pages branch control, the Pages custom domain steps in Pattern 5, the rollback runbook, Pitfalls 2, 3 and 7 and the preview app in Patterns 1 and 4 are superseded by CONTEXT D-05 to D-07 as amended; everything about EmDash, Dokploy volumes, backups, recovery and the guards still applies; second update 2026-10-27: Pattern 8 and the A1 and A2 deploy trigger are superseded by the tag trigger and CI gate of CONTEXT D-15, Open Question 5 is decided by D-16 (proxy on after the certificate, SSL Full strict, HTTP-01 kept), the S3 destination is Cloudflare R2 per D-17, and where text says migrations run on boot read the first request after a start)
 **Domain:** Self-hosted Node container (Dokploy, Traefik, SQLite volume), EmDash 1.3.1 first-run and admin claim, CI guards, DNS cutover from Cloudflare Pages
 **Confidence:** MEDIUM (EmDash behavior is HIGH, read from installed source this session; Dokploy UI and API details are MEDIUM or LOW because the Dokploy host cannot be probed from here and several docs pages are thin)
 

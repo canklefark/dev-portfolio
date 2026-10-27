@@ -14,7 +14,7 @@ state_head: 80f39ded29b1bf9158ea55154bf7ede1b2a244f7
 progress:
   total_phases: 6
   completed_phases: 4
-  total_plans: 23
+  total_plans: 24
   completed_plans: 20
 ---
 
@@ -31,7 +31,7 @@ See: .planning/PROJECT.md (updated 2026-10-26)
 
 Phase: 05 (Dokploy Deploy and Cutover) — EXECUTING
 Current Plan: 3
-Total Plans in Phase: 5
+Total Plans in Phase: 6
 Status: Ready to execute
 Last activity: 2026-10-27 — Phase 05 execution started
 
@@ -51,8 +51,8 @@ Progress: [███████░░░] 67%
 | ----- | ----- | ----- | -------- |
 | 01    | 5     | -     | -        |
 | 02    | 4     | -     | -        |
-| 03 | 6 | - | - |
-| 4 | 3 | - | - |
+| 03    | 6     | -     | -        |
+| 4     | 3     | -     | -        |
 
 **Recent Trend:**
 
@@ -62,28 +62,28 @@ Progress: [███████░░░] 67%
 _Updated after each plan completion_
 **Per-Plan Metrics:**
 
-| Plan         | Duration | Tasks   | Files    |
-| ------------ | -------- | ------- | -------- |
-| Phase 01 P01 | 6 min    | 2 tasks | 3 files  |
-| Phase 01 P02 | 8min     | 3 tasks | 5 files  |
-| Phase 01 P03 | 45min    | 2 tasks | 7 files  |
-| Phase 01 P04 | 9min     | 2 tasks | 0 files  |
-| Phase 01 P05 | 6 min    | 2 tasks | 1 files  |
-| Phase 02 P01 | 5 min    | 2 tasks | 7 files  |
-| Phase 02 P02 | 7 min    | 2 tasks | 8 files  |
-| Phase 02 P03 | 45 min   | 3 tasks | 14 files |
-| Phase 02 P04 | 2 min    | 2 tasks | 1 files  |
-| Phase 03 P01 | 4 min    | 2 tasks | 30 files |
-| Phase 03 P02 | 4 min    | 2 tasks | 9 files  |
-| Phase 03 P03 | 9 min    | 3 tasks | 9 files  |
-| Phase 03 P04 | 9 min    | 3 tasks | 5 files  |
-| Phase 03 P05 | 5 min | 2 tasks | 8 files |
-| Phase 03 P06 | about 1 session | 2 tasks | 5 files |
-| Phase 04 P01 | 5 min | 2 tasks | 4 files |
-| Phase 04 P02 | 6 min | 2 tasks | 2 files |
-| Phase 04 P03 | 15 min | 3 tasks | 1 files |
-| Phase 05 P01 | 3 min | 2 tasks | 5 files |
-| Phase 05 P02 | 3 min | 2 tasks | 7 files |
+| Plan         | Duration        | Tasks   | Files    |
+| ------------ | --------------- | ------- | -------- |
+| Phase 01 P01 | 6 min           | 2 tasks | 3 files  |
+| Phase 01 P02 | 8min            | 3 tasks | 5 files  |
+| Phase 01 P03 | 45min           | 2 tasks | 7 files  |
+| Phase 01 P04 | 9min            | 2 tasks | 0 files  |
+| Phase 01 P05 | 6 min           | 2 tasks | 1 files  |
+| Phase 02 P01 | 5 min           | 2 tasks | 7 files  |
+| Phase 02 P02 | 7 min           | 2 tasks | 8 files  |
+| Phase 02 P03 | 45 min          | 3 tasks | 14 files |
+| Phase 02 P04 | 2 min           | 2 tasks | 1 files  |
+| Phase 03 P01 | 4 min           | 2 tasks | 30 files |
+| Phase 03 P02 | 4 min           | 2 tasks | 9 files  |
+| Phase 03 P03 | 9 min           | 3 tasks | 9 files  |
+| Phase 03 P04 | 9 min           | 3 tasks | 5 files  |
+| Phase 03 P05 | 5 min           | 2 tasks | 8 files  |
+| Phase 03 P06 | about 1 session | 2 tasks | 5 files  |
+| Phase 04 P01 | 5 min           | 2 tasks | 4 files  |
+| Phase 04 P02 | 6 min           | 2 tasks | 2 files  |
+| Phase 04 P03 | 15 min          | 3 tasks | 1 files  |
+| Phase 05 P01 | 3 min           | 2 tasks | 5 files  |
+| Phase 05 P02 | 3 min           | 2 tasks | 7 files  |
 
 ## Accumulated Context
 
@@ -93,7 +93,7 @@ Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
 - [Roadmap]: Schema and content import share Phase 2. The schema is locked (long entry tested in the admin) before the import runs.
-- [Roadmap]: GUARD-01 lands with the read-path rewire (Phase 3). GUARD-02 and GUARD-03 land with the Workers deploy (Phase 5).
+- [Roadmap]: GUARD-01 lands with the read-path rewire (Phase 3). GUARD-02 and GUARD-03 land with the Dokploy deploy (Phase 5; the original Workers wording is obsolete).
 - [Roadmap]: Agent access is proven locally (Phase 4) before the MCP endpoint goes public (Phase 5).
 - [Roadmap]: Draft, preview, publish, revision restore and preview links are exercised on the deployed site (Phase 6).
 - [Phase 01]: Baseline captured at main f4e5470 (Node 24.17.0, astro 6.2.2) in ~/portfolio-baseline/2026-10-23; all later parity is judged against it via scripts/script-inventory.mjs
@@ -126,7 +126,8 @@ Recent decisions affecting current work:
 - [Phase 04]: 04-02: README Agent access section documents the setup and states the residual risk (publish block is a Claude Code guard, token can itself publish); AGENT-01 and AGENT-02 amended, traceability rows stay Pending until 04-03
 - [Phase 04]: 04-03: live pass shows E1, E3, E4, E5 and the E2 negative control; E6 (guard live) and E7 (fresh README session) NOT VERIFIED; token created with a 7 day expiry (deviation from D-07); AGENT-02 amendment (D-03) shown live
 - [Phase 05]: 05-01: Dokploy trigger-and-wait lives in a tested Node script (scripts/dokploy-deploy.mjs), not inline curl and jq
-- [Phase 05]: 05-01: deploy.yml job runs only for a successful push-triggered ci run on main of this repository or a dispatch on main (T-05-01)
+- [Phase 05]: 05-01: deploy.yml job runs only for a successful push-triggered ci run on main of this repository or a dispatch on main (T-05-01). Superseded 2026-10-27 by tag deploys (D-15): deploy.yml starts from a pushed `v*` tag behind a gate in plan 05-04
+- [Phase 05]: 2026-10-27 second plan revision: tag deploys with a CI gate (D-15), Cloudflare proxy on after the first deploy with SSL/TLS Full (strict) (D-16), backups to Cloudflare R2 (D-17); the phase now has 6 plans (05-05 proxy and agent token, 05-06 backup and restore)
 - [Phase 05]: 05-02: manifest gate (git diff --exit-code on committed .emdash/migrations.json) carries the real migration-change signal; seeded migrate --check cannot show a pending migration on a fresh database
 
 ### Pending Todos
@@ -135,14 +136,14 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Roadmap]: `main` auto-deploys to Cloudflare Pages. From Phase 2 on the build targets server output, so this work stays on a branch (or unpushed) until the Phase 5 cutover. Never push without the user's go-ahead.
-- [Roadmap]: No CI exists yet (no `.github/`). Phase 3 creates the first CI check (GUARD-01). Phase 5 picks the deploy mechanism and should run GUARD-02 and GUARD-03 in the same pipeline.
+- [Roadmap]: Cloudflare Pages is dropped (2026-10-27), so `main` no longer auto-deploys anywhere. A push to `main` runs CI only; production deploys when a `v*` tag is pushed after CI succeeded for the tagged commit (Phase 5, D-15). Never push, merge or tag without the user's go-ahead.
+- [Roadmap]: CI exists (`.github/workflows/ci.yml`: GUARD-01 from Phase 3, GUARD-02 and the manifest gate from plan 05-02). Phase 5 adds `deploy.yml` (tag-triggered, CI-gated, with the smoke test, GUARD-03) and `paths-ignore` so documentation pushes run nothing.
 - [Roadmap]: The FOUND-02 baseline lives outside the repo, but the GUARD-01 check runs in CI. Commit a derived allowlist of public scripts, not the baseline HTML.
 - [Roadmap]: The home page reads `showAvailability` from `src/data/about`. The Phase 2 `about` entry must hold the availability flag, role, stack and contacts as well as copy and cells, or REND-05 breaks the home page.
 - [Roadmap]: Page titles in five templates use an em dash separator. Parity (REND-04) keeps them; the no-em-dash copy rule says otherwise. Changing them is a separate copy decision.
 - [Roadmap]: Local admin and MCP checks in Phases 2 to 4 need a running local server. Ask the user before starting `astro dev` or `astro preview`.
 - [Roadmap]: Markdown edits made before Phase 3 need a re-run of the idempotent import before the read path flips. After Phase 3, `/portfolio-update` writes files that no longer drive the site (DOCS-03 fixes or flags it).
-- [Roadmap]: Deleting the Pages project is not a v1 requirement. Decide after the rollback window (DEPLOY-04).
+- [Roadmap]: The old Cloudflare Pages project is not kept as a rollback target (2026-10-27); dev.zeikcookson.com is removed from its custom domains in plan 05-03, and deleting the project itself is optional housekeeping, not a requirement.
 - [Research]: Plan Phases 1, 2 (import), 4 and 5 with deeper research. Phases 3 and 6 follow standard patterns.
 
 ## Deferred Items

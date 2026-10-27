@@ -55,21 +55,21 @@ Milestone v1.0: EmDash Migration. Each maps to roadmap phases.
 ### Deployment
 
 - [ ] **DEPLOY-01**: The site deploys to Dokploy as a Node standalone container (Docker image) with SQLite and uploads on a persistent volume, straight to the production app with no separate preview database (user decision 2026-10-27)
-- [x] **DEPLOY-02**: EmDash applies its migrations on container boot, with no separate pre-deploy migration step (D-02 amended by the user on 2026-10-26), and CI fails when the committed migration manifest .emdash/migrations.json differs from the one the build generates, so a changed migration set is committed on purpose and a volume backup is taken before the deploy that applies it
-- [ ] **DEPLOY-03**: The deployed site is compared against the baseline (17 of 17 pages identical, public-JS allowlist passing) on its real hostname
-- [ ] **DEPLOY-04**: `dev.zeikcookson.com` serves the Dokploy app, the old site is torn down with no rollback target, and Cloudflare stays DNS only (user decision 2026-10-27)
-- [ ] **DEPLOY-05**: A SQLite backup and restore is rehearsed once
+- [x] **DEPLOY-02**: EmDash applies its pending migrations itself on the first request after a container starts (default auto mode), with no separate pre-deploy migration step (D-02 amended by the user on 2026-10-26), and CI fails when the committed migration manifest .emdash/migrations.json differs from the one the build generates, so a changed migration set is committed on purpose and a volume backup is taken before the deploy that applies it
+- [ ] **DEPLOY-03**: The deployed site is compared against the baseline (17 of 17 pages identical, public-JS allowlist passing) on its real hostname, with the record DNS only and again behind the Cloudflare proxy
+- [ ] **DEPLOY-04**: `dev.zeikcookson.com` serves the Dokploy app, the old site is torn down with no rollback target and removed from the old project's custom domains, and once the Let's Encrypt certificate exists Cloudflare proxies the hostname with SSL/TLS Full (strict) while the Dokploy app is still shown to be the one answering (user decisions 2026-10-27)
+- [ ] **DEPLOY-05**: A SQLite backup in the Cloudflare R2 bucket (user decision 2026-10-27) and its restore is rehearsed once
 
 ### Guards
 
 - [x] **GUARD-01**: CI fails if any public route gains a script, `modulepreload` or module tag beyond the recorded baseline
 - [x] **GUARD-02**: CI fails on pending migrations (`emdash migrate --check`)
-- [ ] **GUARD-03**: A post-deploy smoke test checks `/` and one project page return 200
+- [ ] **GUARD-03**: Production deploys when a `v*` tag is pushed, and only after a gate confirms that the tagged commit is on `main` and that CI succeeded for it (a push to `main` runs CI only and documentation-only pushes run no CI; user decision 2026-10-27); a post-deploy smoke test then checks `/` and one project page return 200
 
 ### Docs
 
-- [ ] **DOCS-01**: CLAUDE.md is updated (Dokploy deploy, Node version, admin-only client JS, "no new JS" rule, no-plugins rule, content now edited in EmDash)
-- [ ] **DOCS-02**: README is updated for the new local and deploy workflow
+- [ ] **DOCS-01**: CLAUDE.md is updated (Dokploy deploy by `v*` tag push, Node version, admin-only client JS, "no new JS" rule, no-plugins rule, content now edited in EmDash)
+- [ ] **DOCS-02**: README is updated for the new local and deploy workflow, including the tag release procedure and what to do when a tagged commit has no CI run
 - [ ] **DOCS-03**: The `portfolio-update` skill and any doc referencing the markdown workflow are flagged or updated
 
 ## v2 Requirements
@@ -85,29 +85,29 @@ Deferred to future release. Tracked but not in current roadmap.
 
 ### Access
 
-- **ACCESS-01**: Cloudflare Access in front of the admin (moot unless the proxy stays on Cloudflare; EmDash passkeys are the only admin gate for now, see Phase 1 D-08)
+- **ACCESS-01**: Cloudflare Access in front of the admin (possible now that the proxy is on from Phase 5, D-16; EmDash passkeys are the only admin gate for now, see Phase 1 D-08)
 
 ## Out of Scope
 
-| Feature                                   | Reason                                                          |
-| ----------------------------------------- | --------------------------------------------------------------- |
-| Visual redesign                           | DESIGN.md and PRODUCT.md are fixed; this is a backend migration |
-| Third-party EmDash plugins and sandboxing | Thin ecosystem at 1.x; sandbox may need a paid plan             |
-| Page-builder blocks                       | Conflicts with the Swiss/taut design; fields are fixed          |
-| i18n                                      | Single-language site                                            |
-| Multi-user roles, comments                | Single author                                                   |
-| Custom site-wide settings keys            | No documented support; per-entry fields cover the need          |
-| Astro 7                                   | Separate migration; stay on Astro 6                             |
-| Cloudflare Workers, D1 and R2             | Hosting moved to Node + SQLite on Dokploy (Phase 1 D-01)        |
-| Brand fonts in the media library          | Fonts stay self-hosted in `public/fonts/`                       |
-| Email-based admin recovery                | Email is not configured on the self-hosted Node app             |
+| Feature                                                   | Reason                                                                                                                    |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Visual redesign                                           | DESIGN.md and PRODUCT.md are fixed; this is a backend migration                                                           |
+| Third-party EmDash plugins and sandboxing                 | Thin ecosystem at 1.x; sandbox may need a paid plan                                                                       |
+| Page-builder blocks                                       | Conflicts with the Swiss/taut design; fields are fixed                                                                    |
+| i18n                                                      | Single-language site                                                                                                      |
+| Multi-user roles, comments                                | Single author                                                                                                             |
+| Custom site-wide settings keys                            | No documented support; per-entry fields cover the need                                                                    |
+| Astro 7                                                   | Separate migration; stay on Astro 6                                                                                       |
+| Cloudflare Workers, D1 and R2 as hosting or media storage | Hosting moved to Node + SQLite on Dokploy (Phase 1 D-01); R2 is used only as the backup bucket (user decision 2026-10-27) |
+| Brand fonts in the media library                          | Fonts stay self-hosted in `public/fonts/`                                                                                 |
+| Email-based admin recovery                                | Email is not configured on the self-hosted Node app                                                                       |
 
 ## Traceability
 
 Which phases cover which requirements. Updated during roadmap creation.
 
-| Requirement | Phase   | Status  |
-| ----------- | ------- | ------- |
+| Requirement | Phase   | Status   |
+| ----------- | ------- | -------- |
 | FOUND-01    | Phase 1 | Complete |
 | FOUND-02    | Phase 1 | Complete |
 | FOUND-03    | Phase 1 | Complete |
@@ -132,20 +132,20 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AGENT-02    | Phase 4 | Complete |
 | AGENT-03    | Phase 4 | Complete |
 | AGENT-04    | Phase 4 | Complete |
-| DEPLOY-01   | Phase 5 | Pending |
+| DEPLOY-01   | Phase 5 | Pending  |
 | DEPLOY-02   | Phase 5 | Complete |
-| DEPLOY-03   | Phase 5 | Pending |
-| DEPLOY-04   | Phase 5 | Pending |
-| DEPLOY-05   | Phase 5 | Pending |
-| ADMIN-02    | Phase 5 | Pending |
-| ADMIN-03    | Phase 5 | Pending |
+| DEPLOY-03   | Phase 5 | Pending  |
+| DEPLOY-04   | Phase 5 | Pending  |
+| DEPLOY-05   | Phase 5 | Pending  |
+| ADMIN-02    | Phase 5 | Pending  |
+| ADMIN-03    | Phase 5 | Pending  |
 | GUARD-02    | Phase 5 | Complete |
-| GUARD-03    | Phase 5 | Pending |
-| ADMIN-04    | Phase 6 | Pending |
-| ADMIN-05    | Phase 6 | Pending |
-| DOCS-01     | Phase 6 | Pending |
-| DOCS-02     | Phase 6 | Pending |
-| DOCS-03     | Phase 6 | Pending |
+| GUARD-03    | Phase 5 | Pending  |
+| ADMIN-04    | Phase 6 | Pending  |
+| ADMIN-05    | Phase 6 | Pending  |
+| DOCS-01     | Phase 6 | Pending  |
+| DOCS-02     | Phase 6 | Pending  |
+| DOCS-03     | Phase 6 | Pending  |
 
 **Coverage:**
 
@@ -156,4 +156,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 ---
 
 _Requirements defined: 2026-10-23_
-_Last updated: 2026-10-27 after Cloudflare Pages was dropped (DEPLOY-01, DEPLOY-03 and DEPLOY-04 reworded)_
+_Last updated: 2026-10-27 after Cloudflare Pages was dropped (DEPLOY-01, DEPLOY-03 and DEPLOY-04 reworded), then again for tag deploys, the Cloudflare proxy and R2 backups (DEPLOY-02 to DEPLOY-05, GUARD-03, DOCS-01 and DOCS-02 reworded)_
