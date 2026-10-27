@@ -24,5 +24,5 @@ jobs:
       - run: npx emdash seed .emdash/seed.json --database "$RUNNER_TEMP/migrate-check.db" --uploads-dir "$RUNNER_TEMP/uploads"
       # GUARD-02: fail on any pending or unknown migration (D-03)
       - run: npx emdash migrate --check --from-config --database "$RUNNER_TEMP/migrate-check.db"
-      # DEPLOY-02: production migrates on boot (D-02); the build above regenerated the manifest, so a changed migration set must be committed on purpose
+      # DEPLOY-02: pending migrations apply on the first request after a deploy (D-02); the build above regenerated the manifest, so a changed migration set must be committed on purpose
       - run: git ls-files --error-unmatch .emdash/migrations.json && git diff --exit-code -- .emdash/migrations.json
