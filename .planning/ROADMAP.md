@@ -175,7 +175,25 @@ Plans:
 4. Migrations run as an explicit step before the container deploys, CI fails while a migration is pending, and a post-deploy smoke test confirms `/` and one project page return 200
 5. A SQLite backup has been restored once into a non-production instance, and the restored content matches production
 
-**Plans**: TBD
+**Plans**: 5 plans
+
+Plans:
+**Wave 1**
+
+- [ ] 05-01-PLAN.md: Tracer: deploy.yml to the Dokploy trigger-and-wait script to the smoke test (GUARD-03, D-04), proven against local stand-ins, then every failure mode tested
+- [ ] 05-02-PLAN.md: Tracer: GUARD-02 seeded-database migrate check and the committed-manifest drift gate in CI, the Dockerfile EMDASH_SITE_URL build argument, and DEPLOY-02, criterion 4 and D-02 brought in line with the user's decisions
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
+- [ ] 05-03-PLAN.md: Preview app on Dokploy with its own volume, smoke and first GitHub CI run, baseline parity 17/17, and the panel facts and deploy script checked against the real Dokploy API
+
+**Wave 3** _(blocked on Wave 2 completion)_
+
+- [ ] 05-04-PLAN.md: Cutover sitting (user), then production verified: DNS on the Dokploy host, the merge push deployed and smoke-tested through the pipeline, wizard and two passkeys, parity, malformed Host check, rollback runbook, agent token on production
+
+**Wave 4** _(blocked on Wave 3 completion)_
+
+- [ ] 05-05-PLAN.md: Nightly R2 volume backup, restore into a scratch instance matching production, recovery drill on the restored copy, scratch discarded, named gates closed
 
 ### Phase 6: Live Editing and Docs
 
@@ -201,6 +219,6 @@ Phases execute in numeric order: 1, 2, 3, 4, 5, 6
 | 1. Spike, Baseline and Decisions | 5/5            | Complete    | 2026-10-23 |
 | 2. Content Model and Import      | 4/4            | Complete    | 2026-10-26 |
 | 3. Read Path Rewire and Parity   | 6/6            | Complete    | 2026-10-26 |
-| 4. Agent Access                  | 3/3 | Complete    | 2026-10-26 |
-| 5. Dokploy Deploy and Cutover    | 0/TBD          | Not started | -          |
+| 4. Agent Access                  | 3/3            | Complete    | 2026-10-26 |
+| 5. Dokploy Deploy and Cutover    | 0/5            | Not started | -          |
 | 6. Live Editing and Docs         | 0/TBD          | Not started | -          |
