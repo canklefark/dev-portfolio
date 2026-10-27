@@ -40,8 +40,8 @@ Milestone v1.0: EmDash Migration. Each maps to roadmap phases.
 ### Admin
 
 - [x] **ADMIN-01**: Admin runs under `/_emdash/admin` and loads no admin JS on public routes
-- [ ] **ADMIN-02**: The setup wizard is completed at first deploy, before the URL is shared, and the login page (not setup) is what a visitor sees afterward
-- [ ] **ADMIN-03**: One passkey is enrolled on `dev.zeikcookson.com` and signs in. Dropped by user decision 2026-10-27: the second passkey and a recovery drill in the production container. A lost device means the SQLite recovery procedure in PROJECT.md, rehearsed locally in Phase 1 (lockout risk accepted)
+- [x] **ADMIN-02**: The setup wizard is completed at first deploy, before the URL is shared, and the login page (not setup) is what a visitor sees afterward
+- [x] **ADMIN-03**: One passkey is enrolled on `dev.zeikcookson.com` and signs in. Dropped by user decision 2026-10-27: the second passkey and a recovery drill in the production container. A lost device means the SQLite recovery procedure in PROJECT.md, rehearsed locally in Phase 1 (lockout risk accepted)
 - [ ] **ADMIN-04**: Draft, preview and publish are exercised end to end on one real project, including restoring a revision
 - [ ] **ADMIN-05**: A shareable preview link works for a draft entry
 
@@ -139,8 +139,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DEPLOY-03   | Phase 5 | Pending  |
 | DEPLOY-04   | Phase 5 | Pending  |
 | DEPLOY-05   | Phase 5 | Pending  |
-| ADMIN-02    | Phase 5 | Pending  |
-| ADMIN-03    | Phase 5 | Pending  |
+| ADMIN-02    | Phase 5 | Complete |
+| ADMIN-03    | Phase 5 | Complete |
 | GUARD-02    | Phase 5 | Complete |
 | GUARD-03    | Phase 5 | Pending  |
 | ADMIN-04    | Phase 6 | Pending  |

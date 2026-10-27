@@ -4,18 +4,18 @@ milestone: v1.0
 milestone_name: EmDash Migration
 current_phase: 05
 current_phase_name: Dokploy Deploy and Cutover
-current_plan: 3
+current_plan: 4
 status: executing
-stopped_at: Phase 5 replanned (fourth revision, manual deploys); next is 05-03 Task 2
-last_updated: "2026-10-27T11:58:35.974Z"
+stopped_at: Completed 05-03-PLAN.md
+last_updated: "2026-10-27T16:41:23.288Z"
 last_activity: 2026-10-27
 last_activity_desc: Phase 05 execution started
-state_head: 80f39ded29b1bf9158ea55154bf7ede1b2a244f7
+state_head: c790468f68dd675140add53af2e8a3837313970c
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 23
-  completed_plans: 20
+  completed_plans: 21
 ---
 
 # Project State
@@ -30,7 +30,7 @@ See: .planning/PROJECT.md (updated 2026-10-26)
 ## Current Position
 
 Phase: 05 (Dokploy Deploy and Cutover) — EXECUTING
-Current Plan: 3
+Current Plan: 4
 Total Plans in Phase: 5
 Status: Ready to execute
 Last activity: 2026-10-27 — Phase 05 execution started
@@ -84,6 +84,7 @@ _Updated after each plan completion_
 | Phase 04 P03 | 15 min          | 3 tasks | 1 files  |
 | Phase 05 P01 | 3 min           | 2 tasks | 5 files  |
 | Phase 05 P02 | 3 min           | 2 tasks | 7 files  |
+| Phase 05 P03 | 8 min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -131,6 +132,7 @@ Recent decisions affecting current work:
 - [Phase 05]: 2026-10-27 fourth plan revision (simplification, user: "I just want this done"): manual deploys, the owner clicks Deploy in Dokploy with Auto Deploy off and runs scripts/smoke-test.mjs by hand; no pipeline, no Dokploy API key, no GitHub secrets, no tag probe, no paths-ignore; one passkey is enough (D-09 amended, lockout risk recorded); agent access is OAuth to .mcp.json with no Phase 5 work (D-12 superseded); the phase has 5 plans: 05-03 finishes the evidence, 05-04 removes the dead pipeline code then merges and pushes main (user), repoints the app and turns the proxy on, 05-05 sets up R2 backups and the restore drill
 - [Phase 05]: 2026-10-27: the live origin already sends x-content-type-options, referrer-policy, x-frame-options and a permissions-policy (EmDash), so the Cloudflare Transform Rule of the second revision is dropped (D-11)
 - [Phase 05]: 05-02: manifest gate (git diff --exit-code on committed .emdash/migrations.json) carries the real migration-change signal; seeded migrate --check cannot show a pending migration on a fresh database
+- [Phase 05]: One replica and Dokploy's default stop-first update order are assumed, not read from the panel (05-03)
 
 ### Pending Todos
 
@@ -160,6 +162,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-27T11:58:35.772Z
-Stopped at: Phase 5 replanned (fourth revision, manual deploys); plan 05-03 Task 1 is done (6c4c3f2), Task 2 is next
-Resume file: .planning/phases/05-dokploy-deploy-and-cutover/05-03-PLAN.md
+Last session: 2026-10-27T16:41:23.079Z
+Stopped at: Completed 05-03-PLAN.md
+Resume file: None
