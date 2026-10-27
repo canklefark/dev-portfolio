@@ -67,14 +67,16 @@ Partial. Task 1 is done, Task 2 was done by the user and only partly reported, a
 - Measured for C10: `parity: 17/17 identical` and `check: 17/17 passed`, no UNEXPECTED line.
 - Task 3 (513e244): added `## Manual deploy and rollback` after the Results table.
 
-## Open items (PENDING-USER)
+## Open items
 
-1. Whether the Dokploy Source section now reads main and the redeploy finished done (C8).
-2. The Cloudflare SSL/TLS mode, Full (strict) required (C9).
-3. Whether Always Use HTTPS is off (C9).
-4. Whether the passkey sign-in worked behind the proxy (C9).
+Updated after the user's answers of 2026-10-27 and a second round of checks.
 
-Unexplained observation: `curl -sI https://dev.zeikcookson.com/` carries no cf-ray and no server: cloudflare header although DNS resolves to Cloudflare. The evidence records this without claiming or denying proxying. The D-16 cf-ray check is not met, so C10 cannot be PASS yet.
+- C8 is PASS: Source reads main, redeploy done, ci green on 68e380b, main carries only ci.yml, no deploy run, smoke passes.
+- C10 is FAIL: with cf-ray now present, parity is 16/17 and the allowlist check 16/17. Cloudflare injects `/cdn-cgi/scripts/.../email-decode.min.js` into /about (Email Address Obfuscation). User action: switch Email Address Obfuscation off in Scrape Shield (and confirm Rocket Loader and Web Analytics injection are off), then rerun parity and check.
+- C9 is not PASS: Always Use HTTPS off is NOT VERIFIED (the user does not know). The plan lists it in the must_haves truth for C9, so it is a blocker for PASS, not just a note. Risk: if it is on, the edge may redirect the Let's Encrypt HTTP-01 challenge and the first renewal (about 60 days after 2026-10-27) could fail. Fix: switch it off; fallback: grey cloud. The root http request is answered with a 301 from a Cloudflare-signed body, which hints that it may be on.
+- cf-ray resolved: now present (colo ATL), server cloudflare. The earlier absence was likely propagation, unproven. Health route (product emdash, 1.3.1) and smoke pass through the proxy; the user's passkey sign-in and the OAuth MCP `content_list` (total 13) worked.
+
+The plan is not marked complete and `advance-plan` was not run.
 
 ## Deviations from Plan
 
