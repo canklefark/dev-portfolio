@@ -31,9 +31,8 @@ docs/superpowers
 
 .vscode/  
 
-# EmDash runtime data (local SQLite and uploads) and per-build migration manifest
+# EmDash runtime data (local SQLite and uploads)
 data/
-.emdash/migrations.json
 # emdash-env.d.ts is the committed generated types file; these two are not
 .emdash/types.ts
 .emdash/schema.json
