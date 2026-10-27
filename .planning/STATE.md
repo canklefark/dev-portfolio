@@ -4,18 +4,18 @@ milestone: v1.0
 milestone_name: EmDash Migration
 current_phase: 05
 current_phase_name: Dokploy Deploy and Cutover
-current_plan: Not started
+current_plan: 2
 status: executing
-stopped_at: Phase 5 context gathered
-last_updated: "2026-10-27T11:41:57.429Z"
-last_activity: 2026-10-26
-last_activity_desc: Phase 4 complete, transitioned to Phase 5
-state_head: 7b520a5a0b71860919d26b251dff57ad6b870339
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-10-27T11:54:52.350Z"
+last_activity: 2026-10-27
+last_activity_desc: Phase 05 execution started
+state_head: 978b34ae5a90a304e6373b1cbeec88218945498a
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 23
-  completed_plans: 18
+  completed_plans: 19
 ---
 
 # Project State
@@ -25,15 +25,15 @@ progress:
 See: .planning/PROJECT.md (updated 2026-10-26)
 
 **Core value:** A hiring manager lands on an honest, fast, distinctive site that makes the project work carry the argument.
-**Current focus:** Phase 04 — Agent Access
+**Current focus:** Phase 05 — Dokploy Deploy and Cutover
 
 ## Current Position
 
-Phase: 05 (Dokploy Deploy and Cutover) — READY TO EXECUTE
-Current Plan: Not started
+Phase: 05 (Dokploy Deploy and Cutover) — EXECUTING
+Current Plan: 2
 Total Plans in Phase: 5
 Status: Ready to execute
-Last activity: 2026-10-26 — Phase 4 complete, transitioned to Phase 5
+Last activity: 2026-10-27 — Phase 05 execution started
 
 Progress: [███████░░░] 67%
 
@@ -82,6 +82,7 @@ _Updated after each plan completion_
 | Phase 04 P01 | 5 min | 2 tasks | 4 files |
 | Phase 04 P02 | 6 min | 2 tasks | 2 files |
 | Phase 04 P03 | 15 min | 3 tasks | 1 files |
+| Phase 05 P01 | 3 min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -123,6 +124,8 @@ Recent decisions affecting current work:
 - [Phase 04]: 04-01: nine emdash tools guarded by bare-name deny rules plus hook BLOCKED_TOOLS; content_update uses a draft-only key allowlist, content_create allows status draft only; schema and settings tools deferred to the server (AGENT-03)
 - [Phase 04]: 04-02: README Agent access section documents the setup and states the residual risk (publish block is a Claude Code guard, token can itself publish); AGENT-01 and AGENT-02 amended, traceability rows stay Pending until 04-03
 - [Phase 04]: 04-03: live pass shows E1, E3, E4, E5 and the E2 negative control; E6 (guard live) and E7 (fresh README session) NOT VERIFIED; token created with a 7 day expiry (deviation from D-07); AGENT-02 amendment (D-03) shown live
+- [Phase 05]: 05-01: Dokploy trigger-and-wait lives in a tested Node script (scripts/dokploy-deploy.mjs), not inline curl and jq
+- [Phase 05]: 05-01: deploy.yml job runs only for a successful push-triggered ci run on main of this repository or a dispatch on main (T-05-01)
 
 ### Pending Todos
 
@@ -150,6 +153,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-26T19:55:37.730Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-dokploy-deploy-and-cutover/05-CONTEXT.md
+Last session: 2026-10-27T11:54:52.193Z
+Stopped at: Completed 05-01-PLAN.md
+Resume file: None
