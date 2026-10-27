@@ -172,7 +172,7 @@ Plans:
 1. The site built by Dokploy from the repo Dockerfile and served on `dev.zeikcookson.com` matches the baseline in content and scripts (17 of 17 pages identical, public-JS allowlist passing), checked on the live hostname with the record DNS only and again behind the Cloudflare proxy
 2. `dev.zeikcookson.com` serves the Dokploy app with SQLite and uploads on a persistent volume (the media storage chosen in Phase 1), the old site is torn down, content and passkeys survive a redeploy, and once the certificate exists Cloudflare proxies the hostname with SSL/TLS Full (strict) while the Dokploy app is still shown to be the one answering
 3. Visiting the admin on production shows the login page, not the setup wizard, and each of two passkeys enrolled on `dev.zeikcookson.com` can sign in, with the recovery path tested
-4. EmDash applies pending migrations on the first request after a deploy, CI fails while a migration is pending or when the committed migration manifest differs from the build, documentation-only pushes run no CI, production deploys when a `v*` tag is pushed only after CI succeeded for the tagged commit and that commit is on `main`, and a post-deploy smoke test confirms `/` and one project page return 200
+4. EmDash applies pending migrations on the first request after a deploy, CI fails while a migration is pending or when the committed migration manifest differs from the build, documentation-only pushes run no CI, production deploys when a `v*` tag is pushed only after CI succeeded for the tagged commit and that commit is on `main`, Dokploy is set to build that tag so the tag names exactly the code that goes live, and a post-deploy smoke test confirms `/` and one project page return 200
 5. A SQLite backup in the Cloudflare R2 bucket has been restored once into a non-production instance, and the restored content matches production
 
 **Plans**: 2/6 plans executed
@@ -185,11 +185,11 @@ Plans:
 
 **Wave 2** _(blocked on Wave 1 completion)_
 
-- [ ] 05-03-PLAN.md: First production deploy: the app on Dokploy from the pushed branch on its own volume, dev.zeikcookson.com pointed at it with a DNS only record, the wizard claimed with Sample content and two passkeys, the deploy script run against the real panel, baseline parity 17/17
+- [ ] 05-03-PLAN.md: First production deploy: the app on Dokploy from the pushed branch on its own volume, dev.zeikcookson.com pointed at it with a DNS only record, the wizard claimed with Sample content and two passkeys, the deploy script run against the real panel, a throwaway tag probe that shows the panel can build a tag, baseline parity 17/17
 
 **Wave 3** _(blocked on Wave 2 completion)_
 
-- [ ] 05-04-PLAN.md: Tag-triggered, CI-gated deploy: the deploy gate script, deploy.yml on `v*` tags and ci.yml paths-ignore (tracer), the first tag push proves the pipeline with the volume intact, malformed Host and response header checks at the origin, release procedure and bad deploy recovery steps
+- [ ] 05-04-PLAN.md: Tag-triggered, CI-gated deploy that builds the tag: the deploy gate script, the deploy script's source ref update to the tag and deploy.yml on `v*` tags (tracer), ci.yml paths-ignore, the first tag push proves the pipeline with the volume intact, malformed Host and response header checks at the origin, release procedure and bad deploy recovery by redeploying an earlier tag
 
 **Wave 4** _(blocked on Wave 3 completion)_
 
@@ -208,7 +208,7 @@ Plans:
 
 1. On the deployed site, a real project is edited as a draft, previewed, and published so its public page updates with no rebuild or git push, then restored to its previous revision
 2. A shareable preview link opens a draft entry in a signed-out browser while the public page still shows the published version
-3. CLAUDE.md covers the Dokploy deploy (a pushed `v*` tag deploys after CI is green for the tagged commit), the Node version, admin-only client JS, the "no new JS" rule, the no-plugins rule and content edited in EmDash, and the README walks through the new local and deploy workflow including the tag release procedure
+3. CLAUDE.md covers the Dokploy deploy (a pushed `v*` tag deploys after CI is green for the tagged commit, and Dokploy builds that tag), the Node version, admin-only client JS, the "no new JS" rule, the no-plugins rule and content edited in EmDash, and the README walks through the new local and deploy workflow including the tag release procedure and how to redeploy an earlier tag
 4. The `portfolio-update` skill and every doc that still describes the markdown workflow are updated or flagged, and nothing in the repo points at the removed content files
 
 **Plans**: TBD

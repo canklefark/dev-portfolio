@@ -64,12 +64,12 @@ Milestone v1.0: EmDash Migration. Each maps to roadmap phases.
 
 - [x] **GUARD-01**: CI fails if any public route gains a script, `modulepreload` or module tag beyond the recorded baseline
 - [x] **GUARD-02**: CI fails on pending migrations (`emdash migrate --check`)
-- [ ] **GUARD-03**: Production deploys when a `v*` tag is pushed, and only after a gate confirms that the tagged commit is on `main` and that CI succeeded for it (a push to `main` runs CI only and documentation-only pushes run no CI; user decision 2026-10-27); a post-deploy smoke test then checks `/` and one project page return 200
+- [ ] **GUARD-03**: Production deploys when a `v*` tag is pushed, and only after a gate confirms that the tagged commit is on `main` and that CI succeeded for it; the deploy sets the Dokploy application's source ref to that tag, so Dokploy builds the tag and the tag names exactly the code that goes live (a push to `main` runs CI only and documentation-only pushes run no CI; user decisions 2026-10-27); a post-deploy smoke test then checks `/` and one project page return 200
 
 ### Docs
 
-- [ ] **DOCS-01**: CLAUDE.md is updated (Dokploy deploy by `v*` tag push, Node version, admin-only client JS, "no new JS" rule, no-plugins rule, content now edited in EmDash)
-- [ ] **DOCS-02**: README is updated for the new local and deploy workflow, including the tag release procedure and what to do when a tagged commit has no CI run
+- [ ] **DOCS-01**: CLAUDE.md is updated (Dokploy deploy by `v*` tag push, with Dokploy building the tag, Node version, admin-only client JS, "no new JS" rule, no-plugins rule, content now edited in EmDash)
+- [ ] **DOCS-02**: README is updated for the new local and deploy workflow, including the tag release procedure, what to do when a tagged commit has no CI run, and how to redeploy an earlier tag to undo a bad deploy
 - [ ] **DOCS-03**: The `portfolio-update` skill and any doc referencing the markdown workflow are flagged or updated
 
 ## v2 Requirements
@@ -156,4 +156,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 ---
 
 _Requirements defined: 2026-10-23_
-_Last updated: 2026-10-27 after Cloudflare Pages was dropped (DEPLOY-01, DEPLOY-03 and DEPLOY-04 reworded), then again for tag deploys, the Cloudflare proxy and R2 backups (DEPLOY-02 to DEPLOY-05, GUARD-03, DOCS-01 and DOCS-02 reworded)_
+_Last updated: 2026-10-27 after Cloudflare Pages was dropped (DEPLOY-01, DEPLOY-03 and DEPLOY-04 reworded), then again for tag deploys, the Cloudflare proxy and R2 backups (DEPLOY-02 to DEPLOY-05, GUARD-03, DOCS-01 and DOCS-02 reworded), then a third time so that Dokploy builds the tag and not the tip of main (GUARD-03, DOCS-01 and DOCS-02 reworded)_
