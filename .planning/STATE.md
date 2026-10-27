@@ -4,18 +4,18 @@ milestone: v1.0
 milestone_name: EmDash Migration
 current_phase: 05
 current_phase_name: Dokploy Deploy and Cutover
-current_plan: 4
+current_plan: 5
 status: executing
-stopped_at: 05-04 Tasks 1 and 3 done, C8 to C10 open pending four user reports (Dokploy source, SSL/TLS mode, Always Use HTTPS, passkey) and missing cf-ray
-last_updated: "2026-10-27T17:00:38.839Z"
+stopped_at: Completed 05-04-PLAN.md
+last_updated: "2026-10-27T17:15:27.509Z"
 last_activity: 2026-10-27
 last_activity_desc: Phase 05 execution started
-state_head: 513e244e46a5bc45e963d5467a2d173158ec397d
+state_head: cf181906dcd534ae379435b2a960450cd2ea579a
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 23
-  completed_plans: 21
+  completed_plans: 22
 ---
 
 # Project State
@@ -30,7 +30,7 @@ See: .planning/PROJECT.md (updated 2026-10-26)
 ## Current Position
 
 Phase: 05 (Dokploy Deploy and Cutover) — EXECUTING
-Current Plan: 4
+Current Plan: 5
 Total Plans in Phase: 5
 Status: Ready to execute
 Last activity: 2026-10-27 — Phase 05 execution started
@@ -85,6 +85,7 @@ _Updated after each plan completion_
 | Phase 05 P01 | 3 min           | 2 tasks | 5 files  |
 | Phase 05 P02 | 3 min           | 2 tasks | 7 files  |
 | Phase 05 P03 | 8 min | 2 tasks | 1 files |
+| Phase 05 P04 | n/a | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -133,6 +134,7 @@ Recent decisions affecting current work:
 - [Phase 05]: 2026-10-27: the live origin already sends x-content-type-options, referrer-policy, x-frame-options and a permissions-policy (EmDash), so the Cloudflare Transform Rule of the second revision is dropped (D-11)
 - [Phase 05]: 05-02: manifest gate (git diff --exit-code on committed .emdash/migrations.json) carries the real migration-change signal; seeded migrate --check cannot show a pending migration on a fresh database
 - [Phase 05]: One replica and Dokploy's default stop-first update order are assumed, not read from the panel (05-03)
+- [Phase 05]: Owner accepted Always Use HTTPS on and Cloudflare Email Address Obfuscation on (2026-10-27): proxy parity is 16/17 with the single Cloudflare email-decode script on /about; allowlist unchanged
 
 ### Pending Todos
 
@@ -162,6 +164,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-27T17:00:38.586Z
-Stopped at: 05-04 Tasks 1 and 3 done, C8 to C10 open pending four user reports (Dokploy source, SSL/TLS mode, Always Use HTTPS, passkey) and missing cf-ray
+Last session: 2026-10-27T17:15:27.205Z
+Stopped at: Completed 05-04-PLAN.md
 Resume file: None

@@ -11,18 +11,18 @@ provides:
   - the unused deploy pipeline code removed (deploy.yml, dokploy-deploy.mjs and its test), ci.yml intact
   - main fast-forwarded to emdash-migration by the user, ci green on main, main carries only ci.yml, no deploy run exists
   - the manual deploy and rollback rule written in 05-EVIDENCE.md
-  - C8, C9 and C10 recorded as PENDING-USER with every verified fact and the unexplained missing cf-ray
+  - C8 PASS, C9 and C10 PASS-WITH-ACCEPTED-DEVIATION (Always Use HTTPS on, Email Address Obfuscation on, parity 16/17) in 05-EVIDENCE.md
 affects:
-  [05-05 backups fill B1 to B3, a second pass of 05-04 Task 3 closes C8 to C10]
+  [05-05 backups fill B1 to B3]
 
-status: partial
+status: complete
 plan_head_before: 1661778597317224ba6f7533cab172b91d03766f
-plan_head_after: 513e244e46a5bc45e963d5467a2d173158ec397d
+plan_head_after: cf181906dcd534ae379435b2a960450cd2ea579a
 
 actuals:
-  tokens: 9000
-  tasks: 2
-  commits: 2
+  tokens: 14000
+  tasks: 3
+  commits: 5
 
 tech-stack:
   added: []
@@ -45,7 +45,7 @@ key-decisions:
 patterns-established:
   - "Parity numbers are recorded even when the proxy header is absent, but the row stays open"
 
-requirements-completed: []
+requirements-completed: [DEPLOY-01, DEPLOY-03, DEPLOY-04, GUARD-02, GUARD-03]
 
 duration: n/a
 completed: 2026-10-27
@@ -53,11 +53,11 @@ completed: 2026-10-27
 
 # Phase 5 Plan 04: Cutover to main and the Cloudflare proxy Summary
 
-**Unused deploy pipeline code removed, main pushed with green ci and a single workflow, and the manual deploy and rollback rule written; the proxy and Dokploy rows stay open for four user reports and one unexplained observation.**
+**Unused deploy pipeline code removed, main pushed with green ci and a single workflow, production proxied by Cloudflare with the Dokploy app answering, and the manual deploy and rollback rule written; two owner-accepted deviations are on record.**
 
 ## Status
 
-Partial. Task 1 is done, Task 2 was done by the user and only partly reported, and Task 3 ran with its open rows left open. Plan requirements are not marked complete.
+Complete, with two owner-accepted deviations (not passes of the original criteria).
 
 ## Accomplishments
 
@@ -67,16 +67,13 @@ Partial. Task 1 is done, Task 2 was done by the user and only partly reported, a
 - Measured for C10: `parity: 17/17 identical` and `check: 17/17 passed`, no UNEXPECTED line.
 - Task 3 (513e244): added `## Manual deploy and rollback` after the Results table.
 
-## Open items
+## Final results
 
-Updated after the user's answers of 2026-10-27 and a second round of checks.
-
-- C8 is PASS: Source reads main, redeploy done, ci green on 68e380b, main carries only ci.yml, no deploy run, smoke passes.
-- C10 is FAIL: with cf-ray now present, parity is 16/17 and the allowlist check 16/17. Cloudflare injects `/cdn-cgi/scripts/.../email-decode.min.js` into /about (Email Address Obfuscation). User action: switch Email Address Obfuscation off in Scrape Shield (and confirm Rocket Loader and Web Analytics injection are off), then rerun parity and check.
-- C9 is not PASS: Always Use HTTPS off is NOT VERIFIED (the user does not know). The plan lists it in the must_haves truth for C9, so it is a blocker for PASS, not just a note. Risk: if it is on, the edge may redirect the Let's Encrypt HTTP-01 challenge and the first renewal (about 60 days after 2026-10-27) could fail. Fix: switch it off; fallback: grey cloud. The root http request is answered with a 301 from a Cloudflare-signed body, which hints that it may be on.
-- cf-ray resolved: now present (colo ATL), server cloudflare. The earlier absence was likely propagation, unproven. Health route (product emdash, 1.3.1) and smoke pass through the proxy; the user's passkey sign-in and the OAuth MCP `content_list` (total 13) worked.
-
-The plan is not marked complete and `advance-plan` was not run.
+- C8 PASS: Source reads main, redeploy done, ci green on 68e380b, main carries only ci.yml, no deploy run, smoke passes.
+- C9 PASS-WITH-ACCEPTED-DEVIATION: cf-ray present, health route product emdash 1.3.1, smoke passes, Full (strict), passkey sign-in and OAuth MCP `content_list` (total 13) worked. Always Use HTTPS stays on by the owner's choice. The acme-challenge path answered 404 with no redirect (Cloudflare exempts it), so no renewal risk is known; the first proxied renewal (about 2026-12-26) is under Not covered with the grey-cloud fallback.
+- C10 PASS-WITH-ACCEPTED-DEVIATION: parity 16/17 and check 16/17. Only /about differs, by the Cloudflare-injected email-decode script (Email Address Obfuscation, which stays on). Fix if wanted: Scrape Shield, Email Address Obfuscation off. The allowlist and checks were not edited, and this is an exception to the CLAUDE.md no-client-JS rule for that one script only.
+- Rocket Loader and Web Analytics settings were not checked in the dashboard.
+- cf-ray was absent on probes just after the switch and present later; propagation is likely, unproven.
 
 ## Deviations from Plan
 
@@ -108,5 +105,5 @@ None.
 
 ## Self-Check: PASSED
 
-- 68e380b and 513e244 are ancestors of HEAD.
+- 68e380b, 513e244, d15c3c7, dd616ed and cf18190 are ancestors of HEAD.
 - The three removed files do not exist; `05-EVIDENCE.md` contains the `## Manual deploy and rollback` section, no dash characters and no IPv4 address.
