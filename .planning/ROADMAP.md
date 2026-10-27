@@ -172,7 +172,7 @@ Plans:
 1. A preview deployment on Dokploy, using its own SQLite database and volume, matches the baseline before the domain moves
 2. `dev.zeikcookson.com` serves the Dokploy app with SQLite on a persistent volume and the media storage chosen in Phase 1, and the Pages project is still available for rollback
 3. Visiting the admin on production shows the login page, not the setup wizard, and each of two passkeys enrolled on `dev.zeikcookson.com` can sign in, with the recovery path tested
-4. Migrations run as an explicit step before the container deploys, CI fails while a migration is pending, and a post-deploy smoke test confirms `/` and one project page return 200
+4. EmDash applies migrations on container boot, CI fails while a migration is pending or when the committed migration manifest differs from the build, and a post-deploy smoke test confirms `/` and one project page return 200
 5. A SQLite backup has been restored once into a non-production instance, and the restored content matches production
 
 **Plans**: 1/5 plans executed

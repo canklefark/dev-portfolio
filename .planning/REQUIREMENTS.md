@@ -55,7 +55,7 @@ Milestone v1.0: EmDash Migration. Each maps to roadmap phases.
 ### Deployment
 
 - [ ] **DEPLOY-01**: The site deploys to Dokploy as a Node standalone container (Docker image) with SQLite on a persistent volume and a separate preview database
-- [ ] **DEPLOY-02**: Migrations run as an explicit step before deploy, never implicitly on a live container
+- [ ] **DEPLOY-02**: EmDash applies its migrations on container boot, with no separate pre-deploy migration step (D-02 amended by the user on 2026-10-26), and CI fails when the committed migration manifest .emdash/migrations.json differs from the one the build generates, so a changed migration set is committed on purpose and a volume backup is taken before the deploy that applies it
 - [ ] **DEPLOY-03**: A preview deployment is compared against the baseline before the domain moves
 - [ ] **DEPLOY-04**: `dev.zeikcookson.com` serves the Dokploy app, with the Pages project kept until rollback is no longer needed
 - [ ] **DEPLOY-05**: A SQLite backup and restore is rehearsed once

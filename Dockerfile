@@ -4,6 +4,9 @@ FROM node:${NODE_VERSION}-alpine AS base
 WORKDIR /app
 
 FROM base AS build
+# D-08: Dokploy passes the public site URL as a build argument; astro build bakes it into image.remotePatterns, and the runtime value comes from the container environment
+ARG EMDASH_SITE_URL
+ENV EMDASH_SITE_URL=$EMDASH_SITE_URL
 COPY package.json package-lock.json .npmrc ./
 RUN npm ci
 COPY . .
