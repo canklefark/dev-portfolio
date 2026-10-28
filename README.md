@@ -41,7 +41,7 @@ Saving a published entry stages a draft, and the live page keeps showing the pub
 
 1. Merge to `main` and push. A push runs CI only, and Auto Deploy is off, so a push never deploys.
 2. In Dokploy, click Deploy on the portfolio application and wait for the deployment to show done.
-3. Run the smoke test, which checks that `/`, `/projects/` and one project page answer 200:
+3. Run the smoke test, which checks that `/`, `/projects/`, one project page and `/about/` answer 200 and a missing route answers 404:
 
 ```sh
 node scripts/smoke-test.mjs https://dev.zeikcookson.com

@@ -1,6 +1,6 @@
 // @ts-check
-// Post-deploy smoke test (GUARD-03): "/", "/projects/" and the first project page linked from it must each
-// answer 200 with no redirect. A failure only reports; nothing is rolled back or restarted (D-04).
+// Post-deploy smoke test (GUARD-03): "/", "/projects/", the first project page linked from it and "/about/" must each
+// answer 200 with no redirect, and a missing route must answer 404. A failure only reports; nothing is rolled back or restarted (D-04).
 // usage: node scripts/smoke-test.mjs BASE_URL [--attempts N] [--delay-ms MS]
 //   --attempts N   tries before giving up (default 10)
 //   --delay-ms MS  pause between tries, for a cold container or a certificate still being issued (default 15000)
@@ -8,6 +8,7 @@ import { setTimeout as sleep } from "node:timers/promises";
 import { pathToFileURL } from "node:url";
 
 const FETCH_TIMEOUT_MS = 15000;
+const MISSING_PATH = "/__smoke_missing_route__/";
 const DEFAULT_ATTEMPTS = 10;
 const DEFAULT_DELAY_MS = 15000;
 const USAGE =
@@ -28,7 +29,7 @@ async function get(base, path) {
 }
 
 /**
- * Request "/", "/projects/" and the first project page, in that order.
+ * Request "/", "/projects/", the first project page and "/about/" (each 200), then a missing route (404), in that order.
  * @param {string} base site origin, for example https://dev.zeikcookson.com
  * @returns {Promise<string | null>} null when healthy, otherwise the failure reason
  */
@@ -47,7 +48,17 @@ export async function check(base) {
 
     path = `/projects/${link[1]}/`;
     const page = await get(base, path);
-    return page.status === 200 ? null : `${path} answered ${page.status}`;
+    if (page.status !== 200) return `${path} answered ${page.status}`;
+
+    path = "/about/";
+    const about = await get(base, path);
+    if (about.status !== 200) return `${path} answered ${about.status}`;
+
+    path = MISSING_PATH;
+    const missing = await get(base, path);
+    return missing.status === 404
+      ? null
+      : `${path} answered ${missing.status}, expected 404`;
   } catch (error) {
     return `${path} request failed: ${error instanceof Error ? error.message : error}`;
   }

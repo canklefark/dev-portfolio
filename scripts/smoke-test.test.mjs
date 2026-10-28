@@ -67,12 +67,14 @@ function startSite(routes) {
   });
 }
 
-/** A site where every checked path answers 200 and /projects/ links /projects/alpha/. */
+/** A site where every checked path answers 200, /projects/ links /projects/alpha/ and a missing route answers 404. */
 const healthy = /** @type {Routes} */ (
   (path) =>
     path === "/projects/"
       ? { status: 200, body: '<a href="/projects/alpha/">Alpha</a>' }
-      : { status: 200, body: "ok" }
+      : path === "/__smoke_missing_route__/"
+        ? { status: 404 }
+        : { status: 200, body: "ok" }
 );
 
 /**
@@ -121,6 +123,25 @@ describe("smoke-test", () => {
       path === "/projects/alpha/" ? { status: 500 } : healthy(path, 1),
     );
     assert.equal(await check(base), "/projects/alpha/ answered 500");
+  });
+
+  it("names /about/ when it answers 500", async () => {
+    const { base } = await startSite((path) =>
+      path === "/about/" ? { status: 500 } : healthy(path, 1),
+    );
+    assert.equal(await check(base), "/about/ answered 500");
+  });
+
+  it("fails when a missing route answers 200 instead of 404", async () => {
+    const { base } = await startSite((path) =>
+      path === "/__smoke_missing_route__/"
+        ? { status: 200, body: "ok" }
+        : healthy(path, 1),
+    );
+    assert.equal(
+      await check(base),
+      "/__smoke_missing_route__/ answered 200, expected 404",
+    );
   });
 
   it("treats a redirect as a failure", async () => {
