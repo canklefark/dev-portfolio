@@ -1,11 +1,13 @@
 ---
 phase: "05"
 slug: dokploy-deploy-and-cutover
-status: draft
+status: complete
+# nyquist_compliant stays false: the Nyquist audit (gsd-validate-phase) was not run for this phase, so no coverage is claimed. All map rows are resolved from 05-EVIDENCE.md and 05-VERIFICATION.md.
 nyquist_compliant: false
 wave_0_complete: true
 created: "2026-10-26"
 revised: "2026-10-27"
+closed: "2026-10-28"
 ---
 
 # Phase 05 - Validation Strategy
@@ -23,7 +25,7 @@ revised: "2026-10-27"
 | **Quick run command**  | `npm test`                                                                              |
 | **Full suite command** | `npm test && npm run check:public-js`                                                   |
 | **Estimated runtime**  | ~30 seconds                                                                             |
-| **Test count**         | 60 tests today; 51 after plan 05-04 removes `scripts/dokploy-deploy.test.mjs` (9 tests) |
+| **Test count**         | 51 (60 before plan 05-04 removed `scripts/dokploy-deploy.test.mjs`, 9 tests); 51 pass on 2026-10-28 |
 
 ---
 
@@ -42,12 +44,12 @@ revised: "2026-10-27"
 | -------- | ---- | ---- | -------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | ---------- |
 | 05-01-01 | 01   | 1    | GUARD-03             | none       | Smoke check reports a reason on 500 or missing project link (the manual post-deploy check, D-04)                                         | unit        | `node --test scripts/smoke-test.test.mjs`                                                                                                                              | ✅                  | ✅ green   |
 | 05-02-01 | 02   | 1    | GUARD-02             | none       | CI fails on a pending migration and on a drifted committed manifest                                                                      | CI step     | `npx emdash seed .emdash/seed.json --database <tmp>/m.db --uploads-dir <tmp>/u && npx emdash migrate --check --from-config --database <tmp>/m.db`                      | ✅                  | ✅ green   |
-| 05-03-01 | 03   | 2    | DEPLOY-01, DEPLOY-03 | none       | Production serves the Dokploy app and matches the baseline with the record DNS only                                                      | script      | `node scripts/smoke-test.mjs https://dev.zeikcookson.com`, then script-inventory `fetch`, `parity`, `check` (plan 05-03 Task 2)                                        | ✅ existing tooling | ⬜ pending |
-| 05-03-02 | 03   | 2    | DEPLOY-04            | T-05-13    | A malformed Host header gets a 4xx or 500 at the origin and the site answers 200 afterwards; the origin response headers are recorded    | curl        | `curl --http1.1 -H 'Host: dev.zeikcookson.com:65536' https://dev.zeikcookson.com/`, then the smoke test (plan 05-03 Task 2)                                            | ✅ existing tooling | ⬜ pending |
-| 05-04-01 | 04   | 3    | GUARD-03             | T-05-34    | The dead pipeline code is gone, ci is intact, npm test still passes with 51 tests and the one remaining deploy-time command still passes | unit + git  | `test ! -e .github/workflows/deploy.yml`, `npm test` printing `tests 51`, `node scripts/smoke-test.mjs https://dev.zeikcookson.com` (plan 05-04 Task 1)                | ✅ existing tooling | ⬜ pending |
-| 05-04-03a | 04   | 3    | DEPLOY-01, GUARD-03  | T-05-34    | main carries no deploy workflow, ci is green on the pushed main, and the Dokploy app answers behind the proxy (health route, cf-ray)     | gh + curl   | `gh run list` for the main sha, `curl -s https://dev.zeikcookson.com/_emdash/api/health`, `curl -sI` showing cf-ray, `node scripts/smoke-test.mjs` (plan 05-04 Task 3) | ✅ existing tooling | ⬜ pending |
-| 05-04-03b | 04   | 3    | DEPLOY-03            | T-05-29    | Behind the proxy parity and the public-JS allowlist still hold                                                                           | script      | script-inventory `fetch`, `parity`, `check` against the live site (plan 05-04 Task 3)                                                                                  | ✅ existing tooling | ⬜ pending |
-| 05-05-01 | 05   | 4    | DEPLOY-05            | T-05-19    | A restored volume boots in a scratch app and its pages hash the same as production's                                                     | manual + gh | the user's `emdash doctor` and three `md5sum` lines from both containers, compared by the executor (plan 05-05 Task 1)                                                 | ✅ existing tooling | ⬜ pending |
+| 05-03-01 | 03   | 2    | DEPLOY-01, DEPLOY-03 | none       | Production serves the Dokploy app and matches the baseline with the record DNS only                                                      | script      | `node scripts/smoke-test.mjs https://dev.zeikcookson.com`, then script-inventory `fetch`, `parity`, `check` (plan 05-03 Task 2)                                        | ✅ existing tooling | ✅ green (C1, C6) |
+| 05-03-02 | 03   | 2    | DEPLOY-04            | T-05-13    | A malformed Host header gets a 4xx or 500 at the origin and the site answers 200 afterwards; the origin response headers are recorded    | curl        | `curl --http1.1 -H 'Host: dev.zeikcookson.com:65536' https://dev.zeikcookson.com/`, then the smoke test (plan 05-03 Task 2)                                            | ✅ existing tooling | ✅ green (C7) |
+| 05-04-01 | 04   | 3    | GUARD-03             | T-05-34    | The dead pipeline code is gone, ci is intact, npm test still passes with 51 tests and the one remaining deploy-time command still passes | unit + git  | `test ! -e .github/workflows/deploy.yml`, `npm test` printing `tests 51`, `node scripts/smoke-test.mjs https://dev.zeikcookson.com` (plan 05-04 Task 1)                | ✅ existing tooling | ✅ green (51 tests, no deploy.yml, smoke PASS) |
+| 05-04-03a | 04   | 3    | DEPLOY-01, GUARD-03  | T-05-34    | main carries no deploy workflow, ci is green on the pushed main, and the Dokploy app answers behind the proxy (health route, cf-ray)     | gh + curl   | `gh run list` for the main sha, `curl -s https://dev.zeikcookson.com/_emdash/api/health`, `curl -sI` showing cf-ray, `node scripts/smoke-test.mjs` (plan 05-04 Task 3) | ✅ existing tooling | ✅ green (C8, C9) |
+| 05-04-03b | 04   | 3    | DEPLOY-03            | T-05-29    | Behind the proxy parity and the public-JS allowlist still hold                                                                           | script      | script-inventory `fetch`, `parity`, `check` against the live site (plan 05-04 Task 3)                                                                                  | ✅ existing tooling | ✅ green under accepted deviation (16/17, C10) |
+| 05-05-01 | 05   | 4    | DEPLOY-05            | T-05-19    | A restored volume boots in a scratch app and its pages hash the same as production's                                                     | manual + gh | the user's `emdash doctor` and three `md5sum` lines from both containers, compared by the executor (plan 05-05 Task 1)                                                 | ✅ existing tooling | ✅ green, owner-attested logs and hashes (B2) |
 
 _Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky_
 
@@ -79,9 +81,9 @@ _Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky_
 
 - [ ] All tasks have `<automated>` verify or Wave 0 dependencies
 - [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
+- [x] Wave 0 covers all MISSING references
+- [x] No watch-mode flags
 - [ ] Feedback latency < 30s
 - [ ] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** closed 2026-10-28 with the map resolved from the evidence files. The other four sign-off boxes stay unticked and `nyquist_compliant` stays false because the Nyquist audit was not run. Rows 05-04-01, 05-04-03a and 05-04-03b were re-observed by the verifier on 2026-10-28 (smoke PASS, npm test 51 pass, parity 16/17, ci green on main); rows 05-03-01 and 05-03-02 rest on executor-recorded evidence from 2026-10-27 (C1, C6, C7); row 05-05-01 and the manual-only rows rest on owner-attested logs and reports.
