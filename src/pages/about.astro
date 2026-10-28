@@ -14,7 +14,7 @@ const { cells, stack, contacts, role } = about;
 const meta = pageMeta(about.source, site, { withSiteTitle: true });
 ---
 
-<Layout title={meta.title} description={meta.description} activeNav="about">
+<Layout title={meta.title} description={meta.description} canonical={meta.canonical} image={meta.image} robots={meta.robots} activeNav="about">
   {/* no data-page-entry — about manages its own top spacing via .about-inner padding */}
   <section class="section">
     <div class="about-inner">

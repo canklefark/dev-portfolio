@@ -5,6 +5,11 @@ export interface SiteContext {
   tagline: string;
   /** From the SEO settings; getSeoMeta applies its own default when this is unset. */
   titleSeparator: string | undefined;
+  /** From the SEO settings: the share image for any page whose SEO panel has none. */
+  defaultOgImage: string | undefined;
+  /** From the SEO settings: verification meta tag contents. */
+  googleVerification: string | undefined;
+  bingVerification: string | undefined;
 }
 
 /** Site-wide values read from EmDash settings (D-05). A missing title or tagline is a seed problem. */
@@ -22,6 +27,9 @@ export async function getSiteContext(): Promise<SiteContext> {
     title: settings.title,
     tagline: settings.tagline,
     titleSeparator: settings.seo?.titleSeparator,
+    defaultOgImage: settings.seo?.defaultOgImage?.url,
+    googleVerification: settings.seo?.googleVerification,
+    bingVerification: settings.seo?.bingVerification,
   };
 }
 
@@ -30,12 +38,18 @@ type SeoInput = Parameters<typeof getSeoMeta>[0];
 export interface PageMeta {
   title: string;
   description: string;
+  /** The SEO panel image, else the site default; may be root-relative, the layout makes it absolute. */
+  image: string | null;
+  /** The SEO panel canonical override, or null to let the layout use the route's own URL. */
+  canonical: string | null;
+  /** "noindex, nofollow" when the SEO panel says so, else null. */
+  robots: string | null;
 }
 
 /**
- * Title and description for one route through EmDash's getSeoMeta, so an editor's SEO panel value wins
- * and the computed value applies otherwise. The title is the full title (suffix included) and is used
- * for <title>, og:title and twitter:title alike.
+ * Title, description, image, canonical override and robots for one route through EmDash's getSeoMeta, so
+ * an editor's SEO panel value wins and the computed value applies otherwise. The title is the full title
+ * (suffix included) and is used for <title>, og:title and twitter:title alike.
  */
 export function pageMeta(
   content: SeoInput,
@@ -46,8 +60,15 @@ export function pageMeta(
     siteTitle: options.withSiteTitle ? site.title : undefined,
     titleSeparator: site.titleSeparator,
     defaultDescription: options.defaultDescription,
+    defaultOgImage: site.defaultOgImage,
   });
-  return { title: meta.title, description: meta.description ?? site.tagline };
+  return {
+    title: meta.title,
+    description: meta.description ?? site.tagline,
+    image: meta.ogImage,
+    canonical: meta.canonical,
+    robots: meta.robots,
+  };
 }
 
 /** Absolute og:url with exactly one trailing slash, built from the configured site (never the request Host). */

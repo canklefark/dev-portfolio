@@ -6,7 +6,14 @@ import { describe, it } from "node:test";
 import { isActiveLink, ogUrl, pageMeta } from "./site.ts";
 
 const SEP = " — ";
-const site = { title: "Zeik Cookson", tagline: "Tag", titleSeparator: SEP };
+const site = {
+  title: "Zeik Cookson",
+  tagline: "Tag",
+  titleSeparator: SEP,
+  defaultOgImage: undefined,
+  googleVerification: undefined,
+  bingVerification: undefined,
+};
 
 describe("pageMeta", () => {
   it("appends the site title with the separator and reads the excerpt as the description", () => {
@@ -85,6 +92,61 @@ describe("pageMeta", () => {
     });
     assert.equal(meta.title, `Catalog CMS${SEP}Zeik Cookson`);
     assert.equal(meta.description, "One sentence summary.");
+  });
+
+  it("returns no image, canonical or robots when neither the panel nor the site sets one", () => {
+    const meta = pageMeta({ data: { title: "T" } }, site, {
+      withSiteTitle: true,
+    });
+    assert.equal(meta.image, null);
+    assert.equal(meta.canonical, null);
+    assert.equal(meta.robots, null);
+  });
+
+  it("falls back to the site default share image and lets a panel image win", () => {
+    const withDefault = { ...site, defaultOgImage: "/default.png" };
+    const fallback = pageMeta({ data: { title: "T" } }, withDefault, {
+      withSiteTitle: true,
+    });
+    assert.equal(fallback.image, "/default.png");
+    const own = pageMeta(
+      {
+        data: {
+          title: "T",
+          seo: {
+            title: null,
+            description: null,
+            image: "https://cdn.example/own.png",
+            canonical: null,
+            noIndex: false,
+          },
+        },
+      },
+      withDefault,
+      { withSiteTitle: true },
+    );
+    assert.equal(own.image, "https://cdn.example/own.png");
+  });
+
+  it("passes a panel canonical override and noindex through", () => {
+    const meta = pageMeta(
+      {
+        data: {
+          title: "T",
+          seo: {
+            title: null,
+            description: null,
+            image: null,
+            canonical: "https://example.com/elsewhere",
+            noIndex: true,
+          },
+        },
+      },
+      site,
+      { withSiteTitle: true },
+    );
+    assert.equal(meta.canonical, "https://example.com/elsewhere");
+    assert.equal(meta.robots, "noindex, nofollow");
   });
 });
 

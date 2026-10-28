@@ -9,7 +9,7 @@ const [projects, index, site] = await Promise.all([getSortedProjects(), getProje
 const meta = pageMeta(index, site, { withSiteTitle: true });
 ---
 
-<Layout title={meta.title} description={meta.description} activeNav="projects">
+<Layout title={meta.title} description={meta.description} canonical={meta.canonical} image={meta.image} robots={meta.robots} activeNav="projects">
   <section class="section" data-page-entry>
     <div class="u-gutters">
       <h1 class="section-label">All Projects</h1>

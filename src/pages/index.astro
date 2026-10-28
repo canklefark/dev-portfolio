@@ -14,7 +14,7 @@ const hero = home.data;
 const meta = pageMeta(home, site, { withSiteTitle: false, defaultDescription: site.tagline });
 ---
 
-<Layout title={meta.title} description={meta.description} activeNav="home">
+<Layout title={meta.title} description={meta.description} canonical={meta.canonical} image={meta.image} robots={meta.robots} activeNav="home">
   <section class="section" id="home" data-page-entry>
     <div class="u-gutters">
       <div class="hero">

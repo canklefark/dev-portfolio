@@ -19,7 +19,7 @@ const site = await getSiteContext();
 const meta = pageMeta(detail.source, site, { withSiteTitle: true, defaultDescription: project.summary });
 ---
 
-<Layout title={meta.title} description={meta.description} activeNav="projects">
+<Layout title={meta.title} description={meta.description} canonical={meta.canonical} image={meta.image} robots={meta.robots} activeNav="projects">
   <section class="section">
     <div class="u-gutters">
       <BackButton href="/projects" label="Back to Projects" />
