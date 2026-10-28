@@ -69,3 +69,21 @@ P14 (session): run the anonymous page check. Expect both marker counts 0 and the
 - "No rebuild" rests on the owner's report that no Deploy was clicked and on origin main being unchanged.
 - The url_pattern pre-check in P0 is optional.
 - Cloudflare behavior is read from response headers only.
+
+## Stale references (DOCS-03)
+
+Run on 2026-10-28. D-13 asked for a one-time sweep for references to the removed markdown workflow and declined a CI guard, so none was added. The scope is every tracked and untracked file outside .planning, plus the owner's home folder items named below (the portfolio-update skill, the shell rc file and the two symlinked skills).
+
+| Check | Result |
+| ----- | ------ |
+| S1: portfolio-update skill removed from ~/.claude/skills (D-11) | PASS: the folder is absent. It was moved to the macOS Trash in plan 06-03. |
+| S2: docs/friend-portfolio-intake.md deleted (D-12) | PASS: the file is absent from the working tree and was removed with git rm in plan 06-03. |
+| S3: scripts/log.sh deleted and the ~/.zshrc lines removed by the owner (D-12, Open Question 2) | PASS: scripts/log.sh is absent and ~/.zshrc has no match for portfolio/scripts/log.sh. No rc file mentions it, and Claude never edited ~/.zshrc. |
+| S4: tracked design specs under docs/superpowers/specs (Open Question 3) | PENDING |
+| S5: untracked plans under docs/superpowers/plans (Open Question 3) | FLAGGED: docs/superpowers/plans/2026-05-14-logbook-quick-capture.md and docs/superpowers/plans/2026-05-16-friend-portfolio-intake.md are gitignored local files, not in the repo (git check-ignore matches the docs/superpowers rule in .gitignore). They were left in place. |
+| S6: skills portfolio-logbook and portfolio-projects (Open Question 4) | PENDING |
+| S7: production dev-portfolio card (Open Question 5) | PASS: the owner rewrote and published the card in the admin, and the anonymous /projects/dev-portfolio/ page answers 200 without the three stale phrases (adding a post is a git commit, Content lives in Astro content collections, deploys on every push to). |
+| S8: .emdash/seed.json inspected (D-13) | FLAGGED: it still holds the Phase 2 snapshot of the old dev-portfolio copy, including the frontmatter match D-13 named. It is unchanged since e2ce3f7 (git diff --quiet e2ce3f7 on that path exits 0), is never hand-edited (03-04 decision), and is refreshed only by an export if the owner asks. |
+| S9: logbook wording reviewed and kept (D-13) | PASS: PRODUCT.md, DESIGN.md, .impeccable/design.json, src/pages/404.astro, src/pages/index.astro and src/styles/blocks.css use logbook as design tone or a CSS class (logbook-footer), not the markdown workflow. |
+| S10: README.md and CLAUDE.md describe the EmDash workflow (DOCS-01, DOCS-02) | PASS: README.md has six sections (What this is, Local development, Editing content, Deploying, Rolling back, Agent access). CLAUDE.md gained the Claude MCP drafting sentence under Content, the admin-only client JS bullet and the no-plugins bullet under Code Rules, per 06-02-SUMMARY.md. |
+| S11: final D-13 sweep | PENDING |
