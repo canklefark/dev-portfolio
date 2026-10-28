@@ -21,7 +21,7 @@ created: "2026-10-28"
 | Cloudflare edge to Dokploy origin | Traefik on the Dokploy host, Let's Encrypt certificate            | Same traffic; origin is directly reachable               |
 | Dokploy host to R2                | Nightly volume backup upload                                      | SQLite database copy (private bucket, bucket-scoped key) |
 | GitHub to production              | Manual: the owner clicks Deploy in Dokploy                        | Source built from main; CI is the only guard             |
-| Claude Code to EmDash MCP         | OAuth session with full admin rights (outside Phase 5's register) | Content reads and writes                                 |
+| Claude Code to EmDash MCP         | OAuth session with the scopes ticked at consent (outside Phase 5's register) | Content reads and writes                                 |
 
 ---
 
@@ -81,7 +81,7 @@ _Accepted risks do not resurface in future audit runs._
 
 None are open threats. Recorded for the owner.
 
-1. **Agent access (medium, outside Phase 5).** `.mcp.json` registers the production MCP endpoint by URL only. The OAuth session carries full admin rights and no guard hook exists, so a prompt-injected session could change or publish production content. Backups limit the damage. Owner decision 2026-10-28.
+1. **Agent access (medium, outside Phase 5).** `.mcp.json` registers the production MCP endpoint by URL only. The OAuth session carries whichever scopes were ticked on the consent screen (all are ticked by default), limited by the owner role, and no guard hook exists, so a prompt-injected session could change or publish production content within those scopes. Backups limit the damage. Owner decision 2026-10-28.
 2. **No HSTS (low).** Responses carry no strict-transport-security header.
 3. **Operational identifiers in a public repo (low).** Bucket name, Dokploy app slug, a backup object key and the recovery procedure appear in 05-EVIDENCE.md and PROJECT.md. None are secrets.
 4. **Unexplained 403 on the first S3 destination test (low).** Confirm the R2 token is still limited to Object Read and Write on the one bucket and was not widened.

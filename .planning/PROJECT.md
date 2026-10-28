@@ -113,8 +113,8 @@ getEmDashEntry<T extends string, D, S>(type: T, id: string, options?: { locale?:
 2. Take an online backup with sqlite3 and require the integrity check to print ok: `sqlite3 data/emdash.db ".backup data/pre-recovery.db"`, then `sqlite3 data/pre-recovery.db "PRAGMA integrity_check"`.
 3. Run the delete with foreign keys on, because the CLI default is off and the cascade to credentials would not run otherwise: `sqlite3 data/emdash.db "PRAGMA foreign_keys=ON; DELETE FROM users; DELETE FROM options WHERE name IN ('emdash:setup_complete','emdash:setup_state');"`. This removes the users, then the two setup options.
 4. Complete the setup wizard on the production hostname.
-5. Enroll two new passkeys.
-6. Recreate any agent tokens. They cascade away with the users (from research, not re-measured in the drill).
+5. Enroll a passkey. The owner runs one on purpose, so add a second when convenient.
+6. Sign in to the EmDash MCP server again from Claude Code with /mcp. Access tokens and OAuth sessions are tied to the users that were deleted (from research, not re-measured in the drill).
 7. Reopen public ingress.
 
 What the drill showed: before the delete there was 1 user and 2 credentials, and after it 0 and 0. The schema and content counts were unchanged (2 collections, 6 fields, 2 taxonomy definitions, 1 media row), and the uploaded file survived. The wizard then re-prompted the site title and tagline blank, offered the Empty site or Import choice, and asked for email, name and a passkey; the values entered overwrite the stored ones. A new authenticator claimed the admin and signed in after a cookie reset. Evidence: `spike/recovery.txt`, `spike/passkeys-reclaim.json`.
