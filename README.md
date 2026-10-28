@@ -1,43 +1,56 @@
-# Astro Starter Kit: Minimal
+# Portfolio
+
+This is my portfolio site, live at https://dev.zeikcookson.com. I edit its content in an admin on the site itself, and I deploy it by hand from Dokploy.
+
+## What this is
+
+The site is an Astro 6 server build on the `@astrojs/node` standalone adapter, written in TypeScript strict mode. The content (project cards, About, navigation and site settings) lives in EmDash, in SQLite on a persistent volume, and not in this repo. Public pages ship no client JS. The EmDash admin at `/_emdash/admin` is the only part that runs any. The site is self-hosted on Dokploy from the repo `Dockerfile`, behind the Cloudflare proxy.
+
+Engineering rules are in [CLAUDE.md](CLAUDE.md). The design system is in [DESIGN.md](DESIGN.md) and [PRODUCT.md](PRODUCT.md).
+
+## Local development
+
+I use Node 24, which `.nvmrc` pins. The `engines` field requires Node 22.22.2 or newer and `engine-strict` is on, so an older Node fails at install.
 
 ```sh
-npm create astro@latest -- --template minimal
+npm ci
+mkdir -p data
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+EmDash cannot open its SQLite file until `data/` exists, so `mkdir -p data` has to run before the first `npm run dev`. The folder is gitignored.
 
-## 🚀 Project Structure
+Then open http://localhost:4321/_emdash/admin. On an empty database it runs the setup wizard. I choose Sample content, which loads the committed `.emdash/seed.json`, and enroll a passkey for localhost. The local database is separate from production, so editing one never changes the other, git or the seed.
 
-Inside of your Astro project, you'll see the following folders and files:
+Two checks run before a change is done:
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```sh
+npm test
+npm run check:public-js
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+`npm test` runs the Node test files in `scripts/` and `src/lib/`. `npm run check:public-js` builds the site, serves it against a throwaway database and fails if a public route gains a script.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## Editing content
 
-Any static assets, like images, can be placed in the `public/` directory.
+I edit content in the admin at https://dev.zeikcookson.com/_emdash/admin, signed in with my one passkey. If that device is lost, the way back is the "Admin recovery procedure" section of [.planning/PROJECT.md](.planning/PROJECT.md).
 
-## 🧞 Commands
+Saving a published entry stages a draft, and the live page keeps showing the published copy. Preview opens a signed link to the draft that works in a signed-out browser for an hour, so I can share it. Publish makes the change live on the next request, with no rebuild, push or deploy. Restore in the Revisions panel turns an older version into the draft, and the live page only changes when I publish again. [06-EVIDENCE.md](.planning/phases/06-live-editing-and-docs/06-EVIDENCE.md) records this loop rehearsed on production.
 
-All commands are run from the root of the project, from a terminal:
+## Deploying
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+1. Merge to `main` and push. A push runs CI only, and Auto Deploy is off, so a push never deploys.
+2. In Dokploy, click Deploy on the portfolio application and wait for the deployment to show done.
+3. Run the smoke test, which checks that `/`, `/projects/` and one project page answer 200:
 
-## 👀 Want to learn more?
+```sh
+node scripts/smoke-test.mjs https://dev.zeikcookson.com
+```
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+EmDash applies pending migrations on the first request after the container starts, so before I deploy a change to `.emdash/migrations.json` (an EmDash upgrade) I take a volume backup first.
+
+## Rolling back
+
+For bad code, I revert the commit on `main`, push, click Deploy and run the smoke test. I have not rehearsed this route yet.
+
+A code rollback does not undo a migration that already ran. After a bad migration I restore the nightly volume backup from the private R2 bucket with Dokploy's Restore Volume, picking the `.tar` object and not the app-name folder. That restore was rehearsed into a scratch app, and the record is in [05-EVIDENCE.md](.planning/phases/05-dokploy-deploy-and-cutover/05-EVIDENCE.md) (rows B1 to B3).
