@@ -22,7 +22,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Read Path Rewire and Parity** - Public pages read from EmDash, look identical, ship no new JavaScript, and the markdown sources are gone (completed 2026-10-26)
 - [x] **Phase 4: Agent Access** - Claude manages content through MCP or CLI with a draft-first token that cannot touch the schema (completed 2026-10-26)
 - [x] **Phase 5: Dokploy Deploy and Cutover** - dev.zeikcookson.com is served by a Dokploy Node container with SQLite on a persistent volume, a claimed passkey admin, and migration-safe deploys (completed 2026-10-28)
-- [ ] **Phase 6: Live Editing and Docs** - The live site is edited from the admin end to end, and the repo docs describe the new workflow
+- [x] **Phase 6: Live Editing and Docs** - The live site is edited from the admin end to end, and the repo docs describe the new workflow (completed 2026-10-28)
 
 ## Phase Details
 
@@ -207,7 +207,7 @@ Plans:
 3. CLAUDE.md covers the Dokploy deploy (the owner clicks Deploy in Dokploy, a push to `main` runs CI only, and the smoke test runs after each deploy), the Node version, admin-only client JS, the "no new JS" rule, the no-plugins rule and content edited in EmDash, and the README walks through the new local and deploy workflow including the manual deploy steps and the rollback rule
 4. The `portfolio-update` skill and every doc that still describes the markdown workflow are updated or flagged, and nothing in the repo points at the removed content files
 
-**Plans**: 4/4 plans executed
+**Plans**: 4/4 plans complete
 
 Plans:
 **Wave 1**
@@ -235,4 +235,4 @@ Phases execute in numeric order: 1, 2, 3, 4, 5, 6
 | 3. Read Path Rewire and Parity   | 6/6            | Complete    | 2026-10-26 |
 | 4. Agent Access                  | 3/3            | Complete    | 2026-10-26 |
 | 5. Dokploy Deploy and Cutover    | 5/5            | Complete    | 2026-10-28 |
-| 6. Live Editing and Docs         | 4/4 | In Progress | -          |
+| 6. Live Editing and Docs         | 4/4 | Complete    | 2026-10-28 |

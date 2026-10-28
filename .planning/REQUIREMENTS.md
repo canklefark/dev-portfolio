@@ -42,8 +42,8 @@ Milestone v1.0: EmDash Migration. Each maps to roadmap phases.
 - [x] **ADMIN-01**: Admin runs under `/_emdash/admin` and loads no admin JS on public routes
 - [x] **ADMIN-02**: The setup wizard is completed at first deploy, before the URL is shared, and the login page (not setup) is what a visitor sees afterward
 - [x] **ADMIN-03**: One passkey is enrolled on `dev.zeikcookson.com` and signs in. Dropped by user decision 2026-10-27: the second passkey and a recovery drill in the production container. A lost device means the SQLite recovery procedure in PROJECT.md, rehearsed locally in Phase 1 (lockout risk accepted)
-- [ ] **ADMIN-04**: Draft, preview and publish are exercised end to end on one real project, including restoring a revision
-- [ ] **ADMIN-05**: A shareable preview link works for a draft entry
+- [x] **ADMIN-04**: Draft, preview and publish are exercised end to end on one real project, including restoring a revision
+- [x] **ADMIN-05**: A shareable preview link works for a draft entry
 
 ### Agent access
 
@@ -70,9 +70,9 @@ _Amended 2026-10-27 (user, outside Phase 5): agent access is OAuth to the commit
 
 ### Docs
 
-- [ ] **DOCS-01**: CLAUDE.md is updated (Dokploy deploy by clicking Deploy, a push to `main` runs CI only, a smoke test after each deploy, Node version, admin-only client JS, "no new JS" rule, no-plugins rule, content now edited in EmDash); the Deployment paragraph already says the deploy part (2026-10-27)
-- [ ] **DOCS-02**: README is updated for the new local and deploy workflow, including the manual deploy steps (merge to `main`, click Deploy, run the smoke test) and the rollback rule (revert and redeploy; restore a volume backup after a bad migration)
-- [ ] **DOCS-03**: The `portfolio-update` skill and any doc referencing the markdown workflow are flagged or updated
+- [x] **DOCS-01**: CLAUDE.md is updated (Dokploy deploy by clicking Deploy, a push to `main` runs CI only, a smoke test after each deploy, Node version, admin-only client JS, "no new JS" rule, no-plugins rule, content now edited in EmDash); the Deployment paragraph already says the deploy part (2026-10-27)
+- [x] **DOCS-02**: README is updated for the new local and deploy workflow, including the manual deploy steps (merge to `main`, click Deploy, run the smoke test) and the rollback rule (revert and redeploy; restore a volume backup after a bad migration)
+- [x] **DOCS-03**: The `portfolio-update` skill and any doc referencing the markdown workflow are flagged or updated
 
 ## v2 Requirements
 
@@ -143,11 +143,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ADMIN-03    | Phase 5 | Complete |
 | GUARD-02    | Phase 5 | Complete |
 | GUARD-03    | Phase 5 | Complete |
-| ADMIN-04    | Phase 6 | Pending  |
-| ADMIN-05    | Phase 6 | Pending  |
-| DOCS-01     | Phase 6 | Pending  |
-| DOCS-02     | Phase 6 | Pending  |
-| DOCS-03     | Phase 6 | Pending  |
+| ADMIN-04    | Phase 6 | Complete |
+| ADMIN-05    | Phase 6 | Complete |
+| DOCS-01     | Phase 6 | Complete |
+| DOCS-02     | Phase 6 | Complete |
+| DOCS-03     | Phase 6 | Complete |
 
 **Coverage:**
 
