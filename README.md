@@ -54,3 +54,9 @@ EmDash applies pending migrations on the first request after the container start
 For bad code, I revert the commit on `main`, push, click Deploy and run the smoke test. I have not rehearsed this route yet.
 
 A code rollback does not undo a migration that already ran. After a bad migration I restore the nightly volume backup from the private R2 bucket with Dokploy's Restore Volume, picking the `.tar` object and not the app-name folder. That restore was rehearsed into a scratch app, and the record is in [05-EVIDENCE.md](.planning/phases/05-dokploy-deploy-and-cutover/05-EVIDENCE.md) (rows B1 to B3).
+
+## Agent access
+
+The repo commits `.mcp.json` with one MCP server, `emdash`, at https://dev.zeikcookson.com/_emdash/api/mcp. It is named by URL only. In Claude Code at the repo root I approve the project server and run `/mcp`, and the first connection opens an OAuth sign-in with my admin passkey. No token lives in the repo or the environment. The session then acts with my admin rights.
+
+The rule is draft-first. The agent reads an entry with `content_get`, writes with `content_update` and no status so the change stays a draft, and I publish in the admin. This is a convention, and nothing enforces it. An entry open in the admin editor refuses agent writes with `ENTRY_LOCKED`, so I close the editor first.

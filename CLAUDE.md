@@ -6,12 +6,13 @@ Astro 6 with the `@astrojs/node` standalone adapter, TypeScript strict mode. Con
 
 ## Content
 
-Content is edited in the EmDash admin. There are no markdown content files.
+Content is edited in the EmDash admin. There are no markdown content files. Claude edits content through the `emdash` MCP server in `.mcp.json` (OAuth, with the owner's admin rights) and saves drafts only; the owner publishes in the admin. This is a convention: nothing enforces it.
 
 ## Code Rules
 
 - TypeScript strict — no `any`
-- No client-side JS unless there's no server-side alternative (`npm run check:public-js` guards this)
+- No client-side JS on public routes. Client JS runs only in the EmDash admin under `/_emdash/admin`, and never add a script, modulepreload or module tag to a public route (`npm run check:public-js` fails CI if one appears)
+- No third-party EmDash plugins (`EMDASH_ENCRYPTION_KEY` stays unset because no plugin declares a secret)
 - No inline styles except for CSS custom property overrides (`style="--var: value"`)
 - All SQL queries parameterized, never interpolated
 
