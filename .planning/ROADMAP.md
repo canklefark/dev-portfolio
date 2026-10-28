@@ -21,7 +21,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Content Model and Import** - Build the EmDash schema and import all 13 projects, About, nav and settings with a zero-diff parity report (completed 2026-10-26)
 - [x] **Phase 3: Read Path Rewire and Parity** - Public pages read from EmDash, look identical, ship no new JavaScript, and the markdown sources are gone (completed 2026-10-26)
 - [x] **Phase 4: Agent Access** - Claude manages content through MCP or CLI with a draft-first token that cannot touch the schema (completed 2026-10-26)
-- [ ] **Phase 5: Dokploy Deploy and Cutover** - dev.zeikcookson.com is served by a Dokploy Node container with SQLite on a persistent volume, a claimed passkey admin, and migration-safe deploys
+- [x] **Phase 5: Dokploy Deploy and Cutover** - dev.zeikcookson.com is served by a Dokploy Node container with SQLite on a persistent volume, a claimed passkey admin, and migration-safe deploys (completed 2026-10-28)
 - [ ] **Phase 6: Live Editing and Docs** - The live site is edited from the admin end to end, and the repo docs describe the new workflow
 
 ## Phase Details
@@ -169,13 +169,13 @@ Plans:
 **Requirements**: DEPLOY-01, DEPLOY-02, DEPLOY-03, DEPLOY-04, DEPLOY-05, ADMIN-02, ADMIN-03, GUARD-02, GUARD-03
 **Success Criteria** (what must be TRUE):
 
-1. The site built by Dokploy from the repo Dockerfile and served on `dev.zeikcookson.com` matches the baseline in content and scripts (17 of 17 pages identical, public-JS allowlist passing), checked on the live hostname with the record DNS only and again behind the Cloudflare proxy
+1. The site built by Dokploy from the repo Dockerfile and served on `dev.zeikcookson.com` matches the baseline in content and scripts, checked on the live hostname with the record DNS only and again behind the Cloudflare proxy (17 of 17 pages identical with the record DNS only; behind the proxy 16 of 17 identical, the one difference being the Cloudflare-injected email-decode script on /about, with the public-JS allowlist otherwise passing; Email Address Obfuscation stays on, accepted by the owner 2026-10-27, amended 2026-10-28 to match REQUIREMENTS.md DEPLOY-03)
 2. `dev.zeikcookson.com` serves the Dokploy app with SQLite and uploads on a persistent volume (the media storage chosen in Phase 1), the old site is torn down, content and the passkey survive the redeploy from `main`, and Cloudflare proxies the hostname with SSL/TLS Full (strict) while the Dokploy app is still shown to be the one answering
 3. Visiting the admin on production shows the login page, not the setup wizard, and the one enrolled passkey signs in (the two-passkey requirement was dropped by the user on 2026-10-27; the lockout risk is recorded and the recovery procedure was rehearsed locally in Phase 1)
 4. EmDash applies pending migrations on the first request after a deploy, CI fails while a migration is pending or when the committed migration manifest differs from the build, the owner deploys by clicking Deploy in Dokploy (the app builds `main`, Auto Deploy is off, there is no deploy pipeline: user decision 2026-10-27), and a smoke test run by hand after each deploy confirms `/` and one project page return 200
 5. A SQLite backup in the Cloudflare R2 bucket has been restored once into a non-production instance, and the restored content matches production
 
-**Plans**: 5/5 plans executed
+**Plans**: 5/5 plans complete
 
 Plans:
 **Wave 1**
@@ -220,5 +220,5 @@ Phases execute in numeric order: 1, 2, 3, 4, 5, 6
 | 2. Content Model and Import      | 4/4            | Complete    | 2026-10-26 |
 | 3. Read Path Rewire and Parity   | 6/6            | Complete    | 2026-10-26 |
 | 4. Agent Access                  | 3/3            | Complete    | 2026-10-26 |
-| 5. Dokploy Deploy and Cutover    | 5/5 | In Progress | -          |
+| 5. Dokploy Deploy and Cutover    | 5/5 | Complete    | 2026-10-28 |
 | 6. Live Editing and Docs         | 0/TBD          | Not started | -          |

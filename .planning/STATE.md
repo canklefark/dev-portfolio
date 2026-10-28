@@ -2,18 +2,18 @@
 gsd_state_version: "1.0"
 milestone: v1.0
 milestone_name: EmDash Migration
-current_phase: 05
-current_phase_name: Dokploy Deploy and Cutover
-current_plan: 5
-status: verifying
-stopped_at: Completed 05-05-PLAN.md
-last_updated: "2026-10-28T12:39:25.020Z"
-last_activity: 2026-10-27
-last_activity_desc: Phase 05 execution started
-state_head: 596db6c9506b53ccb68b80cf2e568cbf35062aaa
+current_phase: 6
+current_phase_name: Live Editing and Docs
+current_plan: Not started
+status: planning
+stopped_at: Phase 5 complete, ready to plan Phase 6
+last_updated: "2026-10-28T15:47:03.801Z"
+last_activity: 2026-10-28
+last_activity_desc: Phase 5 complete, transitioned to Phase 6
+state_head: 51fcf4f2331ebb2ff3d8e022d4575a14468f8e7b
 progress:
   total_phases: 6
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 23
   completed_plans: 23
 ---
@@ -22,26 +22,26 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-10-26)
+See: .planning/PROJECT.md (updated 2026-10-28)
 
 **Core value:** A hiring manager lands on an honest, fast, distinctive site that makes the project work carry the argument.
-**Current focus:** Phase 05 — Dokploy Deploy and Cutover
+**Current focus:** Phase 06 — Live Editing and Docs
 
 ## Current Position
 
-Phase: 05 (Dokploy Deploy and Cutover) — EXECUTING
-Current Plan: 5
-Total Plans in Phase: 5
-Status: Phase complete — ready for verification
-Last activity: 2026-10-27 — Phase 05 execution started
+Phase: 6 — Live Editing and Docs
+Current Plan: Not started
+Total Plans in Phase: TBD
+Status: Ready to plan
+Last activity: 2026-10-28 — Phase 5 complete, transitioned to Phase 6
 
-Progress: [███████░░░] 67%
+Progress: [████████░░] 83%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 18
+- Total plans completed: 23
 - Average duration: -
 - Total execution time: 0 hours
 
@@ -53,6 +53,7 @@ Progress: [███████░░░] 67%
 | 02    | 4     | -     | -        |
 | 03    | 6     | -     | -        |
 | 4     | 3     | -     | -        |
+| 5     | 5     | -     | -        |
 
 **Recent Trend:**
 
@@ -100,7 +101,7 @@ Recent decisions affecting current work:
 - [Roadmap]: Agent access is proven locally (Phase 4) before the MCP endpoint goes public (Phase 5).
 - [Roadmap]: Draft, preview, publish, revision restore and preview links are exercised on the deployed site (Phase 6).
 - [Phase 01]: Baseline captured at main f4e5470 (Node 24.17.0, astro 6.2.2) in ~/portfolio-baseline/2026-10-23; all later parity is judged against it via scripts/script-inventory.mjs
-- [Phase 01]: Allowlist scripts/script-allowlist.json is derived from the baseline inventory and committed; .emdash/migrations.json is not committed (revisit with GUARD-02 in Phase 5)
+- [Phase 01]: Allowlist scripts/script-allowlist.json is derived from the baseline inventory and committed; .emdash/migrations.json is not committed (superseded by 05-02: the manifest is committed and CI diffs it, GUARD-02)
 - [Phase 01]: Stay on Astro 6.4.x with explicit majors; four residual npm advisories (astro, @astrojs/node, sharp, esbuild) recorded for plan 01-05 to become a named gate
 - [Phase 01]: Stack.astro 'as' prop typed as HTMLTag because @types/react (from @astrojs/react) rejects class on a string-typed dynamic tag
 - [Phase 01]: data/ must exist before EmDash opens SQLite; Phase 5 image must create and own it at the baked relative path
@@ -129,7 +130,7 @@ Recent decisions affecting current work:
 - [Phase 04]: 04-02: README Agent access section documents the setup and states the residual risk (publish block is a Claude Code guard, token can itself publish); AGENT-01 and AGENT-02 amended, traceability rows stay Pending until 04-03
 - [Phase 04]: 04-03: live pass shows E1, E3, E4, E5 and the E2 negative control; E6 (guard live) and E7 (fresh README session) NOT VERIFIED; token created with a 7 day expiry (deviation from D-07); AGENT-02 amendment (D-03) shown live
 - [Phase 05]: 05-01: Dokploy trigger-and-wait lives in a tested Node script (scripts/dokploy-deploy.mjs), not inline curl and jq
-- [Phase 05]: 05-01: deploy.yml job runs only for a successful push-triggered ci run on main of this repository or a dispatch on main (T-05-01). Superseded 2026-10-27: deploys are manual (D-15 superseded), so deploy.yml, scripts/dokploy-deploy.mjs and its test are removed in plan 05-04 before main is pushed
+- [Phase 05]: 05-01: deploy.yml job runs only for a successful push-triggered ci run on main of this repository or a dispatch on main (T-05-01). Superseded 2026-10-27: deploys are manual (D-15 superseded), so deploy.yml, scripts/dokploy-deploy.mjs and its test were removed in plan 05-04 (68e380b) before main was pushed
 - [Phase 05]: 2026-10-27 second plan revision: tag deploys with a CI gate (D-15), Cloudflare proxy on after the first deploy with SSL/TLS Full (strict) (D-16), backups to Cloudflare R2 (D-17). Tag deploys and the agent token were superseded by the fourth revision below; the proxy and R2 backups stay
 - [Phase 05]: 2026-10-27 fourth plan revision (simplification, user: "I just want this done"): manual deploys, the owner clicks Deploy in Dokploy with Auto Deploy off and runs scripts/smoke-test.mjs by hand; no pipeline, no Dokploy API key, no GitHub secrets, no tag probe, no paths-ignore; one passkey is enough (D-09 amended, lockout risk recorded); agent access is OAuth to .mcp.json with no Phase 5 work (D-12 superseded); the phase has 5 plans: 05-03 finishes the evidence, 05-04 removes the dead pipeline code then merges and pushes main (user), repoints the app and turns the proxy on, 05-05 sets up R2 backups and the restore drill
 - [Phase 05]: 2026-10-27: the live origin already sends x-content-type-options, referrer-policy, x-frame-options and a permissions-policy (EmDash), so the Cloudflare Transform Rule of the second revision is dropped (D-11)
@@ -137,6 +138,7 @@ Recent decisions affecting current work:
 - [Phase 05]: One replica and Dokploy's default stop-first update order are assumed, not read from the panel (05-03)
 - [Phase 05]: Owner accepted Always Use HTTPS on and Cloudflare Email Address Obfuscation on (2026-10-27): proxy parity is 16/17 with the single Cloudflare email-decode script on /about; allowlist unchanged
 - [Phase 05]: 05-05: B1 and B3 held open until the user reported size, schedule and discard; deletion attributed to the user
+- [Phase 5]: 2026-10-28: owner confirmed Cloudflare Full (strict), Dokploy source main with Auto Deploy off, one replica, volume at /app/data, private-window admin login with the one passkey, and a private R2 bucket with chosen retention (owner-attested, not independently verified); owner accepted the weakened goal (manifest diff is the only migration tripwire and cannot stop a manual Deploy click): 'this is just a portfolio website, it's not that important'
 
 ### Pending Todos
 
@@ -145,7 +147,7 @@ None yet.
 ### Blockers/Concerns
 
 - [Roadmap]: Cloudflare Pages is dropped (2026-10-27), so `main` no longer auto-deploys anywhere. A push to `main` runs CI only; the owner deploys by clicking Deploy in Dokploy (D-15 superseded). Never push or merge without the user's go-ahead.
-- [Roadmap]: CI exists (`.github/workflows/ci.yml`: GUARD-01 from Phase 3, GUARD-02 and the manifest gate from plan 05-02). The deploy workflow committed in plan 05-01 is removed in plan 05-04 before `main` is pushed, because a deploy workflow on the default branch would start after every CI run. The smoke test (GUARD-03) is run by hand after each deploy.
+- [Roadmap]: CI exists (`.github/workflows/ci.yml`: GUARD-01 from Phase 3, GUARD-02 and the manifest gate from plan 05-02). No deploy workflow exists; the smoke test (GUARD-03) is run by hand after each deploy.
 - [Phase 05]: One passkey is enrolled (user decision 2026-10-27), so a lost device is a lockout until the SQLite recovery procedure in PROJECT.md is run; that procedure was rehearsed locally in Phase 1 and is not rehearsed in the production container.
 - [Phase 05]: The first Let's Encrypt renewal behind the Cloudflare proxy (around 2026-12-26) is not exercised in the phase; the fallback is to set the record DNS only, let Traefik renew and proxy it again.
 - [Roadmap]: The FOUND-02 baseline lives outside the repo, but the GUARD-01 check runs in CI. Commit a derived allowlist of public scripts, not the baseline HTML.
@@ -167,5 +169,5 @@ Items acknowledged and deferred at milestone close, most recent first:
 ## Session Continuity
 
 Last session: 2026-10-28T12:39:24.795Z
-Stopped at: Completed 05-05-PLAN.md
+Stopped at: Phase 5 complete, ready to plan Phase 6
 Resume file: None
