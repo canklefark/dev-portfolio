@@ -11,7 +11,7 @@ Content is edited in the EmDash admin. There are no markdown content files. Clau
 ## Code Rules
 
 - TypeScript strict — no `any`
-- No client-side JS on public routes. Client JS runs only in the EmDash admin under `/_emdash/admin`, and never add a script, modulepreload or module tag to a public route (`npm run check:public-js` fails CI if one appears)
+- No new client-side JS on public routes. The only scripts there are the ones in `scripts/script-allowlist.json` (theme, nav, 404), other client JS runs only in the EmDash admin under `/_emdash/admin`, and never add a script, modulepreload or module tag beyond that allowlist (`npm run check:public-js` fails CI if a route exceeds it)
 - No third-party EmDash plugins (`EMDASH_ENCRYPTION_KEY` stays unset because no plugin declares a secret)
 - No inline styles except for CSS custom property overrides (`style="--var: value"`)
 - All SQL queries parameterized, never interpolated
