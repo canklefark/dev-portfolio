@@ -207,7 +207,21 @@ Plans:
 3. CLAUDE.md covers the Dokploy deploy (the owner clicks Deploy in Dokploy, a push to `main` runs CI only, and the smoke test runs after each deploy), the Node version, admin-only client JS, the "no new JS" rule, the no-plugins rule and content edited in EmDash, and the README walks through the new local and deploy workflow including the manual deploy steps and the rollback rule
 4. The `portfolio-update` skill and every doc that still describes the markdown workflow are updated or flagged, and nothing in the repo points at the removed content files
 
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+**Wave 1**
+
+- [ ] 06-01-PLAN.md: Open Question 6 decision, then the tracer (production baseline H0 for catalog-cms and the procedure in 06-EVIDENCE.md), then the owner and a Claude Code session run draft, preview, publish, one agent draft over OAuth MCP, restore and a second publish back to H0 (ADMIN-04, ADMIN-05)
+
+**Wave 2** _(blocked on Wave 1 completion)_
+
+- [ ] 06-02-PLAN.md: README replaced (local dev, editing content, manual deploy, rollback), Open Question 1 decision, then the Agent access section and the surgical CLAUDE.md additions (DOCS-01, DOCS-02)
+- [ ] 06-03-PLAN.md: Friend intake doc and the portfolio-update skill removed, the owner removes the ~/.zshrc lines and rewrites the stale dev-portfolio card, then scripts/log.sh deleted (DOCS-03)
+
+**Wave 3** _(blocked on Wave 2 completion)_
+
+- [ ] 06-04-PLAN.md: D-13 sweep and the DOCS-03 rows in 06-EVIDENCE.md, Open Questions 3 and 4 decision, then the specs and skills dispositions applied and the phase regression checks (DOCS-03)
 
 ## Progress
 
@@ -220,5 +234,5 @@ Phases execute in numeric order: 1, 2, 3, 4, 5, 6
 | 2. Content Model and Import      | 4/4            | Complete    | 2026-10-26 |
 | 3. Read Path Rewire and Parity   | 6/6            | Complete    | 2026-10-26 |
 | 4. Agent Access                  | 3/3            | Complete    | 2026-10-26 |
-| 5. Dokploy Deploy and Cutover    | 5/5 | Complete    | 2026-10-28 |
-| 6. Live Editing and Docs         | 0/TBD          | Not started | -          |
+| 5. Dokploy Deploy and Cutover    | 5/5            | Complete    | 2026-10-28 |
+| 6. Live Editing and Docs         | 0/4            | Not started | -          |
