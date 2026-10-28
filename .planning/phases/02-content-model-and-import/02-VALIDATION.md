@@ -1,9 +1,9 @@
 ---
 phase: "02"
 slug: content-model-and-import
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: validated
+nyquist_compliant: true
+wave_0_complete: true
 created: "2026-10-26"
 ---
 
@@ -15,52 +15,52 @@ created: "2026-10-26"
 
 ## Test Infrastructure
 
-| Property               | Value                                                                                                   |
-| ---------------------- | ------------------------------------------------------------------------------------------------------- |
-| **Framework**          | `node:test` (built in), no install                                                                      |
-| **Config file**        | none, Wave 0 creates the test files                                                                     |
-| **Quick run command**  | `node --test scripts/import-content.test.mjs` (a bare directory argument fails on Node 24)              |
-| **Full suite command** | `node scripts/import-content.mjs && node scripts/verify-import.mjs && npx astro check && npm run build` |
-| **Estimated runtime**  | ~60 seconds                                                                                             |
+| Property               | Value                                                                                                    |
+| ---------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Framework**          | `node:test` (built in), no install                                                                       |
+| **Config file**        | none                                                                                                     |
+| **Quick run command**  | `node --test scripts/seed-shape.test.mjs`                                                                |
+| **Full suite command** | `npm test && npx emdash seed .emdash/seed.json --validate && npx astro check && npm run check:public-js` |
+| **Estimated runtime**  | ~60 seconds                                                                                              |
+
+Note: `scripts/import-content.mjs`, `scripts/verify-import.mjs`, `scripts/lib/*` and the markdown sources were deleted in Phase 3 (REND-05, plan 03-01). The seed is now the source of truth, so checks read `.emdash/seed.json` directly.
 
 ---
 
 ## Sampling Rate
 
-- **After every task commit:** Run `node --test scripts/import-content.test.mjs`
-- **After every plan wave:** Import twice, then `node scripts/verify-import.mjs`
-- **Before `/gsd-verify-work`:** Full suite must be green, plus the human admin checkpoint recorded
+- **After every task commit:** Run `node --test scripts/seed-shape.test.mjs`
+- **After every plan wave:** `npm test` and `npx emdash seed .emdash/seed.json --validate`
+- **Before `/gsd-verify-work`:** Full suite green, plus the human admin checkpoint recorded (done in 02-03, see its SUMMARY)
 - **Max feedback latency:** 60 seconds
 
 ---
 
 ## Per-Task Verification Map
 
-| Req ID                  | Behavior                                                | Test Type          | Automated Command                                                                                      | File Exists |
-| ----------------------- | ------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------ | ----------- |
-| SCHEMA-01               | Field slugs non-reserved, seed validates                | unit + smoke       | `node --test scripts/import-content.test.mjs`; `emdash seed <seed> --validate`                         | ❌ W0       |
-| SCHEMA-02               | Tags subset of options, stats variants valid            | unit               | `node --test scripts/import-content.test.mjs`                                                          | ❌ W0       |
-| SCHEMA-02 / criterion 1 | Admin edits and long body save                          | manual-only        | human checkpoint (no dev server rule)                                                                  | n/a         |
-| SCHEMA-03               | About holds role, flag, cells, stack, contacts, body    | integration        | `node scripts/verify-import.mjs`                                                                       | ❌ W0       |
-| SCHEMA-04               | Menu has 3 items, settings keys present                 | integration        | `node scripts/verify-import.mjs`                                                                       | ❌ W0       |
-| SCHEMA-04 / criterion 2 | Nav and settings editable in admin                      | manual-only        | human checkpoint                                                                                       | n/a         |
-| SCHEMA-05               | Types exist and typecheck                               | smoke              | `test -f .emdash/types.ts && test -f emdash-env.d.ts && npx astro check`                               | ❌ W0       |
-| MIGR-01                 | Run twice: 13 projects, 1 about, no duplicates          | integration        | `node scripts/import-content.mjs && node scripts/import-content.mjs && node scripts/verify-import.mjs` | ❌ W0       |
-| MIGR-01                 | Draft fixture stays draft                               | unit               | `node --test scripts/import-content.test.mjs`                                                          | ❌ W0       |
-| MIGR-02                 | About copy identical                                    | integration        | `node scripts/verify-import.mjs`                                                                       | ❌ W0       |
-| MIGR-03                 | Zero differences, and verifier fails on a mutated field | integration + unit | `node scripts/verify-import.mjs`; `node --test scripts/import-content.test.mjs`                        | ❌ W0       |
-| MIGR-04                 | Exported seed rebuilds identical content in a fresh DB  | integration        | export, apply to fresh cwd, run verifier                                                               | ❌ W0       |
+| Req ID                  | Behavior                                                                    | Test Type    | Automated Command                                                                                                                      | File Exists | Status                                                        |
+| ----------------------- | --------------------------------------------------------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------- |
+| SCHEMA-01               | Four collections, field slugs non-reserved, seed valid                      | unit + smoke | `node --test scripts/seed-shape.test.mjs`; `npx emdash seed .emdash/seed.json --validate`                                              | yes         | green                                                         |
+| SCHEMA-02               | status, variant, time label fields; stats repeater; variants within options | unit         | `node --test scripts/seed-shape.test.mjs`                                                                                              | yes         | green                                                         |
+| SCHEMA-02 / criterion 1 | Admin edits and long body save                                              | manual-only  | human checkpoint (no dev server rule), recorded in 02-03 SUMMARY; not re-verified by this audit                                        | n/a         | manual                                                        |
+| SCHEMA-03               | About holds role, flag, cells, stack, contacts, body                        | unit         | `node --test scripts/seed-shape.test.mjs`; `npm run check:public-js` (renders /about)                                                  | yes         | green                                                         |
+| SCHEMA-04               | Menu has Home, Projects, About; settings keys present                       | unit         | `node --test scripts/seed-shape.test.mjs`                                                                                              | yes         | green                                                         |
+| SCHEMA-04 / criterion 2 | Nav and settings editable in admin                                          | manual-only  | human checkpoint, recorded in 02-03 SUMMARY; not re-verified by this audit                                                             | n/a         | manual                                                        |
+| SCHEMA-05               | Committed types exist and typecheck                                         | smoke        | `node --test scripts/seed-shape.test.mjs` (emdash-env.d.ts exists); `npx astro check`                                                  | yes         | green (only emdash-env.d.ts is committed, per 03-04 decision) |
+| MIGR-01                 | 13 projects, unique slugs, 1 about, valid statuses                          | unit         | `node --test scripts/seed-shape.test.mjs`                                                                                              | yes         | green                                                         |
+| MIGR-01                 | Draft fixture stays draft                                                   | unit         | `scripts/import-content.test.mjs` deleted; seed has no drafts, test asserts status is published or draft                               | n/a         | superseded by Phase 3 REND-05                                 |
+| MIGR-02                 | About copy identical to source                                              | integration  | `scripts/verify-import.mjs` and markdown sources deleted                                                                               | n/a         | superseded by Phase 3 REND-05 (one-time migration check)      |
+| MIGR-03                 | Zero differences, verifier fails on mutated field                           | integration  | `scripts/verify-import.mjs` deleted                                                                                                    | n/a         | superseded by Phase 3 REND-05 (one-time migration check)      |
+| MIGR-04                 | Seed rebuilds content in a fresh DB                                         | integration  | CI step `npx emdash seed .emdash/seed.json --database ...`; `npm run check:public-js` (throwaway DB, 17/17 PASS, owner run 2026-10-28) | yes         | green                                                         |
 
-_Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky_
+_Status: green · manual · superseded_
 
 ---
 
 ## Wave 0 Requirements
 
-- [ ] `scripts/import-content.test.mjs` — converter round trip over all 13 files and about.md, draft fixture, tags subset, reserved-slug check
-- [ ] `scripts/fixtures/` — draft-status fixture
-- [ ] `scripts/lib/schema.mjs` and `scripts/lib/sources.mjs`
-- [ ] devDependency `yaml`
+- [x] `scripts/seed-shape.test.mjs` created in the Phase 2 audit; replaces the deleted `scripts/import-content.test.mjs`
+- [x] `scripts/fixtures/`, `scripts/lib/schema.mjs`, `scripts/lib/sources.mjs`, devDependency `yaml`: obsolete, removed with the importer in Phase 3 (REND-05)
 
 ---
 
@@ -75,11 +75,11 @@ _Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky_
 
 ## Validation Sign-Off
 
-- [ ] All tasks have `<automated>` verify or Wave 0 dependencies
-- [ ] Sampling continuity: no 3 consecutive tasks without automated verify
-- [ ] Wave 0 covers all MISSING references
-- [ ] No watch-mode flags
-- [ ] Feedback latency < 60s
-- [ ] `nyquist_compliant: true` set in frontmatter
+- [x] All tasks have `<automated>` verify or Wave 0 dependencies
+- [x] Sampling continuity: no 3 consecutive tasks without automated verify
+- [x] Wave 0 covers all MISSING references
+- [x] No watch-mode flags
+- [x] Feedback latency < 60s
+- [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** validated 2026-10-28
