@@ -1,7 +1,7 @@
 ---
 phase: 06-live-editing-and-docs
 verified: 2026-10-28T18:00:00Z
-status: human_needed
+status: passed
 score: 2/4 must-haves verified
 covered_files:
   - .planning/phases/06-live-editing-and-docs/06-01-PLAN.md
@@ -30,7 +30,9 @@ human_verification:
 
 **Phase Goal:** The user edits the live site from the admin instead of git, and the repo docs describe the workflow that replaced hand-edited markdown
 **Verified:** 2026-10-28
-**Status:** human_needed
+**Status:** passed (resolved 2026-10-28 on owner attestation; first written as human_needed)
+
+**Resolution (2026-10-28):** the owner confirmed that rows E2 to E8 in 06-EVIDENCE.md are an accurate record ("those were passed"). Truths 1 and 2 (ADMIN-04, ADMIN-05) remain **owner-attested, not independently verified**: the verifier confirmed only the end state (live page hash equals H0, `main` unmoved). The Auto Deploy item was already owner-attested in 05-VERIFICATION.md on 2026-10-28.
 **Re-verification:** No, initial verification (branch gsd/phase-06-live-editing-and-docs, nothing pushed)
 
 ## Goal Achievement
