@@ -36,3 +36,8 @@ data/
 # emdash-env.d.ts is the committed generated types file; these two are not
 .emdash/types.ts
 .emdash/schema.json
+
+# GSD tool state
+.planning/config.json
+.planning/state.json
+.planning/milestone.lock
