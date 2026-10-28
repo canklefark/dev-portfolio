@@ -35,7 +35,7 @@ npm run check:public-js
 
 I edit content in the admin at https://dev.zeikcookson.com/_emdash/admin, signed in with my one passkey. If that device is lost, the way back is the "Admin recovery procedure" section of [.planning/PROJECT.md](.planning/PROJECT.md).
 
-Saving a published entry stages a draft, and the live page keeps showing the published copy. Preview opens a signed link to the draft that works in a signed-out browser for an hour, so I can share it. Publish makes the change live on the next request, with no rebuild, push or deploy. Restore in the Revisions panel turns an older version into the draft, and the live page only changes when I publish again. [06-EVIDENCE.md](.planning/phases/06-live-editing-and-docs/06-EVIDENCE.md) records this loop rehearsed on production.
+Saving a published entry stages a draft, and the live page keeps showing the published copy. Preview opens a signed link to the draft that works in a signed-out browser for an hour, so I can share it. Publish makes the change live on the next request, with no rebuild, push or deploy. Restore in the Revisions panel turns an older version into the draft, and the live page only changes when I publish again. [06-EVIDENCE.md](.planning/milestones/v1.0-phases/06-live-editing-and-docs/06-EVIDENCE.md) records this loop rehearsed on production.
 
 ## Deploying
 
@@ -53,7 +53,7 @@ EmDash applies pending migrations on the first request after the container start
 
 For bad code, I revert the commit on `main`, push, click Deploy and run the smoke test. I have not rehearsed this route yet.
 
-A code rollback does not undo a migration that already ran. After a bad migration I restore the nightly volume backup from the private R2 bucket with Dokploy's Restore Volume, picking the `.tar` object and not the app-name folder. That restore was rehearsed into a scratch app, and the record is in [05-EVIDENCE.md](.planning/phases/05-dokploy-deploy-and-cutover/05-EVIDENCE.md) (rows B1 to B3).
+A code rollback does not undo a migration that already ran. After a bad migration I restore the nightly volume backup from the private R2 bucket with Dokploy's Restore Volume, picking the `.tar` object and not the app-name folder. That restore was rehearsed into a scratch app, and the record is in [05-EVIDENCE.md](.planning/milestones/v1.0-phases/05-dokploy-deploy-and-cutover/05-EVIDENCE.md) (rows B1 to B3).
 
 ## Agent access
 

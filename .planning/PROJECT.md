@@ -24,11 +24,12 @@ A hiring manager lands on an honest, fast, distinctive site that makes the proje
 - ✓ Admin route protected by an EmDash passkey (one passkey, owner decision 2026-10-27), claimed on the production hostname (Phase 5)
 - ✓ Nightly volume backup to a private Cloudflare R2 bucket, with one restore rehearsed into a scratch app (Phase 5)
 - ✓ CI runs the public-JS check, `emdash migrate --check` on a seeded database and a committed-manifest drift gate on every push (Phases 3 and 5)
+- ✓ Live editing loop (draft, preview, publish, revision restore) exercised on the deployed site; ADMIN-04 and ADMIN-05 are owner-attested (Phase 6, 06-EVIDENCE.md)
+- ✓ README, CLAUDE.md and the content-update workflow describe the EmDash model; the portfolio-update skill and markdown-workflow docs are removed (Phase 6) — v1.0
 
 ### Active
 
-- [ ] CLAUDE.md, README and content-update workflow updated for the new model (README and the workflow are Phase 6; the CLAUDE.md Deployment section was updated in Phase 5)
-- [ ] The live editing loop (draft, preview, publish, revision restore) exercised on the deployed site (Phase 6)
+(None committed. Deferred candidates from v1.0 requirements: scheduled publishing, tag archive routes, media library with the Images integration once there are photos, Cloudflare Access in front of the admin. Define next milestone requirements with `/gsd-new-milestone`.)
 
 ### Out of Scope
 
@@ -152,18 +153,13 @@ What the drill showed: before the delete there was 1 user and 2 credentials, and
 - (k) Cookie-authenticated writes: `upload_without_header_status` is 403 (CSRF_REJECTED) in `spike/media.txt`, so the X-EmDash-Request header requirement is enforced. Recorded for Phase 4 (agent tokens) and Phase 5 (public admin); no gate is raised.
 - (l) Generated files: the plan 01-02 summary listed no generated file as a Phase 2 decision. .emdash/types.ts is not ignored, so Phase 2 can commit generated types.
 
-## Current Milestone: v1.0 EmDash Migration
+## Current State
 
-**Goal:** Move the portfolio's content management into EmDash so content is edited in an admin UI or by an agent instead of by hand in git.
+Shipped v1.0 EmDash Migration on 2026-10-28: 6 phases, 27 plans, 38 requirements satisfied, 95 automated tests. Content lives in EmDash (SQLite on a Dokploy volume), edited in the admin or by Claude over OAuth MCP (drafts only by convention). The owner deploys by clicking Deploy in Dokploy. Known debt is listed in `.planning/milestones/v1.0-MILESTONE-AUDIT.md` (owner-attested production checks, one passkey, unrehearsed code rollback, manifest diff as the only migration tripwire).
 
-**Target features:**
+## Next Milestone Goals
 
-- EmDash installed with a schema matching the current projects frontmatter
-- All projects, the About page, nav, settings and stats migrated
-- Public pages server-rendered, zero client JS; admin JS only under the admin route
-- Deploy on Dokploy (Node + SQLite) behind the Cloudflare proxy, admin protected by a passkey
-- Agent access via MCP/CLI
-- CLAUDE.md, README and update workflow revised
+Not yet defined. Run `/gsd-new-milestone`.
 
 ## Evolution
 
@@ -186,4 +182,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-_Last updated: 2026-10-28 after Phase 5 (Dokploy deploy and cutover)_
+_Last updated: 2026-10-28 after v1.0 milestone_

@@ -2,20 +2,18 @@
 gsd_state_version: "1.0"
 milestone: v1.0
 milestone_name: EmDash Migration
-current_phase: 06
-current_plan: Not started
-status: completed
+status: Awaiting next milestone
 stopped_at: Phase 06 complete — all phases complete
-last_updated: "2026-10-28T17:43:10.252Z"
+last_updated: "2026-10-28T18:14:32.485Z"
 last_activity: 2026-10-28
-last_activity_desc: Phase 06 complete
-state_head: c1e66bf02c400d40e9bc6855dc446913d75c0843
+last_activity_desc: Milestone v1.0 completed and archived
+state_head: e46892f1d86263aa4057efe355aebc760975618b
 progress:
   total_phases: 6
   completed_phases: 6
   total_plans: 27
   completed_plans: 27
-  percent: 100
+current_phase: 06
 ---
 
 # Project State
@@ -29,13 +27,10 @@ See: .planning/PROJECT.md (updated 2026-10-28)
 
 ## Current Position
 
-Phase: 06
-Current Plan: Not started
-Total Plans in Phase: 4
-Status: All phases complete
-Last activity: 2026-10-28 — Phase 06 complete
-
-Progress: [██████████] 100%
+Phase: Milestone v1.0 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-10-28 — Milestone v1.0 completed and archived
 
 ## Performance Metrics
 
@@ -172,3 +167,7 @@ Items acknowledged and deferred at milestone close, most recent first:
 Last session: 2026-10-28T16:19:43.305Z
 Stopped at: Phase 06 complete — all phases complete
 Resume file: .planning/phases/06-live-editing-and-docs/06-CONTEXT.md
+
+## Operator Next Steps
+
+- Start the next milestone with /gsd-new-milestone

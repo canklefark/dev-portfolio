@@ -1,0 +1,43 @@
+{
+  "contract": "1.0.0",
+  "flavor": "core",
+  "milestone": "v1.0 — EmDash Migration",
+  "phases": [
+    {
+      "number": "1",
+      "name": "Spike, Baseline and Decisions",
+      "status": "complete"
+    },
+    {
+      "number": "2",
+      "name": "Content Model and Import",
+      "status": "complete"
+    },
+    {
+      "number": "3",
+      "name": "Read Path Rewire and Parity",
+      "status": "complete"
+    },
+    {
+      "number": "4",
+      "name": "Agent Access",
+      "status": "complete"
+    },
+    {
+      "number": "5",
+      "name": "Dokploy Deploy and Cutover",
+      "status": "complete"
+    },
+    {
+      "number": "6",
+      "name": "Live Editing and Docs",
+      "status": "complete"
+    }
+  ],
+  "next": {
+    "command": "/gsd-progress",
+    "label": "Show progress",
+    "reason": "Unsure of state — showing progress"
+  },
+  "updated_at": "2026-10-28T18:14:32.510Z"
+}
