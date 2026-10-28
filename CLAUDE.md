@@ -25,4 +25,4 @@ Zero border-radius throughout. No card shadows at rest.
 
 ## Deployment
 
-Dokploy builds the `Dockerfile` (Node 24, output `dist/server/entry.mjs`). `engines` requires Node >=22.22.2. The owner clicks Deploy in Dokploy; nothing deploys automatically. A push to `main` runs CI only. After each deploy run `node scripts/smoke-test.mjs https://dev.zeikcookson.com`.
+Dokploy builds the `Dockerfile` (Node 24, output `dist/server/entry.mjs`). `engines` requires Node >=22.22.2. The owner clicks Deploy in Dokploy; nothing deploys automatically. A push to `main` runs CI only. After each deploy run `node scripts/smoke-test.mjs https://dev.zeikcookson.com`. dev.zeikcookson.com is behind the Cloudflare proxy (SSL/TLS Full strict), and the proxy injects one email-decode script on `/about`, an accepted exception to the no-client-JS rule that `check:public-js` cannot see because it runs on the origin build.
