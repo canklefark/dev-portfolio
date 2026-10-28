@@ -41,7 +41,28 @@ To deploy, merge to main and push, which runs ci only. Then open Dokploy, click 
 
 To roll back, revert the bad commit on main, push it and click Deploy, or point the Dokploy app at an earlier branch or tag and click Deploy. Neither route has been rehearsed. A code rollback does not undo a migration that already ran (EmDash updating guide), so after a bad migration restore a volume backup, and take a backup before deploying an EmDash upgrade. Plan 05-05 sets up the nightly backup.
 
+## Named gates
+
+- (a) Astro 6 residual advisories: accepted by the user (D-10). The malformed Host header was checked at the origin in C7 (status 500 and 404, site still up), and that check stays valid behind the proxy because the origin remains directly reachable.
+- (b) Extra recovery path: not adopted (D-09). One passkey is enrolled (C4), and the SQLite recovery procedure was rehearsed locally in Phase 1, not in the production container.
+- (c) Deprecated auth packages: `npm ls arctic @oslojs/crypto @oslojs/encoding` on 2026-10-28 shows arctic 3.7.0, @oslojs/crypto 1.0.1 (1.0.0 under @oslojs/webauthn) and @oslojs/encoding 1.1.0 (1.0.0 and 0.4.1 nested) only inside the emdash 1.3.1 dependency tree, as dependencies of emdash, @emdash-cms/auth and astro. The portfolio package.json lists none of them. They are accepted until an EmDash release replaces them, and the committed manifest gate marks that upgrade.
+- (d) Image architecture: the repo Dockerfile built and runs on the Dokploy host (C1). The host architecture was not read separately.
+- (e) Migration manifest: committed and diffed in CI (plan 05-02), green on GitHub in C1 and again on main in C8.
+- (f) Session store: it stays under node_modules/.astro, accepted (D-11).
+- (g) Security headers: the origin already sends x-content-type-options, referrer-policy, x-frame-options and a permissions-policy (C7), so no header rule is added and there is no CSP (D-11).
+- (h) EMDASH_SITE_URL: set as a build argument and as a runtime environment variable (D-08).
+- (i) `emdash doctor` needs --database ./data/emdash.db (C5).
+
 ## Not covered
 
 - The first Let's Encrypt renewal behind the proxy, around 2026-12-26 (30 days before expiry), is not exercised in this phase. The fallback is to set the dev record to DNS only, let Traefik renew, and turn the proxy back on. Always Use HTTPS is on, and the acme-challenge path was probed and answered 404 with no redirect, so no renewal risk is known.
 - Cloudflare Rocket Loader and Web Analytics injection settings were not checked in the dashboard.
+- Backup gaps (2026-10-28): the backup object size, the saved schedule 0 3 * * * and the retention setting were not reported, retention is assumed to be the Dokploy default, and a failed nightly run raises no alert. Dokploy stored the object under the app name folder dev-portfolio-app-waklhr and not under the prefix portfolio the plan asked for. The first S3 destination test returned 403 AccessDenied and the cause was not reported.
+- Restore pitfall: the first Restore Volume attempt picked the folder dev-portfolio-app-waklhr and failed with `tar: Is a directory`. Pick the .tar object inside the folder, not the app name folder.
+- The restore check compared doctor and three pages (/, /projects/ and /about/) in the production and scratch containers, not the admin or media, because the site holds no uploaded media. Those terminal results are the user's report; the executor did not run them.
+- The deploy has no automation: the owner clicks Deploy and runs the smoke test, and a rollback to an earlier ref is not rehearsed (D-15 superseded).
+- With one passkey, a lost device is a lockout; the recovery procedure was rehearsed locally in Phase 1 but not in the production container (D-09).
+- The update order and replica count were not read from the panel.
+- Cloudflare Access in front of the admin, locking the origin to Cloudflare addresses and trusted proxy headers are deferred, so EmDash rate limiting stays inactive (D-16).
+- Agent access is OAuth with the owner's admin rights and sits outside this phase; its token, guard hook and README section were removed by the user on 2026-10-27.
+- Zero downtime deploys are deferred.
