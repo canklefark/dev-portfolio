@@ -60,7 +60,7 @@ _Amended 2026-10-27 (user, outside Phase 5): agent access is OAuth to the commit
 - [x] **DEPLOY-02**: EmDash applies its pending migrations itself on the first request after a container starts (default auto mode), with no separate pre-deploy migration step (D-02 amended by the user on 2026-10-26), and CI fails when the committed migration manifest .emdash/migrations.json differs from the one the build generates, so a changed migration set is committed on purpose and a volume backup is taken before the deploy that applies it
 - [x] **DEPLOY-03**: The deployed site is compared against the baseline (17 of 17 pages identical, public-JS allowlist passing) on its real hostname, with the record DNS only and again behind the Cloudflare proxy (behind the proxy 16 of 17 identical, the one difference being the Cloudflare-injected email-decode script on /about; Email Address Obfuscation stays on, accepted by the owner 2026-10-27)
 - [x] **DEPLOY-04**: `dev.zeikcookson.com` serves the Dokploy app, the old site is torn down with no rollback target (the Cloudflare Pages project no longer exists), and once the Let's Encrypt certificate exists Cloudflare proxies the hostname with SSL/TLS Full (strict) and, by the owner's decision of 2026-10-27, Always Use HTTPS left on while the Dokploy app is still shown to be the one answering through the EmDash health route (user decisions 2026-10-27)
-- [ ] **DEPLOY-05**: A nightly Dokploy volume backup of `/app/data` goes to a private Cloudflare R2 bucket (user decision 2026-10-27), and one backup is restored into a new volume and booted in a scratch app whose pages match production
+- [x] **DEPLOY-05**: A nightly Dokploy volume backup of `/app/data` goes to a private Cloudflare R2 bucket (user decision 2026-10-27), and one backup is restored into a new volume and booted in a scratch app whose pages match production
 
 ### Guards
 
@@ -138,7 +138,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DEPLOY-02   | Phase 5 | Complete |
 | DEPLOY-03   | Phase 5 | Complete |
 | DEPLOY-04   | Phase 5 | Complete |
-| DEPLOY-05   | Phase 5 | Pending  |
+| DEPLOY-05   | Phase 5 | Complete |
 | ADMIN-02    | Phase 5 | Complete |
 | ADMIN-03    | Phase 5 | Complete |
 | GUARD-02    | Phase 5 | Complete |

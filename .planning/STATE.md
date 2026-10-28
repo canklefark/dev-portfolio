@@ -5,17 +5,17 @@ milestone_name: EmDash Migration
 current_phase: 05
 current_phase_name: Dokploy Deploy and Cutover
 current_plan: 5
-status: executing
-stopped_at: Completed 05-04-PLAN.md
-last_updated: "2026-10-27T17:15:27.509Z"
+status: verifying
+stopped_at: Completed 05-05-PLAN.md
+last_updated: "2026-10-28T12:39:25.020Z"
 last_activity: 2026-10-27
 last_activity_desc: Phase 05 execution started
-state_head: cf181906dcd534ae379435b2a960450cd2ea579a
+state_head: 596db6c9506b53ccb68b80cf2e568cbf35062aaa
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 23
-  completed_plans: 22
+  completed_plans: 23
 ---
 
 # Project State
@@ -32,7 +32,7 @@ See: .planning/PROJECT.md (updated 2026-10-26)
 Phase: 05 (Dokploy Deploy and Cutover) — EXECUTING
 Current Plan: 5
 Total Plans in Phase: 5
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-10-27 — Phase 05 execution started
 
 Progress: [███████░░░] 67%
@@ -86,6 +86,7 @@ _Updated after each plan completion_
 | Phase 05 P02 | 3 min           | 2 tasks | 7 files  |
 | Phase 05 P03 | 8 min | 2 tasks | 1 files |
 | Phase 05 P04 | n/a | 3 tasks | 8 files |
+| Phase 05 P05 | n/a | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -135,6 +136,7 @@ Recent decisions affecting current work:
 - [Phase 05]: 05-02: manifest gate (git diff --exit-code on committed .emdash/migrations.json) carries the real migration-change signal; seeded migrate --check cannot show a pending migration on a fresh database
 - [Phase 05]: One replica and Dokploy's default stop-first update order are assumed, not read from the panel (05-03)
 - [Phase 05]: Owner accepted Always Use HTTPS on and Cloudflare Email Address Obfuscation on (2026-10-27): proxy parity is 16/17 with the single Cloudflare email-decode script on /about; allowlist unchanged
+- [Phase 05]: 05-05: B1 and B3 held open until the user reported size, schedule and discard; deletion attributed to the user
 
 ### Pending Todos
 
@@ -164,6 +166,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-10-27T17:15:27.205Z
-Stopped at: Completed 05-04-PLAN.md
+Last session: 2026-10-28T12:39:24.795Z
+Stopped at: Completed 05-05-PLAN.md
 Resume file: None

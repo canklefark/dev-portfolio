@@ -175,7 +175,7 @@ Plans:
 4. EmDash applies pending migrations on the first request after a deploy, CI fails while a migration is pending or when the committed migration manifest differs from the build, the owner deploys by clicking Deploy in Dokploy (the app builds `main`, Auto Deploy is off, there is no deploy pipeline: user decision 2026-10-27), and a smoke test run by hand after each deploy confirms `/` and one project page return 200
 5. A SQLite backup in the Cloudflare R2 bucket has been restored once into a non-production instance, and the restored content matches production
 
-**Plans**: 4/5 plans executed
+**Plans**: 5/5 plans executed
 
 Plans:
 **Wave 1**
@@ -193,7 +193,7 @@ Plans:
 
 **Wave 4** _(blocked on Wave 3 completion)_
 
-- [ ] 05-05-PLAN.md: Nightly Cloudflare R2 volume backup, one restore into a new volume with a scratch app (no domain) compared with production by doctor and page hashes, scratch discarded, named gates closed and what is not covered written down
+- [x] 05-05-PLAN.md: Nightly Cloudflare R2 volume backup, one restore into a new volume with a scratch app (no domain) compared with production by doctor and page hashes, scratch discarded, named gates closed and what is not covered written down
 
 ### Phase 6: Live Editing and Docs
 
@@ -220,5 +220,5 @@ Phases execute in numeric order: 1, 2, 3, 4, 5, 6
 | 2. Content Model and Import      | 4/4            | Complete    | 2026-10-26 |
 | 3. Read Path Rewire and Parity   | 6/6            | Complete    | 2026-10-26 |
 | 4. Agent Access                  | 3/3            | Complete    | 2026-10-26 |
-| 5. Dokploy Deploy and Cutover    | 4/5 | In Progress | -          |
+| 5. Dokploy Deploy and Cutover    | 5/5 | In Progress | -          |
 | 6. Live Editing and Docs         | 0/TBD          | Not started | -          |
