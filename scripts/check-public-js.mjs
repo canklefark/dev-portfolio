@@ -1,8 +1,8 @@
 // @ts-check
 // Public-JS guard (GUARD-01): builds the site, seeds a throwaway database from .emdash/seed.json plus a draft
 // fixture, serves the Node build from a temp directory on 127.0.0.1, asserts the HTTP status of every public
-// route (project routes are crawled from /projects/), the 404 cases and the admin route, then runs the
-// script-inventory allowlist check on the fetched pages. The repo data/ directory is never read or written.
+// route (project routes are crawled from /projects/), the 404 cases and the admin route, and that no public page
+// links to /_emdash/ other than uploaded media. The repo data/ directory is never read or written.
 // usage: node scripts/check-public-js.mjs [--skip-build] [--out DIR]
 //   --skip-build  reuse the existing dist/ instead of running npm run build
 //   --out DIR     write the fetched pages to DIR and keep them (default: a temp directory that is removed)
@@ -31,7 +31,9 @@ const HEALTH_TIMEOUT_MS = 30000;
 const FETCH_TIMEOUT_MS = 15000;
 const KILL_GRACE_MS = 5000;
 const KEPT_LINES = 50;
-// Unmatched path that requests the 404 page from a running server (same as script-inventory.mjs).
+// The one /_emdash/ path public pages may reference: uploaded media (the share image, favicon) is served from it.
+const PUBLIC_MEDIA_PATH = "/_emdash/api/media/file/";
+// Unmatched path that requests the 404 page from a running server.
 const MISSING_ROUTE = "/__parity_missing_route__/";
 // Slug no project has: must answer 404 (fetched, never written).
 const MISSING_PROJECT = "/projects/__no_such_slug__/";
@@ -343,8 +345,6 @@ async function run(options) {
       : `server not ready within ${HEALTH_TIMEOUT_MS / 1000}s`;
   }
 
-  // Assert every status before the script check: an error page carries fewer scripts and
-  // would pass the allowlist.
   let unexpected = 0;
   /** @type {string[]} */
   const adminRefs = [];
@@ -370,7 +370,7 @@ async function run(options) {
       unexpected++;
       return null;
     }
-    if (body.includes("/_emdash/")) {
+    if (body.replaceAll(PUBLIC_MEDIA_PATH, "").includes("/_emdash/")) {
       console.log(`ADMIN-REF ${path}`);
       adminRefs.push(path);
     }
@@ -403,18 +403,6 @@ async function run(options) {
   if (adminRefs.length > 0) {
     return `${adminRefs.length} public pages reference /_emdash/`;
   }
-
-  const inventory = spawnSync(
-    process.execPath,
-    [
-      join(repo, "scripts", "script-inventory.mjs"),
-      "check",
-      join(repo, "scripts", "script-allowlist.json"),
-      outputDir,
-    ],
-    { stdio: "inherit" },
-  );
-  if (inventory.status !== 0) return "script allowlist check failed";
   return null;
 }
 

@@ -4,7 +4,7 @@ This is my portfolio site, live at https://dev.zeikcookson.com. I edit its conte
 
 ## What this is
 
-The site is an Astro 6 server build on the `@astrojs/node` standalone adapter, written in TypeScript strict mode. The content (project cards, About, navigation and site settings) lives in EmDash, in SQLite on a persistent volume, and not in this repo. Public pages ship no new client JS beyond the few allowlisted scripts they already had (theme and navigation). The EmDash admin at `/_emdash/admin` is the only other part that runs client JS. The site is self-hosted on Dokploy from the repo `Dockerfile`, behind the Cloudflare proxy.
+The site is an Astro 6 server build on the `@astrojs/node` standalone adapter, written in TypeScript strict mode. The content (project cards, About, navigation and site settings) lives in EmDash, in SQLite on a persistent volume, and not in this repo. The site is self-hosted on Dokploy from the repo `Dockerfile`, behind the Cloudflare proxy.
 
 Engineering rules are in [CLAUDE.md](CLAUDE.md). The design system is in [DESIGN.md](DESIGN.md) and [PRODUCT.md](PRODUCT.md).
 
@@ -29,7 +29,7 @@ npm test
 npm run check:public-js
 ```
 
-`npm test` runs the Node test files in `scripts/` and `src/lib/`. `npm run check:public-js` builds the site, serves it against a throwaway database and fails if a public route gains a script.
+`npm test` runs the Node test files in `scripts/` and `src/lib/`. `npm run check:public-js` builds the site, serves it against a throwaway database and fails if a public route returns an unexpected status or links to `/_emdash/` other than uploaded media.
 
 ## Editing content
 

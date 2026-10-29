@@ -11,8 +11,7 @@ const site = {
   tagline: "Tag",
   titleSeparator: SEP,
   defaultOgImage: undefined,
-  googleVerification: undefined,
-  bingVerification: undefined,
+  favicon: false,
 };
 
 describe("pageMeta", () => {

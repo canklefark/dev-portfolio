@@ -1,5 +1,7 @@
 ---
 import { getMenu } from "emdash";
+import { createPublicPageContext } from "emdash/page";
+import { EmDashHead } from "emdash/ui";
 import Nav from "../components/Nav.astro";
 import { getSiteContext, ogUrl, type NavId } from "../lib/site";
 import "../styles/global.css";
@@ -26,6 +28,20 @@ const ogHref = canonical
   ? new URL(canonical, Astro.site).href
   : ogUrl(canonicalPath ?? Astro.url.pathname, Astro.site);
 const imageHref = image ? new URL(image, Astro.site).href : undefined;
+// pageMeta has already applied the entry's SEO panel, so the resolved values go in explicitly and EmDashHead
+// renders the description, canonical, robots, Open Graph, Twitter, JSON-LD, verification and favicon tags.
+const page = createPublicPageContext({
+  Astro,
+  kind: "custom",
+  pageType: "website",
+  title,
+  description: desc,
+  canonical: ogHref,
+  image: imageHref,
+  seo: { robots },
+  siteName: site.title,
+  siteUrl: Astro.site?.origin,
+});
 ---
 
 <html lang="en">
@@ -33,21 +49,8 @@ const imageHref = image ? new URL(image, Astro.site).href : undefined;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
-    <meta name="description" content={desc} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={desc} />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={ogHref} />
-    {imageHref && <meta property="og:image" content={imageHref} />}
-    <meta name="twitter:card" content={imageHref ? "summary_large_image" : "summary"} />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={desc} />
-    {imageHref && <meta name="twitter:image" content={imageHref} />}
-    <link rel="canonical" href={ogHref} />
-    {robots && <meta name="robots" content={robots} />}
-    {site.googleVerification && <meta name="google-site-verification" content={site.googleVerification} />}
-    {site.bingVerification && <meta name="msvalidate.01" content={site.bingVerification} />}
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <EmDashHead page={page} />
+    {!site.favicon && <link rel="icon" type="image/svg+xml" href="/favicon.svg" />}
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="icon" href="/favicon.ico" />

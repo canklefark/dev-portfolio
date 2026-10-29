@@ -7,9 +7,8 @@ export interface SiteContext {
   titleSeparator: string | undefined;
   /** From the SEO settings: the share image for any page whose SEO panel has none. */
   defaultOgImage: string | undefined;
-  /** From the SEO settings: verification meta tag contents. */
-  googleVerification: string | undefined;
-  bingVerification: string | undefined;
+  /** Whether the General settings hold an uploaded favicon; EmDashHead renders it, the layout falls back to the static one. */
+  favicon: boolean;
 }
 
 /** Site-wide values read from EmDash settings (D-05). A missing title or tagline is a seed problem. */
@@ -28,8 +27,7 @@ export async function getSiteContext(): Promise<SiteContext> {
     tagline: settings.tagline,
     titleSeparator: settings.seo?.titleSeparator,
     defaultOgImage: settings.seo?.defaultOgImage?.url,
-    googleVerification: settings.seo?.googleVerification,
-    bingVerification: settings.seo?.bingVerification,
+    favicon: Boolean(settings.favicon?.url),
   };
 }
 

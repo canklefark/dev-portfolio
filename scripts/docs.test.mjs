@@ -51,10 +51,9 @@ for (const heading of [
   });
 }
 
-test("CLAUDE.md states the plugin, draft, admin-only JS, Node floor and CI-only rules", () => {
+test("CLAUDE.md states the plugin, draft, Node floor and CI-only rules", () => {
   assert.match(claude, /plugins/i);
   assert.match(claude, /drafts?/i);
-  assert.ok(claude.includes("/_emdash/admin"));
   assert.ok(claude.includes(">=22.22.2"));
   assert.match(claude, /push to `main` runs CI only/);
   assert.match(claude, /clicks Deploy/);

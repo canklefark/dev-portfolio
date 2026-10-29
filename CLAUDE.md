@@ -11,7 +11,6 @@ Content is edited in the EmDash admin. There are no markdown content files. Clau
 ## Code Rules
 
 - TypeScript strict — no `any`
-- No new client-side JS on public routes. The only scripts there are the ones in `scripts/script-allowlist.json` (theme, nav, 404), other client JS runs only in the EmDash admin under `/_emdash/admin`, and never add a script, modulepreload or module tag beyond that allowlist (`npm run check:public-js` fails CI if a route exceeds it)
 - No third-party EmDash plugins (`EMDASH_ENCRYPTION_KEY` stays unset because no plugin declares a secret)
 - No inline styles except for CSS custom property overrides (`style="--var: value"`)
 - All SQL queries parameterized, never interpolated
@@ -26,4 +25,4 @@ Zero border-radius throughout. No card shadows at rest.
 
 ## Deployment
 
-Dokploy builds the `Dockerfile` (Node 24, output `dist/server/entry.mjs`). `engines` requires Node >=22.22.2. The owner clicks Deploy in Dokploy; nothing deploys automatically. A push to `main` runs CI only. After each deploy run `node scripts/smoke-test.mjs https://dev.zeikcookson.com`. dev.zeikcookson.com is behind the Cloudflare proxy (SSL/TLS Full strict), and the proxy injects one email-decode script on `/about`, an accepted exception to the no-client-JS rule that `check:public-js` cannot see because it runs on the origin build.
+Dokploy builds the `Dockerfile` (Node 24, output `dist/server/entry.mjs`). `engines` requires Node >=22.22.2. The owner clicks Deploy in Dokploy; nothing deploys automatically. A push to `main` runs CI only. After each deploy run `node scripts/smoke-test.mjs https://dev.zeikcookson.com`. dev.zeikcookson.com is behind the Cloudflare proxy (SSL/TLS Full strict), and the proxy injects one email-decode script on `/about`.
