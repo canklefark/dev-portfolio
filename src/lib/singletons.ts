@@ -23,12 +23,6 @@ async function loadSingleton<K extends keyof EmDashCollections>(
   return entry;
 }
 
-export const PROJECTS_INDEX_SLUG = "projects-index";
-
-export function getProjectsIndex() {
-  return loadSingleton("projects_index", PROJECTS_INDEX_SLUG);
-}
-
 export const HOME_SLUG = "home";
 export const ABOUT_SLUG = "about";
 

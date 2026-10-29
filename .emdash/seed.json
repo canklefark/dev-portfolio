@@ -217,6 +217,7 @@
 			"slug": "projects",
 			"label": "Projects",
 			"labelSingular": "Project",
+			"description": "Internal platforms, AI-assisted tooling, and self-hosted infrastructure, with the real problems and decisions behind each one.",
 			"supports": [
 				"drafts",
 				"revisions",
@@ -326,31 +327,6 @@
 					"label": "Body",
 					"type": "portableText",
 					"searchable": true
-				}
-			]
-		},
-		{
-			"slug": "projects_index",
-			"label": "Projects Index",
-			"labelSingular": "Projects Index",
-			"supports": [
-				"drafts",
-				"revisions",
-				"preview",
-				"seo"
-			],
-			"urlPattern": "/projects",
-			"fields": [
-				{
-					"slug": "title",
-					"label": "Page title",
-					"type": "string",
-					"required": true
-				},
-				{
-					"slug": "excerpt",
-					"label": "Meta description",
-					"type": "text"
 				}
 			]
 		}
@@ -5139,17 +5115,6 @@
 						"puppeteer",
 						"sveltekit"
 					]
-				}
-			}
-		],
-		"projects_index": [
-			{
-				"id": "projects_index:projects-index",
-				"slug": "projects-index",
-				"status": "published",
-				"data": {
-					"title": "Projects",
-					"excerpt": "Infrastructure projects — Kubernetes clusters, self-hosted services, observability, and more."
 				}
 			}
 		]

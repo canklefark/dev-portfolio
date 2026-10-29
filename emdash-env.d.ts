@@ -3,7 +3,12 @@
 
 /// <reference types="emdash/locals" />
 
-import type { BylineSummary, ContentBylineCredit, TaxonomyTerm, PortableTextBlock } from "emdash";
+import type {
+  BylineSummary,
+  ContentBylineCredit,
+  TaxonomyTerm,
+  PortableTextBlock,
+} from "emdash";
 
 export interface About {
   id: string;
@@ -13,9 +18,20 @@ export interface About {
   role: string;
   show_availability?: boolean;
   body?: PortableTextBlock[];
-  cells?: { "label": string; "value": string; "variant": "default" | "accent" | "green" }[];
-  stack?: { "name": string; "level": "DAILY" | "PROFICIENT" | "FAMILIAR" | "LEARNING" | "NEXT" }[];
-  contacts?: { "icon": "email" | "github" | "linkedin"; "label": string; "href": string }[];
+  cells?: {
+    label: string;
+    value: string;
+    variant: "default" | "accent" | "green";
+  }[];
+  stack?: {
+    name: string;
+    level: "DAILY" | "PROFICIENT" | "FAMILIAR" | "LEARNING" | "NEXT";
+  }[];
+  contacts?: {
+    icon: "email" | "github" | "linkedin";
+    label: string;
+    href: string;
+  }[];
   heading_line_1?: string;
   heading_line_2?: string;
   heading_accent?: string;
@@ -59,22 +75,12 @@ export interface Project {
   period: string;
   summary: string;
   sub: string;
-  stats?: { "label": string; "value": string; "variant": "default" | "green" | "accent" }[];
+  stats?: {
+    label: string;
+    value: string;
+    variant: "default" | "green" | "accent";
+  }[];
   body?: PortableTextBlock[];
-  createdAt: Date;
-  updatedAt: Date;
-  publishedAt: Date | null;
-  byline?: BylineSummary | null;
-  bylines?: ContentBylineCredit[];
-  terms?: Record<string, TaxonomyTerm[]>;
-}
-
-export interface ProjectsIndex {
-  id: string;
-  slug: string | null;
-  status: string;
-  title: string;
-  excerpt?: string;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
@@ -88,6 +94,5 @@ declare module "emdash" {
     about: About;
     home: Home;
     projects: Project;
-    projects_index: ProjectsIndex;
   }
 }

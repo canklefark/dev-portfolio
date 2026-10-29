@@ -22,10 +22,10 @@ test("seed passes emdash validateSeed", () => {
   assert.equal(result.valid, true, JSON.stringify(result.errors));
 });
 
-test("seed defines exactly the four collections", () => {
+test("seed defines exactly the three collections", () => {
   assert.deepEqual(
     seed.collections.map((/** @type {any} */ c) => c.slug).sort(),
-    ["about", "home", "projects", "projects_index"],
+    ["about", "home", "projects"],
   );
 });
 
@@ -83,10 +83,16 @@ test("project status_variant values stay within the select options", () => {
   }
 });
 
-test("one about entry, one home entry, one projects_index entry", () => {
+test("one about entry, one home entry", () => {
   assert.equal(seed.content.about.length, 1);
   assert.equal(seed.content.home.length, 1);
-  assert.equal(seed.content.projects_index.length, 1);
+});
+
+test("the projects collection carries the description the /projects page uses", () => {
+  const projects = seed.collections.find(
+    (/** @type {any} */ c) => c.slug === "projects",
+  );
+  assert.ok(projects.description);
 });
 
 test("taxonomies: hierarchical category with 9 terms, flat tag with 45", () => {

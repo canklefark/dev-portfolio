@@ -1,12 +1,14 @@
 ---
+import { getCollectionInfo } from "emdash";
 import Layout from "../../layouts/Layout.astro";
 import StageCard from "../../components/StageCard.astro";
 import { getSortedProjects } from "../../lib/projects";
 import { getSiteContext, pageMeta } from "../../lib/site";
-import { getProjectsIndex } from "../../lib/singletons";
 
-const [projects, index, site] = await Promise.all([getSortedProjects(), getProjectsIndex(), getSiteContext()]);
-const meta = pageMeta(index, site, { withSiteTitle: true });
+const [projects, info, site] = await Promise.all([getSortedProjects(), getCollectionInfo("projects"), getSiteContext()]);
+if (!info) throw new Error('The EmDash collection "projects" is missing');
+// The listing page has no entry of its own: its title and description are the collection's label and description.
+const meta = pageMeta({ data: { title: info.label, excerpt: info.description } }, site, { withSiteTitle: true });
 ---
 
 <Layout title={meta.title} description={meta.description} canonical={meta.canonical} image={meta.image} robots={meta.robots} activeNav="projects">
